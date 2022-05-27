@@ -2,7 +2,7 @@ include ../Makefile.inc
 
 SRCS=do.asm echo.asm HelloWorld.asm HexDump.asm listdcb.asm mycopy.asm name.asm set.asm RamDiskL.asm
 OBJS=$(SRCS:asm=cm)
-TGTDSK=foo1.dsk
+TGTDSK=../foo1.dsk
 
 all: $(OBJS)
 	../$(MPX9DSK) $(TGTDSK) -w -n $(OBJS)

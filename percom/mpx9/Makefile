@@ -19,10 +19,9 @@ sub-makes:
 	$(MAKE) -C boot-sector all
 	$(MAKE) -C os all
 	$(MAKE) -C utils all
+	$(MAKE) -C my-utils all
 
 foo1.dsk: sub-makes boot-sector/BootSector.bin os/MPX9.SY
-	$(MAKE) -C utils
-	$(MAKE) -C my-utils
 	$(MPX9DSK) $(TGTDSK) --init boot-sector/BootSector.bin os/MPX9.SY -f 
 	$(MPX9DSK) $(TGTDSK) -n -w $(wildcard utils/*.cm) -f 
 	$(MPX9DSK) $(TGTDSK) -n -w $(wildcard my-utils/*.cm) -f 

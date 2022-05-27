@@ -321,12 +321,12 @@ class Mpx9DskImg(object):
 	
 	def __init__(self, filename, init=False):
 		# print('__init__(', filename, init, ')')
+		self.dirty = False
 		self.sectors = []
 		self.dir = None
 		self.filename = filename
 		if not init:
 			self.loadImage()
-		self.dirty = False
 
 	def __del__(self):
 		# print("__del__()")

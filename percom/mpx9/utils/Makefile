@@ -2,7 +2,7 @@ include ../Makefile.inc
 
 SRCS=create.asm list.asm memtst.asm OutVectr.asm
 OBJS=$(SRCS:.asm=.cm)
-TGTDSK=foo2.dsk
+TGTDSK=../foo1.dsk
 
 all: $(TGTDSK) abc
 
