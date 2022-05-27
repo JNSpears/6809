@@ -34,7 +34,7 @@ STACK   EQU * ; (55) TOP OF STACK
 
 REGC    RMB 1 ; (55) CONDITION CODE REGISTER
 
-REGA    RMB 1 ; (56) A REGISTER I-‘
+REGA    RMB 1 ; (56) A REGISTER I-ï¿½
 REGB    RMB 1 ; (57) B REGISTER
 REGD    RMB 1 ; (58) DIRECT PAGE REGISTER
 REGX    RMB 2 ; (59) X REGISTER
@@ -47,7 +47,7 @@ BpTabl  RMB 15 ; (67) SPACE FOR 5 BREAKPOINTS
 BpTEnd  EQU * ; (82) END OF BREAKPOINT TABLE
 
 ; PSYMON WORK AREAS
-MemPtr  RMB 2 ; (82) MEMORY POINTER FOR ‘M’ COMMAN1
+MemPtr  RMB 2 ; (82) MEMORY POINTER FOR ï¿½Mï¿½ COMMAN1
 UsrTbl  RMB 2 ; (84) ADDRESS OF USER COMMAND TABLE)
 Comand  RMB 1 ; (86) COMMAND CHARACTER STORAGE
 CkSum   RMB 1 ; (87) CHECKSUM FOR LOAD AND SAVE
@@ -175,7 +175,7 @@ DSKSL EQU 4 ;SELECT DISK & RETURN STATUS
 DSKCT EQU 8 ;DISK CONTROL FUNCTION
 
 ; PSYMON-ext ROM CODE
-    IFDEF   RAMTGT  ; Build for Ram on SBC/9
+    IFDEF   RAMTGT ; Build for Ram on SBC/9
 
 UsrTblv EQU $F3D4
     ORG UsrTblv
@@ -184,7 +184,7 @@ BUFFER  EQU $0000
     ORG $F050
 
     ELSE
-    IFDEF MPX9      ; Build for MPX/9
+    IFDEF MPX9 ; Build for MPX/9
 S19LOADER       SET 1
 DSKUTL          SET 1
 MEMTST1         SET 1
@@ -194,16 +194,16 @@ UsrTblv EQU $F3D4
 BUFFER  EQU $DE00
     ORG $0000
 
-    else ; build for EPROM on SBC/9
-
-;S19LOADER   SET 1
-;DSKUTL      SET 1
-MEMTST1     SET 1
+    ELSE ; build for EPROM on SBC/9
+;S19LOADER   SET 0
+DSKUTL      SET 1
+;MEMTST1     SET 0
 HELPHELP    SET 1
 LIST_DCB    SET 1
+NULL_DCB    SET 1
             ORG     ROM2
 BUFFER      EQU FREE+$0100
-    ENDC
+    ENDC ; build for EPROM on SBC/9
 
     ENDC ; RAMTGT
 
@@ -223,7 +223,21 @@ Setup:
 
     ifdef   NULL_DCB
 ;AddNullDev:
-    leay    <NullDCB,pcr
+    leax     >NullDCB,pcr
+    leay    <NullDCB_INIT,pcr
+
+    ldd     ,Y++
+    std     ,X++
+    ldd     ,Y++
+    std     ,X++
+    ldd     ,Y++
+    std     ,X++
+    ldd     ,Y++
+    std     ,X++
+    ldd     ,Y++
+    std     ,X++
+
+    leay     >NullDCB,pcr
     ldx     DCBCHN
     stx     DCBLnk,y
     sty     DCBCHN
@@ -231,15 +245,15 @@ Setup:
 
     RTS
 
-; *****************************************
 
-    ifdef   NULL_DCB
-NullDCB:
+    IFDEF   NULL_DCB
+NullDCB_INIT:
     FDB 0
     FCC 'NL'    ; DCB ID
     FDB NullDr  ; DRIVER
     FDB 0       ; I/O ADDRESS
     FDB 0       ; STATUS, EXT
+    ENDC
 
 *** *************************
 *** * Null Driver
@@ -404,7 +418,6 @@ n2:
     bne n3
     ldx <8,x    ; get U register from stack
     bra GetHexXok
-
 n3:
     cmpa    #'S
     beq GetHexXok
@@ -733,6 +746,22 @@ ListDCB1:
     ldd DCBIOA,y
     jsr DspDBy  ; display DCB I/O address
 
+    ldb DCBExt,y
+    beq noDbcExt
+
+    leaX DCBApp,y   ; point to extension bytes
+    LDA #'[
+    jsr OutChr
+
+DbcExtLoop
+    lda ,X+
+    jsr DspSBy  ; display DCB extension bytes
+    decb
+    bne DbcExtLoop ; not done then loop
+    LDA #']
+    jsr OutChr
+
+noDbcExt:
     jsr CRLF
     ldx DCBLnk,y
     bne ListDCB1
@@ -869,9 +898,9 @@ ReadSectX2:
 
 ErrorString:
     fcb CR,LF
-    fcc /*** DISK Error/
+    fcc "*** DISK Error"
     fcb SP+$80
-SectMsg fcs />>> Sector:/
+SectMsg fcs ">>> Sector:"
         ENDC
 
     IFDEF   MEMTST1
@@ -1196,12 +1225,22 @@ HelpTable:
         fcb     0       ; end of table
 
 
-endcod  equ *-1
+endcod  equ *
 sizcod  equ endcod-begcod
+        if sizcod&~$3ff
+            ERROR image must fit in 1k ROM
+        endc
 
     org BUFFER ; use ram at 0 for buffer
 begdat  equ *
 buffer  rmb 256
-enddat  equ *-1
+; *****************************************
+
+    IFDEF   NULL_DCB
+NullDCB:
+    RMB 10
+    ENDC
+
+enddat  equ *
 sizdat  equ enddat-begdat
 
