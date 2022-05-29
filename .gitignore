@@ -14,3 +14,5 @@ tools/lwtools/lwlink/
 tools/lwtools/win/
 
 tools/lwtools/
+
+tools/coco-disasm

@@ -23,7 +23,7 @@
 *	 device. normally OFF
 *
 *   /F - will toggle the flag which indicates that the printer
-*	 accepts harware form feed characters. normallY OFF
+*	 accepts hardware form feed characters. normallY OFF
 *
 *   /P - suppress polling keyboard for break. (JNS)
 * 
