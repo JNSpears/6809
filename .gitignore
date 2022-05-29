@@ -2,3 +2,17 @@
 *.lst
 
 *.bak
+
+tools/lwtools/lwasm/
+
+tools/lwtools/lwcc/
+
+tools/lwtools/lwlib/
+
+tools/lwtools/lwlink/
+
+tools/lwtools/win/
+
+tools/lwtools/
+
+tools/coco-disasm
