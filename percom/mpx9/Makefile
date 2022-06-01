@@ -29,6 +29,9 @@ foo1.dsk: sub-makes boot-sector/BootSector.bin os/MPX9.SY
 test: $(EPROMS) $(TGTDSK) 
 	../../tools/usim/percom/percom -1 $(TGTDSK) -- $(EPROMS)
 
+testd: $(EPROMS) $(TGTDSK) 
+	../../tools/usim/percom/percomd -d -1 $(TGTDSK) -- $(EPROMS)
+
 clean:
 	$(MAKE) -C ../psymon clean
 	$(MAKE) -C boot-rom clean
