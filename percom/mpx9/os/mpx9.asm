@@ -388,6 +388,7 @@ MPX9EP LEAS STACK,PCR SET STACK
         LEAX >NEWLIN,PCR        ; print crlf
         SWI3
         FCB PSTRNG
+
 ;JNS-   
         ;JNS LBRA GETCMD EXIT TO COMMAND LOOP ; maybe so bootload could jam a command to be exectued in the buffer?
         LBRA MPXRET 
@@ -498,7 +499,7 @@ GETLN PSHS B,X,Y SAVE REGISTERS
  CLRB RESET CHARACTER COUNT
 GETLN1 SWI3 GET NEXT CHARACTER
  FCB INCHR
- 
+
 	IFDEF CMDREPT
 	cmpa #1 repeat last line
 	beq GETLN6 go if yes
