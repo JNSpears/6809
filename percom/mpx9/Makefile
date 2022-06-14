@@ -20,23 +20,31 @@ sub-makes:
 	$(MAKE) -C os all
 	$(MAKE) -C utils all
 	$(MAKE) -C my-utils all
+# 	$(MAKE) -C FigForth
+	$(MAKE) -C tForth
 
-foo1.dsk: sub-makes boot-sector/BootSector.bin os/MPX9.SY
+init: boot-sector/BootSector.bin os/MPX9.SY
 	$(MPX9DSK) $(TGTDSK) --init boot-sector/BootSector.bin os/MPX9.SY -f 
-	$(MPX9DSK) $(TGTDSK) -n -w $(wildcard utils/*.cm) -f 
-	$(MPX9DSK) $(TGTDSK) -n -w $(wildcard my-utils/*.cm) -f 
+
+foo1.dsk: init sub-makes
+# 	$(MPX9DSK) $(TGTDSK) -n -w $(wildcard utils/*.cm) -f 
+# 	$(MPX9DSK) $(TGTDSK) -n -w $(wildcard my-utils/*.cm) -f 
 
 test: $(EPROMS) $(TGTDSK) 
-	../../tools/usim/percom/percom -1 $(TGTDSK) -- $(EPROMS)
+	../../tools/usim/percom/percom -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
 
 testd: $(EPROMS) $(TGTDSK) 
-	../../tools/usim/percom/percomd -d -1 $(TGTDSK) -- $(EPROMS)
+	../../tools/usim/percom/percomd -d -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
 
 clean:
 	$(MAKE) -C ../psymon clean
-	$(MAKE) -C boot-rom clean
+	$(MAKE) -C boot-rom cleanz
 	$(MAKE) -C boot-sector clean
 	$(MAKE) -C os clean
 	$(MAKE) -C utils clean
 	$(MAKE) -C my-utils clean
+# 	$(MAKE) -C FigForth clean
+	$(MAKE) -C tForth clean
+
+clean:
 	-$(CLEAN)

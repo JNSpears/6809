@@ -371,10 +371,10 @@ MPX9EP LEAS STACK,PCR SET STACK
         SWI3
         FCB DSPDBY
 
-        LEAX >MPXBAS,PCR        ; print code begining of MPX/9 memeory
-        tfr X,D
-        SWI3
-        FCB DSPDBY
+        ; LEAX >MPXBAS,PCR        ; print code begining of MPX/9 memeory
+        ; tfr X,D
+        ; SWI3
+        ; FCB DSPDBY
 
         LEAX >LDATMSG2,PCR      ; print "- " message
         SWI3
@@ -1980,7 +1980,7 @@ FILES1 PSHS X DISPLAY THE BANNER
  SWI3
  FCB PSTRNG
  PULS X
- LDB #14 SET DISPLAY LIMIT
+ LDB #32 SET DISPLAY LIMIT ;JNS changed for convenience when running from emulation (32=max files in dir).
 FILES2 PSHS B SAVE FILE COUNT
  LDA #15 SET FILL COUNTER
  STA ,-S
