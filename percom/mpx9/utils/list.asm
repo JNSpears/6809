@@ -76,6 +76,28 @@ DELDCB EQU 35   ;DELETE DCB FROM DEVICE LIST
  spc 1
 SYSLIM EQU 35   ;LAST VALID CALL
 
+**************************************************
+* ERROR Codes                                    *
+**************************************************
+ERR_OK  EQU      0 ; OK - NO ERROR
+ERR_FN  EQU      1 ; FN - ILLEGAL FUNCTION ATTEMPTED
+ERR_ID  EQU      2 ; ID - ILLEGAL DISK DRIVE #
+ERR_IB  EQU      3 ; IB - ILLEGAL BLOCK # USED
+ERR_DM  EQU      4 ; DM - DISK MISSING OR INOPERATIVE
+ERR_NB  EQU      5 ; NB - NULL (EMPTY) BLOCK READ
+ERR_SK  EQU      6 ; SK - SEEK ERROR
+ERR_RD  EQU      7 ; RD - DISK READ ERROR
+ERR_VF  EQU      8 ; VF - DISK VERIFY ERROR
+ERR_WP  EQU      9 ; WP - WRITE PROTECTED DISK
+ERR_NF  EQU     10 ; NF - FILE NOT FOUND
+ERR_DF  EQU     11 ; DF - DISK FULL OR NO SPACE FOR FILE
+ERR_IF  EQU     12 ; IF - INVALID FILE SPEC
+ERR_NC  EQU     13 ; NC - FILE NOT CLOSED
+ERR_UF  EQU     14 ; UF - ACCESS TO UNOPENED FILE
+ERR_IA  EQU     15 ; IA - ILLEGAL ACCESS TO FILE
+ERR_EF  EQU     16 ; EF - END OF FILE
+ERR_SN  EQU     17 ; SN - SYNTAX ERROR IN COMMAND
+
 
 ; SYSTEM ADDRESS CONSTANTS
 
@@ -340,6 +362,9 @@ newlin  ldd     >linnum,pcr     ; get current line number
 listln  leay    >infcb,pcr      ; point to fcb
         swi3
         fcb     RDFIL           ; get a character of input
+        cmpb    #ERR_EF
+        lbeq    eject
+        tstb
         lbne    dskerr          ; report disk error
         anda    #$7f            ; adjust for ascii value
         cmpa    #$7f            ; check for nulls
@@ -347,18 +372,11 @@ listln  leay    >infcb,pcr      ; point to fcb
         cmpa    #4              ; check for EOF
         lbeq    eject           ; eject listing and return when eof found
         cmpa	#LF
-        bne	    listln1
-;	lda	#'\		; for helping debug.
-;	bsr 	output		;;
-;	lda	#'n		;;
-;	bsr	output		;;
-        bra	    listln
-listln1 
-
-        cmpa    #CR             ; check for end of line
+        bne	listln1
+        bra	listln
+listln1 cmpa    #CR             ; check for end of line
         beq     nxtlin0
         bsr     output          ; send character to device
-
 ; check for record count.
         lda     >recflg,pcr     ; JNS
         beq     listln          ; JNS if recflg is zero then no fixed record size.
@@ -430,8 +448,8 @@ sndnum  ora     #'0             ; make number ascii
         
 output  pshs    b
         inc     >reccnt,pcr ; JNS increment char count for fixed record.
-        tst	    >polflg,pcr	; JNS added, check to see if we are going to poll for break/cancel
-        beq	    nopoll
+        tst	>polflg,pcr	; JNS added, check to see if we are going to poll for break/cancel
+        beq	nopoll
         pshs    a	
         ldx     [>_cidcb,pcr]   ; get input dcb pointer
         ldb     #StatFn     	; check port status
@@ -458,10 +476,9 @@ outcns  swi3
         fcb     OUTCHR          ; send character to console
 outret  puls    b,pc
 
-notfnd  ldb     #10
+notfnd  ldb     #ERR_NF
         bra     dskerr
-        
-synerr  ldb     #16
+synerr  ldb     #ERR_SN
 dskerr  swi3
         fcb     RPTERR
 return  lds     >stack,pcr
@@ -474,13 +491,13 @@ endcod  equ *-1
 ** Working Variables
 *
 
-_cidcb   rmb     2
+_cidcb  rmb     2
 lincnt  rmb     1
 lzflg   rmb     1
 conflg  rmb     1
 ffflg   rmb     1
 numflg  rmb     1
-polflg 	rmb	    1   ; JNS
+polflg 	rmb	1   ; JNS
 recflg  rmb     1   ; JNS
 reccnt  rmb     1   ; JNS
 linnum  rmb     2

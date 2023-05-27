@@ -125,11 +125,12 @@ class Sector(object):
 		return psnew
 		
 	def __repr__(self):
-		return "<Sector(ts:%04x, <%d, >%d, #%d, @%04x, t%d, ... %04x)>" % (self.Curr, self.Back, self.Next, self.Count, self.Address, self.Type, self.CRC)
+		return "<Sector(ts:%04x, <%03x, >%03x, #%d, @%04x, t%d, ... %04x)>" % (self.Curr, self.Back, self.Next, self.Count, self.Address, self.Type, self.CRC)
 
-	def fixCRC(self):
-		(A, B) = calcrc(self)
-		# print('fixCRC: Curr:%04X crc:%02X:%02X' % (self.Curr, A, B))
+	def fixCRC(self, debug=False):
+		(A, B) = calcrc(self, debug)
+		if debug:
+			print('fixCRC: Curr:%04X crc:%02X:%02X' % (self.Curr, A, B))
 		crc = (A << 8) | B
 		self.CRC = crc
 	
@@ -172,15 +173,16 @@ class DirEntry(object):
 	def printDirHeader(cls, verbose):
 		if verbose: print("idx    ", end=' ')
 		print("filename        first   last  entry", end=' ')
-		if verbose: print("#sec      K", end=' ')
+		if verbose: print("         #sec      K", end=' ')
 		print()
 		if verbose: print("----   ", end=' ')
 		print("-----------     -----  -----  ----", end=' ')
-		if verbose: print(" ----  -----", end=' ')
+		if verbose: print("          ----  -----", end=' ')
 		print()
 
 	def getFomattedDirEntry(self):
-		return "% -12s\t% 5d  % 5d  %04x" % (self.getFilename(), self.first, self.last, self.entry)
+		# return "% -12s\t% 5d  % 5d  %04x  % 6.2fK" % (self.getFilename(), self.first, self.last, self.entry, ((self.last-self.first)*256)/1024.0)
+		return "% -12s\t  % 3x    % 3x  %04x  % 6.2fK" % (self.getFilename(), self.first, self.last, self.entry, ((self.last-self.first)*256)/1024.0)
 	
 	def printDirEntry(self):
 		print(self.getFomattedDirEntry)
@@ -232,7 +234,7 @@ class Dir(object):
 		for i, (filename, ext, first, last, enter) in [ (i, direntry.getTuple()) for i, direntry in enumerate(self.dir)]:
 			newrawdir.append(struct.pack(DIR_ENT_FMT, filename, ext, first, last, enter))
 		foo = ''.join(newrawdir)
-		# print('len(newrawdir):', len(newrawdir))
+		print('len(newrawdir):', len(newrawdir))
 		return newrawdir
 
 	def findFile(self, filename, debug=False):
@@ -359,7 +361,7 @@ class Mpx9DskImg(object):
 		if debug:
 			self.displayDir(True)
 
-		self.writeFile(osimage, 0, debug=debug)
+		self.writeFile(osimage, 0, verbose=debug)
 
 		self.dirty = True
 		if debug:
@@ -403,15 +405,19 @@ class Mpx9DskImg(object):
 				
 	def saveDir(self):
 		# print("saveDir()")
-		sec1 = self.sectors[1]
-		sec2 = self.sectors[2]
+		# sec1 = self.sectors[1]
+		# sec2 = self.sectors[2]
 		directory = self.dir.getPackedString()
+		# print('directory:', directory)
 		self.sectors[1].Data = directory[0:256]
 		self.sectors[2].Data = directory[256:512]
-		sec1.fixCurr(1)
-		sec2.fixCurr(2)
-		sec1.fixCRC()
-		sec2.fixCRC()
+		self.sectors[1].Next = 2
+		self.sectors[2].Back = 1
+		self.sectors[1].fixCurr(1)
+		self.sectors[2].fixCurr(2)
+		self.sectors[1].fixCRC()
+		self.sectors[2].fixCRC()
+
 #        self.displayDir()
 		self.dirty = True
 				
@@ -434,30 +440,30 @@ class Mpx9DskImg(object):
 					# print(data)
 					dst.write(data)
 
-	def writeFile(self, filename, entry_address=0, buffer_address=0, normalcase=False, debug=False):
+	def writeFile(self, filename, entry_address=0, buffer_address=0, normalcase=False, verbose=False):
 		file_size = os.path.getsize(filename)
 
 		mpxfilename = filename
 		if normalcase:
 			mpxfilename = filename.upper()
 
-		if debug:
+		if verbose:
 			print('writeFile() filename: %s (size:%d entry:%04x buffer:%04x)' % (filename, file_size, entry_address, buffer_address))
 		info = self.dir.findFile(mpxfilename)
-		if debug:
+		if verbose:
 			print('info:', info)
 		
 		if info:
-			if debug:
+			if verbose:
 				print('### file exists')
 			i, ent = info
 			#todo: check to see if new file will fit in space allocated for old file.
 		
 		else:
-			if debug:
+			if verbose:
 				print('### file does not exist finding space')
 			i, ent = self.dir.findSpace(file_size)
-			if debug:
+			if verbose:
 				print('write file for free space', i, ent, ent.getTuple())
 			ent.setFilename(mpxfilename)
 
@@ -472,8 +478,9 @@ class Mpx9DskImg(object):
 					next = 0
 				data = src.read(BYTES_PER_SECTOR)
 				count = (len(data) & 0xff)
-				if debug:
-					print('writeFile() II:', ii, 'count:', hex(count), 'data:', data[:45], '...')
+				# if verbose > 1:
+				# 	print(self.sectors[ii])
+				# 	print('writeFile() II:', ii, 'count:', hex(count), 'prev:', hex(prev), 'next:', hex(next), 'data:', data[:45], '...')
 				self.sectors[ii].fixCurr(ii)
 				self.sectors[ii].Back = prev
 				self.sectors[ii].Next = next
@@ -483,12 +490,23 @@ class Mpx9DskImg(object):
 				buffer_address += BYTES_PER_SECTOR
 				self.sectors[ii].fixCRC()
 
+				# if ii == 0x55:
+				# 	self.sectors[ii].fixCRC(True)
+
+
+				if verbose > 1:
+					print(('block:  %03x' % ii),self.sectors[ii])
+
 				prev = ii
 				next += 1
 
-		self.sectors[prev].Next = 0
-		self.sectors[prev].fixCRC()
-		self.dirty = True
+			self.sectors[prev].Next = 0
+			self.sectors[prev].fixCRC()
+
+			if verbose > 1:
+				print(('blockX: %03x' % prev), self.sectors[prev])
+
+			self.dirty = True
 
 # create    
 	
@@ -542,7 +560,7 @@ class Mpx9DskImg(object):
 #  LDB #DCBCRC-DCBCUR HEADER SIZE TO B
 #  BSR CRCRTN GET CRC BYTE
 #  PULS B,PC GET RESULT & EXIT
-def calcrc(sector):                
+def calcrc(sector, debug=False):                
 	ps = sector.getPackedString()
 	# SECTOR_FMT = ">HHHBHB256sH"
 
@@ -550,12 +568,14 @@ def calcrc(sector):
 	count = sector.Count
 	if count == 0:
 		count = 256
-	# print('calcrc() count:', count)
+	if debug:
+		print('calcrc() count:', count)
 	for i, c in enumerate(ps[10:10+count]):
-		A, P = crc1(i, c, A, P)
-	# print('calcrc() 0:10')
+		A, P = crc1(i, c, A, P, debug)
+	if debug:
+		print('calcrc() 0:10')
 	for i, c in enumerate(ps[0:10]):
-		A, P = crc1(i, c, A, P)
+		A, P = crc1(i, c, A, P, debug)
 	return A, P
 
 # CRCRTN EORA ,U+ CRC CALCULATION ROUTINE
@@ -566,8 +586,9 @@ def calcrc(sector):
 # CRCRT1 DECB DECREMENT LOOP COUNT
 #  BNE CRCRTN LOOP UNTIL 0
 #  RTS
-def crc1(i, c,  A, P):
-	# print('i:', i, 'c:', "%02x" % c)
+def crc1(i, c,  A, P, debug=False):
+	# if debug:
+	# 	print('i:', i, 'c:', "%02x" % c)
 	A = (A ^ c) & 0x00FF
 	A = A << 1
 	P = P << 1
@@ -575,7 +596,8 @@ def crc1(i, c,  A, P):
 		P = P | 1
 	if P & 0x0100:
 		A = A + 1
-	# print('crc1:',"%02x    %02x:%02x" % (c, P & 0xff, A & 0xff))
+	if debug:
+		print("crc1: i:%d c:%02x    P:%02x A:%02x" % (i, c, P & 0xff, A & 0xff))
 	return A & 0xff, P & 0xff
 
 ################################################################################
@@ -586,7 +608,8 @@ def ParseOptions():
 	opt.add_option("-v", "--verbose",
 						action="count",
 						dest="verbose",
-						help="Print more(and more) debug messages."
+						help="Print more(and more) debug messages.",
+						default=0,
 						)
 	opt.add_option("-r", "--read",
 						dest="read",
@@ -740,7 +763,7 @@ def main(args):
 	if Options.write:
 		for filename in Args[1:]:
 			# print('filename:', filename)
-			dskimg.writeFile(filename, entry_address, buffer_address, normalcase=Options.normalcase)
+			dskimg.writeFile(filename, entry_address, buffer_address, normalcase=Options.normalcase, verbose=Options.verbose)
 
 	if Options.files:
 		dskimg.displayDir(Options.verbose)

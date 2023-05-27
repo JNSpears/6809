@@ -341,7 +341,6 @@ BootEntry:
 
         ldx     #$C000          ; Rom location on LDF-400
         ldd     #$55AA          ; test pattern
-	leax	-1*K,X 		; JNS move down 1k (needed for extra debug code)
 ; try again at  lower address
 ScanMemoryLoop:
         leax    -4*K,X	; move down 4k
@@ -353,6 +352,8 @@ ScanMemoryLoop:
         bne     ScanMemoryLoop
 
         ; hit $0000 stop. ?????
+
+        leax    -1*K,X          ; JNS move down 1k (needed for extra debug code)
         
 ScanMemoryLoopX:
         ; OK found memory at ,X
