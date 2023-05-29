@@ -2,11 +2,12 @@
 
 MPX9DSK=../mpx9dsk/mpx9dsk.py
 TOOLS=../../tools/
+ASMINCLUDE=-I ../..
 ASM=lwasm
 #DEFINES=-DRAMTGT -DS19LOADER
 #DEFINES=-DMPX9
 DEFINES=-DNULL_DCB -DBS_BUG
-ASMFLAGS=-l$*.lst $(DEFINES)
+ASMFLAGS=-l$*.lst $(ASMINCLUDE) $(DEFINES)
 
 %.hex : %.asm
 	$(ASM) $(ASMFLAGS) -fhex -o$@ $<

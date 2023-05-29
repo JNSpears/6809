@@ -1,0 +1,125 @@
+	INCLUDE config.i
+
+	IFNDEF PSYMON__I
+
+**************************************************
+* ASCII CHARACTER CONSTANTS
+**************************************************
+CR      EQU $0D ; CARRIAGE RETURN
+LF      EQU $0A ; LINE FEED
+NUL     EQU $00 ; NULL
+BS      EQU $08 ; BACKSPACE
+CAN     EQU $18 ; CANCEL
+SP      EQU $20 ; SPACE
+FF      EQU $0C ; FORM Feed for Printer
+BRK     EQU $03 ; Crtl-c
+
+**************************************************
+* SWI3 PARAMETER DEFINITIONS
+**************************************************
+* PSYMON (tm) ROUTINE REFERENCES
+MONITR EQU 0 ;RETURN TO MONITOR MODE
+REQIO EQU 1 ;REQUEST I/O
+OUTCHR EQU 2 ;OUTPUT CHARACTER TO TERMINAL
+INCHR EQU 3 ;INPUT CHARACTER FROM TERMINAL
+PSTRNG EQU 4 ;PRINT STRING
+GETHEX EQU 5 ;GET HEX NUMBER
+DSPDBY EQU 6 ;DISPLAY DOUBLE BYTE
+DSPSBY EQU 7 ;DISPLAY SINGLE BYTE
+ spc 1
+
+; SYSTEM ADDRESS CONSTANTS
+
+ROM1	EQU $FC00 ; BASE ADDRESS OF PSYMON ROM
+ROM2	EQU $F800 ; BASE ADDRESS OF EXTENSION ROM
+RAM     EQU $F380 ; BASE ADDRESS OF SCRATCHPAD RAM;
+FREE	EQU $F000 ; ADDRESS OF FREE RAM
+
+; PSYMON RAM DEFINITIONS
+        ORG RAM
+; PSYMON INTERNAL STACK & REGISTER SPACE
+; OFFSETS TO RAM BASE IN PARENTHESES
+
+        RMB 55 ; STACK SPACE r1
+STACK	EQU * ; (55) TOP OF STACK
+
+REGC	RMB 1 ; (55) CONDITION CODE REGISTER
+
+REGA	RMB 1 ; (56) A REGISTER I-
+REGB	RMB 1 ; (57) B REGISTER
+REGD	RMB 1 ; (58) DIRECT PAGE REGISTER
+REGX	RMB 2 ; (59) X REGISTER
+REGY	RMB 2 ; (61) Y REGISTER M
+REGU	RMB 2 ; (63) U STACK POINTER
+REGP	RMB 2 ; (65) PROGRAM COUNTER
+
+; PSYMON BREAKPOINT TABLE
+BpTabl	RMB 15 ; (67) SPACE FOR 5 BREAKPOINTS
+BpTEnd	EQU * ; (82) END OF BREAKPOINT TABLE
+
+; PSYMON WORK AREAS
+MemPtr	RMB 2 ; (82) MEMORY POINTER FOR M COMMAN1
+UsrTbl	RMB 2 ; (84) ADDRESS OF USER COMMAND TABLE)
+Comand	RMB 1 ; (86) COMMAND CHARACTER STORAGE
+CkSum	RMB 1 ; (87) CHECKSUM FOR LOAD AND SAVE
+BegAdd	RMB 2 ; (88) BEGIN ADDRESS FOR SAVE
+EndAdd	RMB 2 ; (90) END ADDRESS FOR SAVE
+StkPtr	RMB 2 ; (92) CONTENTS OF STACK POINTER
+
+; THE PSYMON CONSOLE DCB
+ConDCB	RMB 10 ; (94) STANDARD DCB
+
+; PSYMON DCB POINTERS
+DCBCHN	RMB 2 ; (104) BASE OF DCB CHAIN
+CIDCB	RMB 2 ; (106) CONSOLE INPUT DCB
+CEDCB	RMB 2 ; (108) CONSOLE ECHO DCB
+CODCB	RMB 2 ; (110) CONSOLE OUTPUT DCB
+TPDCB	RMB 2 ; (112) CASSETTE TAPE DCB
+
+; PSYMON VECTORS
+SWI3v	RMB 2 ; (114) SOFTWARE INTERRUPT 3
+SWI2v	RMB 2 ; (116) SOFTWARE INTERRUPT 2
+FIRQv	RMB 2 ; (118) FAST INTERRUPT REQUEST
+IRQv	RMB 2 ; (120) INTERRUPT REQUEST
+SWIv	RMB 2 ; (122) SOFTWARE INTERRUPT
+NMIv	RMB 2 ; (124) NON-MASKABLE INTERRUPT
+FRERAM	RMB 2 ; (126) ADDRESS OF FREE RAM
+
+; DCB offsets
+DCBLnk	equ 0	; pointer to next dcb in chain
+DCBDId	equ 2	; ascii 2 char device Id
+DCBDvr	equ 4	; device driver addr
+DCBIOA	equ 6	; device i/o addr
+DCBErr	equ 8	; error status code
+DCBExt	equ 9	; number of extension bytes in dcb
+DCBApp	equ 10	; dcb extension for driver
+
+; DCB function Codes
+ReadFn	equ 1	; Read function code
+WritFn	equ 2	; Write function code
+StatFn	equ 4	; Status function code
+CntlFn	equ 8	; Device Control function code
+
+*****************************
+* Software Vectors
+*****************************
+RAMv		equ $ffde
+DspSByv		equ $ffe0
+DspDByv		equ $ffe2
+GetHexv		equ $ffe4
+PStringv	equ $ffe6
+InChrv		equ $ffe8
+OutChrv		equ $ffea
+ReqIOv		equ $ffec
+MonEntv		equ $ffee
+
+*****************************
+* PsyMon Software entry points
+*****************************
+OutSp		equ $FD75
+CRLF		equ $FDA2
+
+
+PSYMON__I SET 1
+	ENDC
+

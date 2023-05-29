@@ -38,7 +38,7 @@ testd: $(EPROMS) $(TGTDSK)
 
 clean:
 	$(MAKE) -C ../psymon clean
-	$(MAKE) -C boot-rom cleanz
+	$(MAKE) -C boot-rom clean
 	$(MAKE) -C boot-sector clean
 	$(MAKE) -C os clean
 	$(MAKE) -C utils clean
