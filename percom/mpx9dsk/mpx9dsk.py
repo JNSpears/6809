@@ -28,7 +28,7 @@ import sys, string, optparse, pprint
 import os
 # from importlib.metadata import files
 # from Xlib.X import Above
-import hexdump
+# import hexdump
 
 import struct
 
