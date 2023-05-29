@@ -37,6 +37,7 @@
 *   C(URRENT) <DRIVE#>                           *
 *                     SET CURRENT DRIVE #        *
  ENDC
+*                                                *
 * IF A COMMAND IS ENTERED WHICH IS NOT FOUND IN  *
 * THE ABOVE LIST, MPX/9 WILL SEARCH FOR A FILE   *
 * WITH THAT NAME ON DISK.  IF FOUND IT WILL BE   *
@@ -246,7 +247,7 @@ DKDCB RMB DCBSIZ RESERVE SPACE FOR DISK DCB
  SPC 1
 SYSVEC RMB 2 SYSTEM CALL VECTOR
  IFDEF NEWSYSDCB
-SYSDBCn RMB 2 ;NUMBER OF SYSDCB'S (DRIVES) IN SYSTEM
+SYSDCBn RMB 2 ;NUMBER OF SYSDCB'S (DRIVES) IN SYSTEM
 SYSDCBv RMB 2*MaxDrv ; POINTER TO DCB FOR EACH DRIVE
  ENDC
 
@@ -707,7 +708,7 @@ DSKCM1 LBSR LOCFL LOOK UP THE FILE
  LDX SYSDCB,PCR POINT X AT SYSTEM DCB
 
  IFDEF NEWSYSDCB
- leax   SYSDBCn-DKDCB,X ; now x -> count of dcb's
+ leax   SYSDCBn-DKDCB,X ; now x -> count of dcb's
  cmpa ,x
  bgt DSKCMERR 
  LDA FCBDRN,Y GET DRIVE #
@@ -916,7 +917,7 @@ RDDIR PSHS A,Y SAVE REGISTERS
  LDX SYSDCB,PCR POINT X AT SYSTEM DCB
 
  IFDEF NEWSYSDCB
- leax   SYSDBCn-DKDCB,X	; now x -> count of dcb's
+ leax   SYSDCBn-DKDCB,X	; now x -> count of dcb's
  cmpa 	1,x		; GREATER THAN MAX NUMBER OF DRIVES (REDUNDANT CHECK)
  bgt 	RDDIRERR ERROR	; IF SO THEN ERROR
  tfr    a,b	
@@ -951,7 +952,7 @@ WTDIR PSHS A,X,Y SAVE REGISTERS
  LDX SYSDCB,PCR POINT X AT DCB
 
  IFDEF NEWSYSDCB
- leax   SYSDBCn-DKDCB,X	; now x -> count of dcb's
+ leax   SYSDCBn-DKDCB,X	; now x -> count of dcb's
  cmpa 	1,x		; GREATER THAN MAX NUMBER OF DRIVES (REDUNDANT CHECK)
  bgt 	WTDIRERR ERROR	; IF SO THEN ERROR
  tfr    a,b	
@@ -1322,7 +1323,7 @@ RDBL PSHS A,X,Y SAVE REGISTERS
  LDA FCBDRV,Y PLUG DRIVE #
 
  IFDEF NEWSYSDCB
- leax   SYSDBCn-DKDCB,X	; now x -> count of dcb's
+ leax   SYSDCBn-DKDCB,X	; now x -> count of dcb's
  cmpa 	1,x		; GREATER THAN MAX NUMBER OF DRIVES (REDUNDANT CHECK)
  bgt 	RDBLERR 	; IF SO THEN ERROR
  tfr    a,b	
@@ -1391,7 +1392,7 @@ WTBL PSHS A,X,Y SAVE REGISTERS
  LDA FCBDRV,Y PLUG DRIVE #
 
  IFDEF NEWSYSDCB
- leax   SYSDBCn-DKDCB,X	; now x -> count of dcb's
+ leax   SYSDCBn-DKDCB,X	; now x -> count of dcb's
  cmpa 	1,x		; GREATER THAN MAX NUMBER OF DRIVES (REDUNDANT CHECK)
  bgt 	WRBLERR 	; IF SO THEN ERROR
  tfr    a,b	
@@ -1903,7 +1904,7 @@ SAVE5 LBSR LOCSP FIND SPACE FOR NEW FILE
  IFDEF NEWSYSDCB
  pshs   d
  LDA 	FCBDRN,Y 	; GET DRIVE #
- leax   SYSDBCn-DKDCB,X	; now x -> count of dcb's
+ leax   SYSDCBn-DKDCB,X	; now x -> count of dcb's
  cmpa 	1,x		; GREATER THAN MAX NUMBER OF DRIVES (REDUNDANT CHECK)
  bgt 	SAVEERR 	; IF SO THEN ERROR
  tfr    a,b	
@@ -1958,7 +1959,7 @@ LOAD2 STX 1,S SAVE LINE POINTER
  IFDEF NEWSYSDCB
  pshs   d
  LDA 	FCBDRN,Y 	; GET DRIVE #
- leax   SYSDBCn-DKDCB,X	; now x -> count of dcb's
+ leax   SYSDCBn-DKDCB,X	; now x -> count of dcb's
  cmpa 	1,x		; GREATER THAN MAX NUMBER OF DRIVES (REDUNDANT CHECK)
  bgt 	LOADERR 	; IF SO THEN ERROR
  tfr    a,b	
@@ -2134,7 +2135,7 @@ INIT1 LDB ,X+ GET NEXT CHARACTER
 
  IFDEF NEWSYSDCB
  LDA 	,S 		; GET DRIVE #
- leax   SYSDBCn-DKDCB,X	; now x -> count of dcb's
+ leax   SYSDCBn-DKDCB,X	; now x -> count of dcb's
  cmpa 	1,x		; GREATER THAN MAX NUMBER OF DRIVES (REDUNDANT CHECK)
  bgt 	INITERR 	; IF SO THEN ERROR
  tfr    a,b	
