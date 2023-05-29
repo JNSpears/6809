@@ -448,8 +448,8 @@ sndnum  ora     #'0             ; make number ascii
         
 output  pshs    b
         inc     >reccnt,pcr ; JNS increment char count for fixed record.
-        tst	>polflg,pcr	; JNS added, check to see if we are going to poll for break/cancel
-        beq	nopoll
+        tst	    >polflg,pcr	; JNS added, check to see if we are going to poll for break/cancel
+        beq	    nopoll
         pshs    a	
         ldx     [>_cidcb,pcr]   ; get input dcb pointer
         ldb     #StatFn     	; check port status
@@ -497,7 +497,7 @@ lzflg   rmb     1
 conflg  rmb     1
 ffflg   rmb     1
 numflg  rmb     1
-polflg 	rmb	1   ; JNS
+polflg 	rmb	    1   ; JNS
 recflg  rmb     1   ; JNS
 reccnt  rmb     1   ; JNS
 linnum  rmb     2
