@@ -156,8 +156,9 @@ DELFIL EQU 32 DELETE A DISK FILE
 LOCDCB EQU 33 LOCATE DCB FOR DEVICE
 ADDDCB EQU 34 ADD DCB TO DEVICE LIST
 DELDCB EQU 35 DELETE DCB FROM DEVICE LIST
+GETBAS EQU 36 Get Mpx9 base address.
  SPC 1
-SYSLIM EQU 35 LAST VALID CALL
+SYSLIM EQU 36 LAST VALID CALL
  SPC 1
 **************************************************
 * ASCII CHARACTER CONSTANTS                      *
@@ -473,6 +474,7 @@ SYSOFF FDB MPXRET-SYSOFF 8 - RETURN TO MPX/9
  FDB LCDCB-SYSOFF 33 - LOCATE DCB FOR DEVICE
  FDB ADDCB-SYSOFF 34 - ADD DCB TO DEVICE LIST
  FDB DLDCB-SYSOFF 35 - DELETE DCB FROM DEVICE LIST
+ FDB GTBAS-SYSOFF 36 - Get Mpx9 Base
  SPC 1
 **************************************************
 * SYSTEM CALL 8 (MPX) - RETURN TO MPX/9          *
@@ -2286,6 +2288,20 @@ CURRENT:
  RTS
  SPC 1
  ENDC
+
+**************************************************
+* SYSTEM CALL 36 (GETBAS) - GET MPX9 BASE ADDR   *
+*                                                *
+* ENTRY REQUIREMENTS:  none                      *
+*                                                *
+* EXIT CONDITIONS:  X --> MPXBAS                 *
+*                   OTHERS UNCHANGED             *
+**************************************************
+GTBAS:
+ LEAX MPXRAM,PCR
+ RTS
+ SPC 1
+
 
 * END OF MPX/9 OPERATING SYSTEM
 MPXEND EQU *

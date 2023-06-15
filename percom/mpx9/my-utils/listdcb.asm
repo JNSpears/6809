@@ -66,48 +66,102 @@ xxxx:
     tst     ,X
     bne     xxxx
 
-	LDD		#"DK
-	SWI3
-	FCB		LOCDCB				; Locate DCB
-	beq		Nosysdcbs
-		; X -> mpx9 DKDCB @ 20 in mpx9 ram
+	; LDD		#"DK
+	; SWI3
+	; FCB		LOCDCB				; Locate DCB
+	; beq		Nosysdcbs
+	; 	; X -> mpx9 DKDCB @ 20 in mpx9 ram
 
-		tfr		X,D
-		jsr		[DspDByv]
+	; 	tfr		X,D
+	; 	jsr		[DspDByv]
 
-		ldd     DCBDId,X
-		jsr	    [OutChrv]
-		tfr     b,a
-		jsr	    [OutChrv]
+	; 	ldd     DCBDId,X
+	; 	jsr	    [OutChrv]
+	; 	tfr     b,a
+	; 	jsr	    [OutChrv]
 
-		****
-		TFR		S,X
-        LDD		#$100		; dump specified # of bytes of data
-        JSR     [DumpMem2v]	; dump mpx9 data.
-    	jsr		CRLF
-		****
-		LEAY	11,S		; Y -> back into stack
-		LDY		,Y			; get return address from first call in command processor loop
-							; (os/mpx9.asm):00468          LBSR PROCM PROCESS CURRENT COMMAND
-		LEAY	-$611,Y		; move back to get base address of mpx9
-        LDD		#$400		; dump specified # of bytes of data
-        TFR		Y,X
-        JSR     [DumpMem2v]	; dump mpx9 data.
-    	jsr		CRLF
-		****
+	; 	****
+	; 	TFR		S,X
+    ;     LDD		#$100		; dump specified # of bytes of data
+    ;     JSR     [DumpMem2v]	; dump mpx9 data.
+    ; 	jsr		CRLF
+	; 	****
+	; 	LEAY	11,S		; Y -> back into stack
+	; 	LDY		,Y			; get return address from first call in command processor loop
+	; 						; (os/mpx9.asm):00468          LBSR PROCM PROCESS CURRENT COMMAND
+	; 	LEAY	-$611,Y		; move back to get base address of mpx9
+    ;     LDD		#$400		; dump specified # of bytes of data
+    ;     TFR		Y,X
+    ;     JSR     [DumpMem2v]	; dump mpx9 data.
+    ; 	jsr		CRLF
+	; 	****
+
+
+**************************************************
+
+; 0290                  (         mpx9.asm):00273         SYSDCB RMB 2 POINTER TO SYSTEM DISK DCB
+; 0292                  (         mpx9.asm):00274         MDSBAS RMB 2 MINIDOS/9 RAM BASE ADDRESS
+; 0294                  (         mpx9.asm):00275         SCLVEC RMB 2 EXTENDED SWI3 CALL VECTOR
+; 0296                  (         mpx9.asm):00276         DEVLST RMB 2 SYSTEM DEVICE LIST POINTER
+; 0298                  (         mpx9.asm):00277         MPXLOC RMB 2 MPX/9 DISK LOCATION
+;                       (         mpx9.asm):00278          SPC 1
+;                       (         mpx9.asm):00279         * CONFIGURATION PARAMETERS
+; 029A                  (         mpx9.asm):00280         SYSBS RMB 1 SYSTEM BACKSPACE CODE
+; 029B                  (         mpx9.asm):00281         SYSBSE RMB 4 SYSTEM BACKSPACE ECHO STRING
+; 029F                  (         mpx9.asm):00282         SYSCAN RMB 1 SYSTEM CANCEL CODE
+;                       (         mpx9.asm):00283         
+;                       (         mpx9.asm):00284          IFDEF NEWSYSDCB
+; 02A0                  (         mpx9.asm):00285         SYSDCBn RMB 2 ;NUMBER OF SYSDCB'S (DRIVES) IN SYSTEM
+; 02A0                  (         mpx9.asm):00286         SYSDCBv RMB 2*MaxDrv ; POINTER TO DCB FOR EACH DRIVE
+;                       (         mpx9.asm):00287          ENDC
+
+
+
+	    leax    >SYSDSKPREFIX,pcr
+		jsr	    [PStringv]  ; display entry name
+
+		SWI3
+		FCB		GETBAS
+
 
         IFDEF NEWSYSDCB
+			tfr		X,D
+			jsr		[DspDByv]
+			leax 	$01a0,X 		; Y --> SYSDCBn
+
+				tfr		x,D
+				jsr		[DspDByv]
+
+			ldb 	,x+		d=dcb count ( b lsb ignore a )
+diskloop:
+			ldy     ,x++
+			lda     DCBDId,y
+	        jsr	    [OutChrv]
+		    lda 	DCBDId+1,y
+		    jsr	    [OutChrv]
+
+	   		jsr     OutSp
+	   		decb
+	   		bne 	diskloop
 		ELSE
+			leay 	$0190,X 		; Y --> SYSDCB
+				; tfr		Y,D
+				; jsr		[DspDByv]
+
+			ldy 	,Y
+
+			ldd     DCBDId,y
 
 
+	    
+		    jsr	    [OutChrv]
+		    tfr     b,a
+		    jsr	    [OutChrv]
+
+	   		jsr     OutSp
         ENDC
 
-
         jsr		CRLF		; display CRLF
-
-
-
-    	jsr		CRLF
 
 Nosysdcbs:
 	LEAX	DmyDcb,PCR			; X -> Dummy DCB
@@ -200,20 +254,23 @@ prefix:
 DmyID:	FCC	/ZZ/	
         
 sysdcbprefix:
-	fcc	/CIDCB/
+	fcc	/CIdcb/
 	fcb	'=+$80
     fdb CIDCB   
-	fcc	/CEDCB/
+	fcc	/CEdcb/
 	fcb	'=+$80
     fdb CEDCB   
-	fcc	/CODCB/
+	fcc	/COdcb/
 	fcb	'=+$80
     fdb CODCB   
-	fcc	/TPDCB/
+	fcc	/TPdcb/
 	fcb	'=+$80
     fdb TPDCB   
     
     FCB 0
+SYSDSKPREFIX:
+	fcc	/DSK/
+	fcb	'=+$80
      
 endcod  equ *-1
 
