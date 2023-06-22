@@ -316,6 +316,9 @@ ExtTbl:
     FDB     Help
     endc
 
+    FCB     'Q
+    FDB     QUIT
+
     FCB     'Z
     FDB     $C000
 
@@ -470,6 +473,9 @@ XNoAddr:
     RTS
 
 *****************************************
+QUIT:
+    FCB     $02         ; Invalid instruction causes trap to USIM debuger.
+    RTS
 
 ;;
 ;; Disassembler (Sortof) lifted from PETER A. STARK's HumBug09

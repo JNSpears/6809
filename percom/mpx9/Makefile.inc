@@ -6,7 +6,7 @@ ASMINCLUDE=-I ../..
 ASM=lwasm
 #DEFINES=-DRAMTGT -DS19LOADER
 #DEFINES=-DMPX9
-DEFINES=-DNULL_DCB -DBS_BUG
+DEFINES=-DNULL_DCB -DBS_BUG -DCURDRIVE -DNEWSYSDCB 
 ASMFLAGS=-l$*.lst $(ASMINCLUDE) $(DEFINES)
 
 %.hex : %.asm
@@ -26,3 +26,6 @@ ASMFLAGS=-l$*.lst $(ASMINCLUDE) $(DEFINES)
 
 .PHONY: clean
 CLEAN=$(RM) -f *.s19 *.ihex *.ihex *.lst *.log *.bin *.cm
+
+
+# AEA1
