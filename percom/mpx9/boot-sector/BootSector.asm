@@ -354,7 +354,7 @@ ScanMemoryLoop:
         ; hit $0000 stop. ?????
 
         leax    -1*K,X          ; JNS move down 1k (needed for extra debug code)
-        
+
 ScanMemoryLoopX:
         ; OK found memory at ,X
         ; TODO: maybe should scan from 0,x to 4k,x to make sure it is all ram.
@@ -443,3 +443,9 @@ MEMLDX  TSTB            ; CHECK ERROR FLAG
 
 
 BOOTSIZE equ *-BootEntry
+
+        if BOOTSIZE&~$7f
+                ERROR  Boot Sector image must fit in 7F bytes
+        endc
+
+        end
