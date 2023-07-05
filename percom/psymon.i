@@ -13,7 +13,9 @@ CAN     EQU $18 ; CANCEL
 SP      EQU $20 ; SPACE
 FF      EQU $0C ; FORM Feed for Printer
 BRK     EQU $03 ; Crtl-c
-
+ESC	EQU $1B ; ESCAPE
+DEL 	EQU $7F ; Delete
+TILDE	EQU $7E ; ~TILDE~
 **************************************************
 * SWI3 PARAMETER DEFINITIONS
 **************************************************
