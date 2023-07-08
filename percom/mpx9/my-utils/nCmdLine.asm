@@ -58,6 +58,43 @@ MainStart:
     tst     >verbose,pcr
     ; beq     Nosysdcbs
 
+; START INIT
+
+; MaxCmdLineLen	equ	64
+; MaxHistBuff	equ 256
+
+; VAR	STRUCT
+; max 		rmb 1
+; left		rmb 1
+; right		rmb	1
+; HBegin		rmw 1
+; HEnd		rmw 1
+; HHead		rmw 1
+; HCurr		rmw 1
+
+; CmdLineBuff	rmb	MaxCmdLineLen
+; HistBuff 	rmb MaxHistBuff
+; 	ENDSTRUCT
+ 	LEAU    data,pcr
+
+	leax 	<VAR.HistBuff,U
+	stx  	<<VAR.HBegin,U
+
+	tfr 	X,D
+	addd  	#MaxHistBuff
+	std 	<<VAR.HEnd,U
+
+	stx  	<<VAR.HHead,U
+
+	stx  	<<VAR.HCurr,U
+
+ClrBuffer2:
+ 	CLR 	,x+
+ 	cmpx 	<<VAR.HEnd,U
+ 	BNE 	ClrBuffer2
+
+ 	; LEAU    data,pcr
+; END INIT
 
 LOOP:
 	LEAX 	>prompt,pcr			; DISPLAY PROMPT
@@ -65,97 +102,153 @@ LOOP:
 
  	; Initialize buffer and other variables.
  	LDB 	#MaxCmdLineLen 		; SET SIZE IN B	
- 	LEAU    data,pcr
- 	LEAX 	<<VAR.CmdLineBuffer,U 	; POINT X AT LINE BUFFER
-ClrBuffer:
+ 	LEAX 	<<VAR.CmdLineBuff-1,U ; POINT X AT LINE BUFFER
+ClrCmdBuffer:
  	CLR 	B,X
  	DECB 
- 	BNE 	ClrBuffer
+ 	BNE 	ClrCmdBuffer
 
  	; setup and get a line.
  	LDB 	#MaxCmdLineLen 		; SET SIZE IN B	
-	BSR  	getline				; x=buffer, b=bufferlen --> a=firstchar, b=bufferlen, x=buffer
+ 	LEAX 	<<VAR.CmdLineBuff,U ; POINT X AT LINE BUFFER
+	LBSR  	getline				; x=buffer, b=bufferlen --> a=firstchar, b=bufferlen, x=buffer
 
+ 	LEAX 	<<VAR.CmdLineBuff,U ; POINT X AT LINE BUFFER
+    ldy 	<<VAR.HHead,U  		; Points to next line to overwrite
+CopyHist2Buff:
+	lda 	,X+
+	beq  	CopyHist2Buff1
+	cmpa 	#CR
+	beq  	CopyHist2Buff1
+	sta   	,Y+
+	cmpy 	<<VAR.HEnd,U 		; need to Wrap?
+	BLT 	CopyHist2Buff		; NO go...
+	ldy 	<<VAR.HBegin,U  	; 
+	bra  	CopyHist2Buff
+
+CopyHist2Buff1:
+	clr 	,Y+ 				; Term line in history buffer with null
+	sty 	<<VAR.HHead,U  		; save for next line.
+	; probably update curr now ??????
+
+CopyHist2Buff2:
+	lda 	,Y
+	beq 	CopyHist2Buff3
+	CLR 	,Y+ 				; Term line in history buffer with null
+
+	cmpy 	<<VAR.HEnd,U 		; need to Wrap?
+	BNE 	CopyHist2Buff2		; NO go...
+	ldy 	<<VAR.HBegin,U  	; 
+
+	bra  	CopyHist2Buff2
+
+CopyHist2Buff3
 
 	; dump buffer just for debug
-	CLRA
- 	LDB 	#MaxCmdLineLen 		; SET SIZE IN B	
+	LEAX    data,pcr
+	ldd 	#sizeof{VAR} 		; SET SIZE IN B	
 	JSR     [DumpMem2v]			; dump buffer DCB data.
-
-	CLRA
- 	LDB 	#3 		; SET SIZE IN B	
- 	LEAX 	<<VAR.max,U
-	JSR     [DumpMem2v]			; dump buffer DCB data.
-
-	; USIM
 
 	; check to see if we are done for now.
 	lda 	<<VAR.left,U
 	adda 	<<VAR.right,U
-	bne   	LOOP
-
-
 
 ; exec command.
 ; bra loop
 
+	bne   	LOOP
 	clrb 		; no error
 	rts			; Return to OS
 
-; *****************************************************
-InChrNEcho:
-  PSHS  X,B		; SAVE REGISTERS
-  LDX   CIDCB	; POINT TO INPUT DCB
-  LDB   #ReadFn	; SET UP FOR READ
-  MPX9  REQIO	; READ A CHARACTER
-  ANDA  #$7F	; REMOVE PARITY
-  PULS  B,X,PC 	; RESTORE & RETURN
+**************************************************
+* GetCharNoEcho - GET INPUT CHAR WITH NO ECHO
+*
+* Entry: None
+* 
+* Exit: A - char with Parity removed
+*		 ALL other regs perserved, except C
+* 
+**************************************************
+GetCharNoEcho:
+ pshs X,B		; SAVE REGISTERS
+ LDX  CIDCB		; POINT TO INPUT DCB
+ LDB  #ReadFn	; SET UP FOR READ
+ MPX9 REQIO		; READ A CHARACTER
+ ANDA #$7F		; REMOVE PARITY
+ PULS B,X,PC 	; RESTORE & RETURN
 
-; *****************************************************
+**************************************************
+* GetConStat - GET CONSOLE STATUS
+*
+* Entry: None
+* 
+* Exit: A - ACIA STATUS
+*		 ALL other regs perserved, except C
+* 
+**************************************************
 GetConStat:
-  PSHS  X,B		; SAVE REGISTERS
-  LDX   CIDCB	; POINT TO INPUT DCB
-  LDB   #StatFn	; SET UP FOR GET STATUS
-  MPX9  REQIO	; READ A CHARACTER
-  PULS  B,X,PC 	; RESTORE & RETURN
+ pshs X,B		; SAVE REGISTERS
+ LDX  CIDCB		; POINT TO INPUT DCB
+ LDB  #StatFn	; SET UP FOR GET STATUS
+ MPX9 REQIO		; GET STATUS
+ PULS B,X,PC 	; RESTORE & RETURN
 
-; *****************************************************
-OutEscBrkNChr: ; IN A=CHAR, B=NUMBER (0 SUPPRESS)
-  pshs B,A
-  ; usim
-  LDA #ESC
-  MPX9 OUTCHR
-  LDA #'['
-  MPX9 OUTCHR
-  tstb
-  BEQ OutEscBrkNChr1
+**************************************************
+* OutEscBrkNChr - Output Vt100 escape sequ.
+*
+* Entry: A - Final char in Esc sequence
+* 		 B - count (if 0 then no count in Esc sequence)
+* 			only works for 0-99
+* 
+* Exit: A - ACIA STATUS
+*		 ALL other regs perserved, except C
+* 
+**************************************************
+OutEscBrkNChr:
+ pshs B,A 		; save registers
+ LDA #ESC
+ MPX9 OUTCHR 	; send Escape to console
+ LDA #'['
+ MPX9 OUTCHR 	; send [ to console
+ tstb 			; check to see if there is a count to send 
+ BEQ OutEscBrkNChr1	; if not go
 ; TWO DIGIT DECIMAL CONVERSION, NO LEADING SPACE OR ZERO
-  tfr B,A
-  ADDA #0
-  daa
-  cmpa #9
-  ble OutEscBrkNChr2
-  TFR A,B
-  ASRA
-  ASRA
-  ASRA
-  ASRA
-  BSR OUTDIGIT
-  TFR b,A
+ tfr B,A
+ ADDA #0
+ daa 			; convert to BCD
+ cmpa #9  		; 2 digits?
+ ble OutEscBrkNChr2	; if not go
+ TFR A,B  		; save BCD count
+ asra 			; shift MSD to LSD
+ ASRA
+ ASRA
+ ASRA
+ BSR OUTDIGIT	; convert MSD to ascii and send to console
+ TFR b,A  		; restore BCD count
 OutEscBrkNChr2:
-  BSR OUTDIGIT
+ BSR OUTDIGIT	; convert LSD to ascii and send to console
 OutEscBrkNChr1:
-  LDA ,S
-  MPX9 OUTCHR
-  PULS A,B,PC
+ LDA ,S  		; get Final char in Esc sequence
+ MPX9 OUTCHR 	; send to console
+ PULS A,B,PC  	; RESTORE & RETURN
 
+; Mask digit, convert to ascii and send to console
 OUTDIGIT:
   ANDA #$F
   ADDA #'0'
   MPX9 OUTCHR
   rts 
 
-; *****************************************************
+**************************************************
+* OUTNCHR - Output a character N times
+*
+* Entry: A - Char to output
+* 		 B - count 
+* 
+* Exit: B - zero
+*		 ALL other regs perserved, except C
+* 
+**************************************************
 OUTNCHR: ; IN: A-CHAR B-COUNT OUT: A,B MODIFIED.
  MPX9 OUTCHR
  decb 
@@ -163,82 +256,89 @@ OUTNCHR: ; IN: A-CHAR B-COUNT OUT: A,B MODIFIED.
  RTS
 
 **************************************************
-* SYSTEM CALL 9 (GETLIN) - GET INPUT LINE        *
-*                                                *
-* ENTRY REQUIREMENTS:  X POINTS AT LINE BUFFER   *
-*                      B CONTAINS BUFFER LENGTH  *
-*                                                *
-* EXIT CONDITIONS:  A CONTAINS FIRST CHARACTER,  *
-*                     NUL => LINE CANCELED       *
-*                     Z FLAG IN CC SET PER A     *
-*                   OTHERS UNCHANGED             *
+* SYSTEM CALL 9 (GETLIN) - GET INPUT LINE 
+*                                                
+* ENTRY REQUIREMENTS:  X POINTS AT LINE BUFFER   
+*                      B CONTAINS BUFFER LENGTH  
+*                      U POINTS AT WORKING STORAGE   
+*                                                
+* EXIT CONDITIONS:  A CONTAINS FIRST CHARACTER,  
+; *                     NUL => LINE CANCELED       ?
+; *                     Z FLAG IN CC SET PER A     ?
+*                   OTHERS UNCHANGED             
 **************************************************
 getline:
 GETLN:
- stb <<VAR.max,U
- PSHS B,X,Y SAVE REGISTERS
- clr <<VAR.left,U  RESET CHARACTER COUNT
- clr <<VAR.right,U
+	stb <<VAR.max,U
+	PSHS B,X,Y SAVE REGISTERS
+	clr <<VAR.left,U  RESET CHARACTER COUNT
+	clr <<VAR.right,U
 
 GetCharLoop:
- BSR InChrNEcho GET NEXT CHARACTER
+	BSR GetCharNoEcho GET NEXT CHARACTER
 
- CMPA #CR END OF INPUT?
- BEQ Done GO IF YES
- 
- CMPA #ESC START OF ESCAPE SEQ?
- LBEQ CheckEscapeSeq GO IF YES
- 
- CMPA #SP CONTROL CODE?
- BLO CheckOneChar 
+	CMPA #CR END OF INPUT?
+	BEQ Done GO IF YES
 
- CMPA #TILDE Invalide Ascii
- BHI CheckOneChar 
+	CMPA #ESC START OF ESCAPE SEQ?
+	LBEQ CheckEscapeSeq GO IF YES
 
- ; save this character in buffer, output char, update left count
- ldb <<VAR.left,U 
- STA B,X SAVE THIS CHARACTER
- MPX9 OUTCHR
- INC <<VAR.left,U UPDATE COUNT
+	CMPA #SP CONTROL CODE?
+	BLO CheckOneChar 
 
- ; if characters to the right
- ldb <<VAR.right,U
- beq  GetCharLoop2
+	CMPA #TILDE Invalide Ascii
+	BHI CheckOneChar 
 
- bsr OutRightChars
+	; save this character in buffer, output char, update left count
+	ldb <<VAR.left,U 
+	STA B,X SAVE THIS CHARACTER
+	MPX9 OUTCHR
+	INC <<VAR.left,U UPDATE COUNT
 
- ; and back space to return cursor
- lda #BS
- ldb <<VAR.right,U
- ; OUTNCHR: IN: A-CHAR B-COUNT OUT: A,B MODIFIED.
- bsr OUTNCHR
+	; if characters to the right
+	ldb <<VAR.right,U
+	beq  GetCharLoop2
+
+	bsr OutRightChars
+
+	; and back space to return cursor
+	lda #BS
+	ldb <<VAR.right,U
+	; OUTNCHR: IN: A-CHAR B-COUNT OUT: A,B MODIFIED.
+	bsr OUTNCHR
 
 GetCharLoop2:
 
- CMPB ,S PAST LIMIT?
- BLO GetCharLoop LOOP IF NOT
+	CMPB ,S PAST LIMIT?
+	BLO GetCharLoop LOOP IF NOT
 
- LDA #BS OUTPUT A BACKSPACE
- MPX9 OUTCHR
- BRA GetCharLoop
+	LDA #BS OUTPUT A BACKSPACE
+	MPX9 OUTCHR
+	BRA GetCharLoop
 
 Done:
-
- PSHS A,X
- lbsr  	NormBuffer
- PULS X,A
- ldb <<VAR.left,U 
- STA B,X MARK END OF LINE W/ CR
- LDA [1,S] GET FIRST CHARACTER OF LINE
+	; PSHS A,X
+	; lbsr  	NormBuffer
+	; PULS X,A
+	LDB <<VAR.left,U 
+	STA B,X MARK END OF LINE W/ CR
+	LDA [1,S] GET FIRST CHARACTER OF LINE
 
 GETLNX 
- TSTA SET Z FLAG PER A
- PULS B,X,Y,PC RETURN
+	TSTA SET Z FLAG PER A
+	PULS B,X,Y,PC RETURN
 
-**********************************
- ; output right chars
+**************************************************
+* OutRightChars - Output chars to the right of the cursor
+*                                                
+* ENTRY REQUIREMENTS:  X POINTS AT LINE BUFFER   
+*                      U POINTS AT WORKING STORAGE   
+*                                                
+* EXIT CONDITIONS:     A, B MODIFIED
+* 					   OTHERS UNCHANGED             
+**************************************************
 OutRightChars:
- clrb 
+ clrb
 OutRightChars1:
  tfr b,a
  adda <<VAR.max,U
@@ -279,38 +379,33 @@ GetCharLoop_2:
 
 TBL1:
  FCB 'Z-'@
- FDB ESCcmd-*
+ FDB Cmd_ESC-*
 
  FCB ESC
- FDB ESCcmd-*
+ FDB Cmd_ESC-*
 
  FCB BS
- FDB BScmd-*
+ FDB Cmd_BS-*
 
  FCB $7F
- FDB DELcmd-*
+ FDB Cmd_DEL-*
 
  FCB 0 END OF TABLE MARK
 
 **************************************************
-ESCcmd0: 
-ESCcmd:
+Cmd_ESC0: 
+Cmd_ESC:
  ldb   	<<VAR.left,U
-
  BSR 	MoveCurLeft
-
  BSR 	EraseEOL
-
  Clr  	<<VAR.left,U
  Clr  	<<VAR.right,U
-
  BRA	GetCharLoop_2
 
-
 **************************************************
-BScmd:
+Cmd_BS:
  tst  	<<VAR.left,U 
- beq 	BScmdX
+ beq 	Cmd_BSX
 
  dec   	<<VAR.left,U 
  lda 	#BS
@@ -327,21 +422,21 @@ BScmd:
  lda 	#BS
  Lbsr 	OUTNCHR		; output N BS characters, return cursor ot original location
 
-BScmdX:
+Cmd_BSX:
  BRA	GetCharLoop_2
 
 
 **************************************************
-DELcmd:
+Cmd_DEL:
  ldb <<VAR.right,U
- beq DELcmdX
+ beq Cmd_DELX
 
  DEC <<VAR.right,U
- beq DELcmdX
+ beq Cmd_DELX
 
  ; output right chars
  clrb 
-DELcmd1:
+Cmd_DEL1:
  tfr b,a
  adda <<VAR.max,U
  suba <<VAR.right,U
@@ -349,9 +444,9 @@ DELcmd1:
  MPX9 OUTCHR
  incb
  cmpb <<VAR.right,U
- blt DELcmd1
+ blt Cmd_DEL1
 
-DELcmdX:
+Cmd_DELX:
  BSR 	EraseEOL
 
  ldb 	<<VAR.right,U
@@ -387,7 +482,7 @@ CheckEscapeSeq1:
  cmpx #$200
  BLE CheckEscapeSeq2
  puls X
- bra ESCcmd0
+ bra Cmd_ESC0
 CheckEscapeSeq2:
  lbsr GetConStat
  LSRa  		; BIT TO C
@@ -395,11 +490,22 @@ CheckEscapeSeq2:
  ; MPX9 DSPDBY
  PULS X
 
- LBSR InChrNEcho GET NEXT CHARACTER SHOULD BE '['
+ LBSR GetCharNoEcho GET NEXT CHARACTER SHOULD BE '['
  cmpa #'[
  bne CheckEscapeSeqX
  tfr A,B
- LBSR InChrNEcho GET NEXT CHARACTER
+CheckEscapeSeq5
+ LBSR GetCharNoEcho GET NEXT CHARACTER
+
+ cmpa #'0'
+ blt CheckEscapeSeq4
+ cmpa #';'
+ bgt CheckEscapeSeq4
+ tfr A,B
+ bra CheckEscapeSeq5
+
+
+CheckEscapeSeq4
  exg a,b
  ; d = 2 CHAR SEQUENCE
 
@@ -427,34 +533,41 @@ CheckEscapeSeqX:
 TBL2:
  ; [D 5B44 CURSOR LEFT
  FCC /[D/
- FDB CLEFTcmd-*
+ FDB Cmd_CurLeft-*
 
  ; [C 5B43 CURSOR RIGHT
  FCC /[C/
- FDB CRIGHTcmd-*
+ FDB Cmd_CurRight-*
 
  ; [H 5B48 CURSOR HOME
  FCC /[H/
- FDB CHOMEcmd-*
+ FDB Cmd_CurHome-*
 
  ; [F 5B46 CURSOR END
  FCC /[F/
- FDB CENDcmd-*
+ FDB Cmd_CurEnd-*
+
+ ; [1;5C CTRL CURSOR RIGHT
+ FCC /5C/
+ FDB Cmd_CtrlCurRight-*
+
+ ; [1;5D CTRL CURSOR LEFT
+ FCC /5D/
+ FDB Cmd_CtrlCurLeft-*
 
  FCB 0 END OF TABLE MARK
 
 ; *****************************************************
-CLEFTcmd: 
+Cmd_CurLeft:
+ bsr 	Do_CurLeft
+ LBRA	GetCharLoop
+
+Do_CurLeft:
  LDB   	<<VAR.left,U
- beq 	CLEFTcmdX
+ beq 	Cmd_CurLeftX
 
  CLRB 
- BSR	MoveCurLeft
-
- ; PSHS X
- ; LEAX ABC,PCR
- ; MPX9 PSTRNG
- ; PULS X
+ LBSR	MoveCurLeft
 
  DEC 	<<VAR.left,U
  INC 	<<VAR.right,U
@@ -465,17 +578,19 @@ CLEFTcmd:
  SUBB   <<VAR.right,U
  STA 	B,X
 
-CLEFTcmdX:
- LBRA	GetCharLoop
-
-; ABC: FCS /<<</
+Cmd_CurLeftX:
+ rts
 
 ; *****************************************************
-CRIGHTcmd:
+Cmd_CurRight:
+ BSR 	Do_CurRight
+ LBRA	GetCharLoop
+
+Do_CurRight:
  ldb   	<<VAR.right,U
- beq 	CRIGHTcmdX
+ beq 	Do_CurRightX
  clrb 
- LBSR	MoveCurLeft
+ LBSR	MoveCurRight
 
  ldb 	<<VAR.max,U
  subb   <<VAR.right,U
@@ -486,16 +601,16 @@ CRIGHTcmd:
  sta 	b,x
  inc  	<<VAR.left,U
 
-CRIGHTcmdX:
- LBRA	GetCharLoop
+Do_CurRightX:
+ RTS
 
 XCURRIGHT1: FCB ESC
  FCS /[C/
 
 ; *****************************************************
-CHOMEcmd:
+Cmd_CurHome:
  ldb   	<<VAR.left,U
- beq 	CHOMEcmdX
+ beq 	Cmd_CurHomeX
 
  ldb    <<VAR.left,U
  lda 	#BS
@@ -519,13 +634,13 @@ CHOMEcmd:
 
  Clr  	<<VAR.left,U
 
-CHOMEcmdX:
+Cmd_CurHomeX:
  LBRA	GetCharLoop
 
 ; *****************************************************
-CENDcmd:
+Cmd_CurEnd:
  ldb   	<<VAR.right,U
- beq 	CENDcmdX
+ beq 	Cmd_CurEndX
 
 
  ; clrb 
@@ -535,11 +650,11 @@ CENDcmd:
 
  pshs 	X
  ldb   	<<VAR.right,U
-CENDcmd1:
+Cmd_CurEnd1:
  LEAX 	>XCURRIGHT1,pcr
  MPX9 	PSTRNG
  decb 
- BNE CENDcmd1
+ BNE Cmd_CurEnd1
  
  ldx 	,S
 
@@ -547,7 +662,7 @@ CENDcmd1:
 
  PULS 	X
 
-CENDcmdX:
+Cmd_CurEndX:
  LBRA	GetCharLoop
 
 ; *****************************************************
@@ -565,7 +680,10 @@ NormBuffer:
  leax 	a,x
  clra 
  ldb 	<<VAR.right,U
+
+ BEQ NormBuffer1
  MPX9 	BLKMOV
+NormBuffer1:
 
  LDA 	<<VAR.left,U
  adda 	<<VAR.right,U
@@ -573,6 +691,82 @@ NormBuffer:
  
  Clr  	<<VAR.right,U
  rts
+
+; *****************************************************
+Cmd_CtrlCurRight
+
+Cmd_CtrlCurRight1:
+ TST 	<<VAR.right,U
+ BEQ 	Cmd_CtrlCurRight12
+ Lbsr 	Do_CurRight ; EXIT A=CHAR UNDER CURSOR
+ bsr 	IsAlphaNumUnder
+ BEQ 	Cmd_CtrlCurRight1
+Cmd_CtrlCurRight12:
+ TST 	<<VAR.right,U
+ BEQ 	Cmd_CtrlCurRightX
+ Lbsr 	Do_CurRight ; EXIT A=CHAR UNDER CURSOR
+ bsr 	IsAlphaNumUnder
+ bne  	Cmd_CtrlCurRight12
+
+ Lbsr 	Do_CurLeft ; EXIT A=CHAR UNDER CURSOR
+
+
+Cmd_CtrlCurRightX:
+ LBRA	GetCharLoop
+
+; *****************************************************
+; in a=char out b=0 AlphaNumUnder or 1 if puncuation etc. CC set per B
+IsAlphaNumUnder:
+	ldb #1
+
+	; is it a '_'
+	cmpa #'_'
+	beq  IsAlphaNumUnderTrue
+	
+	; is it '0'-'9'
+	suba #'0'
+	bmi  IsAlphaNumUnderX
+	cmpa #9
+	ble  IsAlphaNumUnderTrue
+
+	; is it 'A'-'Z'
+	suba #'A'-'0'
+	bmi  IsAlphaNumUnderX
+	cmpa #26
+	ble  IsAlphaNumUnderTrue
+
+	; is it 'a'-'z'
+	suba #'a'-'A'
+	bmi  IsAlphaNumUnderX
+	cmpa #26
+	ble  IsAlphaNumUnderTrue
+
+	bra  IsAlphaNumUnderX
+
+IsAlphaNumUnderTrue:
+	clrb
+IsAlphaNumUnderX:
+ 	tstb 
+	rts
+
+; *****************************************************
+Cmd_CtrlCurLeft
+
+Cmd_CtrlCurLeft1:
+ TST 	<<VAR.left,U
+ BEQ 	Cmd_CtrlCurLeft2
+ Lbsr 	Do_CurLeft ; EXIT A=CHAR UNDER CURSOR
+ bsr 	IsAlphaNumUnder
+ BNE 	Cmd_CtrlCurLeft1
+Cmd_CtrlCurLeft2:
+ TST 	<<VAR.left,U
+ BEQ 	Cmd_CtrlCurLeftX
+ Lbsr 	Do_CurLeft ; EXIT A=CHAR UNDER CURSOR
+ bsr 	IsAlphaNumUnder
+ BEQ  	Cmd_CtrlCurLeft2
+
+Cmd_CtrlCurLeftX:
+ LBRA	GetCharLoop
 
 ; *****************************************************
 
@@ -593,11 +787,20 @@ verbose	rmb	1
 
 
 MaxCmdLineLen	equ	64
+MaxHistBuff	equ 32
+
 VAR	STRUCT
 max 		rmb 1
 left		rmb 1
 right		rmb	1
-CmdLineBuffer	rmb	MaxCmdLineLen
+
+HBegin		rmw 1
+HEnd		rmw 1
+HHead		rmw 1
+HCurr		rmw 1
+
+CmdLineBuff	rmb	MaxCmdLineLen
+HistBuff 	rmb MaxHistBuff
 	ENDSTRUCT
 
 ; tstruct2.f1 (0),
