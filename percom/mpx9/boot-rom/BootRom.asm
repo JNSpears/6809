@@ -180,6 +180,9 @@ MonEnt  equ $FC32   ; MONITOR RE-ENTRY
  SETDP M9IO/256 USE DIRECT PAGE FOR I/O
  PAGE
  ORG M9ROM
+
+begcod  equ *
+
  SPC 1
 **************************************************
 * MINIDOS/9 ENTRY VECTORS                        *
@@ -868,6 +871,13 @@ SYCAL2 LDX PSYRAM POINT TO PSYMON RAM
  LDX FRERAM,X POINT TO MINIDOS/9 RAM
  JMP [SYSVEC,X] EXIT TO EXTERNAL HANDLER
  SPC 1
+
+endcod  equ *
+sizcod  equ endcod-begcod
+        if sizcod&~$3ff
+            ERROR image must fit in 1k ROM
+        endc
+
  END
 
 

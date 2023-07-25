@@ -157,8 +157,9 @@ LOCDCB EQU 33 LOCATE DCB FOR DEVICE
 ADDDCB EQU 34 ADD DCB TO DEVICE LIST
 DELDCB EQU 35 DELETE DCB FROM DEVICE LIST
 GETBAS EQU 36 Get Mpx9 base address.
+GETDCB EQU 37 Get System DCB address.
  SPC 1
-SYSLIM EQU 36 LAST VALID CALL
+SYSLIM EQU 37 LAST VALID CALL
  SPC 1
 **************************************************
 * ASCII CHARACTER CONSTANTS                      *
@@ -488,7 +489,9 @@ SYSOFF FDB MPXRET-SYSOFF 8 - RETURN TO MPX/9
  FDB LCDCB-SYSOFF 33 - LOCATE DCB FOR DEVICE
  FDB ADDCB-SYSOFF 34 - ADD DCB TO DEVICE LIST
  FDB DLDCB-SYSOFF 35 - DELETE DCB FROM DEVICE LIST
- FDB GTBAS-SYSOFF 36 - Get Mpx9 Base
+ FDB GTBAS-SYSOFF 36 - Get Mpx9 Base. GETBAS
+ FDB GTDCB-SYSOFF 36 - Get System DCB address. GETDCB
+ 
  SPC 1
 **************************************************
 * SYSTEM CALL 8 (MPX) - RETURN TO MPX/9          *
@@ -1470,6 +1473,12 @@ WRBLERR LDB #ERR_ID ERROR 2 (ID)
 **************************************************
 MEMLD PSHS A,X SAVE REGISTERS
 MEMLD1 LDB #DSKRD READ A BLOCK
+
+         ; pshs   d,x
+         ; ldd    #$20   ; SET SIZE IN B 
+         ; JSR    [DumpMem2v]     ; dump buffer DCB data.
+         ; puls   x,d
+
  SWI3
  FCB REQIO
  LDB DCBERR,X CHECK ERROR STATUS
@@ -2319,6 +2328,32 @@ GTBAS:
  RTS
  SPC 1
 
+****************************************************
+* SYSTEM CALL 37 (GETDCB) - Get System DCB address *
+*                                                  *
+* ENTRY REQUIREMENTS:  A - Drive #                 *
+*                (only used if NEWSYSDCB defined)  *
+*                                                  *
+* EXIT CONDITIONS:  X --> DCB                      *
+*                   A Changed                      *
+*                   B CONTAINS ERROR CODE          *
+*                   Z FLAG IN CC SET PER B         *
+****************************************************
+GTDCB:
+ LDX    SYSDCB,PCR POINT X AT SYSTEM DCB
+ IFDEF NEWSYSDCB
+ leax   SYSDCBn-DKDCB,X ; now x -> count of dcb's
+ cmpa   1,x
+ bls    GTDCB2
+ ldb    #ERR_ID ERROR 2 (ID)
+ BRA    GTDCBX
+GTDCB2:
+ asla
+ ldx    a,x
+ clrb 
+ ENDC
+GTDCBX
+ rts 
 
 * END OF MPX/9 OPERATING SYSTEM
 MPXEND EQU *

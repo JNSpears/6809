@@ -77,7 +77,13 @@ SYSLIM EQU 35   ;LAST VALID CALL
  ORG $1000
 HelloWorld:
 	pshs	x
-	leax	HWSTR,PCR
+
+	LEAX 	<HelloWorld,PCR
+	tfr 	X,D
+	SWI3
+	FCB	DSPDBY
+
+	leax	<HWSTR,PCR
 	SWI3
 	FCB	PSTRNG
 
@@ -94,7 +100,7 @@ done	tstb
 	ora	#$80
 	sta	b,x
 
-	leax	HWSTR1,PCR
+	leax	<HWSTR1,PCR
 	SWI3
 	FCB	PSTRNG
 
@@ -103,7 +109,7 @@ done	tstb
 	SWI3
 	FCB	PSTRNG
 	
-	leax	HWSTR2,PCR
+	leax	<HWSTR2,PCR
 	SWI3
 	FCB	PSTRNG
 

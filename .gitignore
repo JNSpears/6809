@@ -12,3 +12,5 @@ percom/mpx9/foo1.dsk
 *.SY
 
 *.dsk
+
+tools/f9dasm/
