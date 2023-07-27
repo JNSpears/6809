@@ -181,8 +181,8 @@ class DirEntry(object):
 		print()
 
 	def getFomattedDirEntry(self):
-		# return "% -12s\t% 5d  % 5d  %04x  % 6.2fK" % (self.getFilename(), self.first, self.last, self.entry, ((self.last-self.first)*256)/1024.0)
-		return "% -12s\t  % 3x    % 3x  %04x  % 6.2fK" % (self.getFilename(), self.first, self.last, self.entry, ((self.last-self.first)*256)/1024.0)
+		# return "% -12s\t% 5d  % 5d  %04x  % 6.2fK" % (self.getFilename(), self.first, self.last, self.entry, ((self.last-self.first+1)*256)/1024.0)
+		return "% -12s\t  % 3x    % 3x  %04x  % 6.2fK" % (self.getFilename(), self.first, self.last, self.entry, ((self.last-self.first+1)*256)/1024.0)
 	
 	def printDirEntry(self):
 		print(self.getFomattedDirEntry)
@@ -213,8 +213,8 @@ class Dir(object):
 			if verbose or entry.isUsed():
 				print(entry.getFomattedDirEntry(), end=' ')
 			if verbose and (entry.last or entry.first):
-				print("%5d" % ((entry.last if entry.last else SECTORS_PER_DISK)-entry.first), end=' ')
-				print("%5.2fK" % ((((entry.last if entry.last else SECTORS_PER_DISK)-entry.first)*BYTES_PER_SECTOR)/1024), end=' ')
+				print("%5d" % ((entry.last if entry.last else SECTORS_PER_DISK)-entry.first+1), end=' ')
+				print("%5.2fK" % ((((entry.last if entry.last else SECTORS_PER_DISK)-entry.first+1)*BYTES_PER_SECTOR)/1024), end=' ')
 			
 			if prev and ((prev.last+1 != entry.first and entry.first != 0) or (entry.first != 0 and entry.last == 0)):
 				if verbose or entry.isUsed(): print()
@@ -223,7 +223,8 @@ class Dir(object):
 				if prev.last+1 != entry.first and entry.first != 0:
 					print('\tgap space:', entry.first-(prev.last+1))
 				if entry.first and not entry.last:
-					print('\tremaining space:', SECTORS_PER_DISK-entry.first+1)
+					print('\tremaining space:', SECTORS_PER_DISK-entry.first+1, 'Sectors')
+					print('\t                ', (SECTORS_PER_DISK-entry.first+1)/4, 'K Bytes')
 			else:
 				if verbose or entry.isUsed(): print()
 
