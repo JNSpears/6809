@@ -2,7 +2,7 @@
 
 MPX9DSK=../mpx9dsk/mpx9dsk.py
 TOOLS=../../tools/
-ASMINCLUDE=-I ../..
+ASMINCLUDE=-I ..
 ASM=lwasm
 #DEFINES=-DRAMTGT -DS19LOADER
 #DEFINES=-DMPX9

@@ -2,7 +2,7 @@ include ../Makefile.inc
 
 SRCS=create.asm list.asm memtst.asm OutVectr.asm
 OBJS=$(SRCS:.asm=.cm)
-TGTDSK=../foo1.dsk
+TGTDSK=../system.dsk
 
 all: $(TGTDSK) abc
 
@@ -34,7 +34,7 @@ clean:
 
 # case insensitivity???
 
-# dumpfilein hex
+# dumpfile in hex
 # make forth work under mpx9
 
 #DONE add memtst to the psymon-exts
