@@ -3,20 +3,6 @@
 	IFNDEF PSYMON__I
 
 **************************************************
-* ASCII CHARACTER CONSTANTS
-**************************************************
-CR      EQU $0D ; CARRIAGE RETURN
-LF      EQU $0A ; LINE FEED
-NUL     EQU $00 ; NULL
-BS      EQU $08 ; BACKSPACE
-CAN     EQU $18 ; CANCEL
-SP      EQU $20 ; SPACE
-FF      EQU $0C ; FORM Feed for Printer
-BRK     EQU $03 ; Crtl-c
-ESC	EQU $1B ; ESCAPE
-DEL 	EQU $7F ; Delete
-TILDE	EQU $7E ; ~TILDE~
-**************************************************
 * SWI3 PARAMETER DEFINITIONS
 **************************************************
 * PSYMON (tm) ROUTINE REFERENCES
@@ -60,13 +46,13 @@ BpTabl	RMB 15 ; (67) SPACE FOR 5 BREAKPOINTS
 BpTEnd	EQU * ; (82) END OF BREAKPOINT TABLE
 
 ; PSYMON WORK AREAS
-MemPtr	RMB 2 ; (82) MEMORY POINTER FOR M COMMAN1
-UsrTbl	RMB 2 ; (84) ADDRESS OF USER COMMAND TABLE)
+MemPtr	RMB 2 ; (82) MEMORY POINTER FOR 'M' COMMAN1
+;UsrTbl	RMB 2 ; (84) ADDRESS OF USER COMMAND TABLE)
 Comand	RMB 1 ; (86) COMMAND CHARACTER STORAGE
 CkSum	RMB 1 ; (87) CHECKSUM FOR LOAD AND SAVE
-BegAdd	RMB 2 ; (88) BEGIN ADDRESS FOR SAVE
-EndAdd	RMB 2 ; (90) END ADDRESS FOR SAVE
-StkPtr	RMB 2 ; (92) CONTENTS OF STACK POINTER
+;BegAdd	RMB 2 ; (88) BEGIN ADDRESS FOR SAVE
+;EndAdd	RMB 2 ; (90) END ADDRESS FOR SAVE
+;StkPtr	RMB 2 ; (92) CONTENTS OF STACK POINTER
 
 ; THE PSYMON CONSOLE DCB
 ConDCB	RMB 10 ; (94) STANDARD DCB
@@ -103,24 +89,34 @@ StatFn	equ 4	; Status function code
 CntlFn	equ 8	; Device Control function code
 
 *****************************
-* Software Vectors
+* PsyMon Software Vectors
 *****************************
-RAMv		equ $ffde
-DspSByv		equ $ffe0
-DspDByv		equ $ffe2
-GetHexv		equ $ffe4
-PStringv	equ $ffe6
-InChrv		equ $ffe8
-OutChrv		equ $ffea
-ReqIOv		equ $ffec
-MonEntv		equ $ffee
+RAMv		equ $ffde	; BASE OF PSYMON RAM
+DspSByv		equ $ffe0	; DISPLAY SINGLE BYTE ON CONSOLE
+DspDByv		equ $ffe2	; DISPLAY DOUBLE BYTE ON CONSOLE
+GetHexv		equ $ffe4	; GET HEX NUMBER FROM CONSOLE
+PStringv	equ $ffe6	; PRINT STRING TO CONSOLE
+InChrv		equ $ffe8	; INPUT CHARACTER FROM CONSOLE
+OutChrv		equ $ffea	; OUTPUT CHARACTER TO CONSOLE
+ReqIOv		equ $ffec	; PERFORM I/O REQUEST
+MonEntv		equ $ffee	; MONITOR RE-ENTRY
 
 *****************************
-* PsyMon Software entry points
+* Extra PsyMon Software entry points
 *****************************
-OutSp		equ $FD75
-CRLF		equ $FDA2
+OutSp  	EQU $FD75 ; OUTPUT A SPACE
+CRLF	equ $FDA2 ; OUTPUT A CRLF
 
+OutChr  equ $FD58 ; OUTPUT CHARACTER TO CONSOLE
+
+BegAdd 	equ $F3D8 ; BEGIN ADDRESS FOR SAVE
+EndAdd 	equ $F3DA ; END ADDRESS FOR SAVE
+StkPtr 	equ $F3DC ; CONTENTS OF STACK POINTER
+
+LOOKUP 	equ $FC50 ; LOOKUP Lookup Command In Table search F3D4 UsrTbl then CmdTbl
+UsrTbl 	equ $F3D4
+Search 	equ $FC62 ; General Table Search (X:Table, Y:Item -> CC, X)
+ComPar 	equ $FC70 ; General String Compare (X, Y, B:len -> CC)
 
 PSYMON__I SET 1
 	ENDC

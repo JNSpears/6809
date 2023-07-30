@@ -1,4 +1,4 @@
-	INCLUDE psymon.i
+	INCLUDE psymon-ext.i
 
 	IFNDEF MPX9__I
 
@@ -215,4 +215,10 @@ DIREXT RMB 2 EXTENSION BYTES
 
 MPX9__I SET 1
 	ENDC
+
+MPX9 MACRO   NOEXPAND
+        SWI3
+        FCB \1
+        ENDM
+
 

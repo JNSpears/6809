@@ -874,6 +874,7 @@ SYCAL2 LDX PSYRAM POINT TO PSYMON RAM
 
 endcod  equ *
 sizcod  equ endcod-begcod
+frecod  equ $400-sizcod
         if sizcod&~$3ff
             ERROR image must fit in 1k ROM
         endc

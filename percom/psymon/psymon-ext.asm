@@ -110,7 +110,7 @@ MonEntv     equ     $ffee
 RAM             equ     $F380   ; BASE OF PSYMON RAM
 DspSBy          equ     $FD73   ; DISPLAY SINGLE BYTE ON CONSOLE
 DspDBy          equ     $FD6A   ; DISPLAY DOUBLE BYTE ON CONSOLE
-PsyGetHex          equ     $FD0E   ; GET HEX NUMBER FROM CONSOLE
+PsyGetHex       equ     $FD0E   ; GET HEX NUMBER FROM CONSOLE
 PString         equ     $FD97   ; PRINT STRING TO CONSOLE
 InChr           equ     $FD44   ; INPUT CHARACTER FROM CONSOLE
 OutChr          equ     $FD58   ; OUTPUT CHARACTER TO CONSOLE
@@ -216,6 +216,7 @@ Init:
     JMP Setup
 ; Begin Vectors
     FDB DumpMem2
+    FDB Line16Dump
 ; End Vectors
 Setup:
     leax    <ExtTbl,pcr ; Install user command table
@@ -333,7 +334,7 @@ DmpMem:
 ;   ANDB    #$f0        ; make 16 byte allined
 ;   STD BegAdd
 ;   TFR D,X
-    BRA DmpMemStart
+    BRA     DmpMemStart
 ; todo add alt entry point takes x-> memory, D=length
 
 DumpMem2:
@@ -341,49 +342,19 @@ DumpMem2:
         ;       x-> memory
         ;       d=length
 
-        stx     BegAdd
-        leax    D,X
-        leax    -1,X
-        stx     EndAdd
+    stx     BegAdd
+    leax    D,X
+    leax    -1,X
+    stx     EndAdd
 ;        ldx     BegAdd
 DmpMemStart:
-        ldx     BegAdd          ; put starting address in X
-    ldd EndAdd
-    pshs    D       ; put ending address on stack
+    ldx     BegAdd      ; put starting address in X
+    ldd     EndAdd
 
 LineLoop:
-    jsr CRLF
-    tfr X,D
-    jsr DspDBy          ; Display Address
-    lda #':
-    jsr OutChr          ; display ':'
-    jsr OutSp
-    pshs    X
-    ldb #16
-HexLoop:
-    lda ,X+
-    jsr     DspSBy
-    cmpb    #9
-    bne NotHalfway
-    jsr OutSp
-NotHalfway:
-    decb
-    bne HexLoop
-    jsr OutSp
-    puls    x
-    ldb #16
-AsciiLoop:
-    lda ,X+
-    cmpa    #SP
-    blt NonPrintable
-    cmpa    #$7f
-    blt Printable
-NonPrintable:
-    lda #'.
-Printable:
-    jsr     OutChr
-    decb
-    bne AsciiLoop
+    tfr     X,D         ; use address for displayed address
+    bsr     Line16Dump  ; dump 1 line of data
+
 ;   leay    -1,X
 
         ; check for kb char.
@@ -393,11 +364,54 @@ Printable:
 ;       LSRB         ; read buffer full BIT TO C
 ;        BCs   dumpx  ; if so we are done.
 
-    cmpx    ,s
-    blo LineLoop
+    cmpx    EndAdd      ; are we done yet?
+    blo     LineLoop    ; if not
 dumpx
-    leas    2,s
     RTS
+
+**********************************************************
+* Psymon-Ext utility function for memory dump command
+**********************************************************
+* Entry:    D = offset (printed before line)
+*           X -> memory buffer to dump
+*
+* Exit:     X -> new location after current 16 bytes.
+*
+**********************************************************
+
+Line16Dump:
+    jsr     CRLF
+    jsr     DspDBy          ; Display Address
+    lda     #':
+    jsr     OutChr          ; display ':'
+    jsr     OutSp
+    ldb     #16
+HexLoop:
+    lda     ,X+
+    jsr     DspSBy
+    cmpb    #9
+    bne     NotHalfway
+    jsr     OutSp
+NotHalfway:
+    decb
+    bne     HexLoop
+    jsr     OutSp
+    leax    -16,X
+    ldb     #16
+AsciiLoop:
+    lda     ,X+
+    cmpa    #SP
+    blt     NonPrintable
+    cmpa    #$7f
+    blt     Printable
+NonPrintable:
+    lda     #'.
+Printable:
+    jsr     OutChr
+    decb
+    bne     AsciiLoop
+    rts
+
 
 *****************************************
 ; accept [ <hexnumber> | X | Y | U | S ] from console.
@@ -711,7 +725,7 @@ JumpSubr1
     ; rts from user code puts us here. without PC on stack
 Rt2Mon:
     pshs    cc,a,b,dp,x,y,u,pc  ; put all registers back.
-    jmp $fc36       ; goto main command loop.
+    jmp     $fc36       ; goto main command loop.
 
 ;TEST:
 ;    LDA     #$77
@@ -1233,8 +1247,9 @@ HelpTable:
 
 endcod  equ *
 sizcod  equ endcod-begcod
+frecod  equ $400-sizcod
         if sizcod&~$3ff
-            ERROR image must fit in 1k ROM
+            ERROR Image must fit in 1k ROM
         endc
 
     org BUFFER ; use ram at 0 for buffer

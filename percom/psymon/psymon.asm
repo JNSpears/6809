@@ -179,6 +179,7 @@ FRERAM	RMB 2 ; (126) ADDRESS OF FREE RAM
 
 ; PSYMON ROM CODE
 	ORG ROM1
+begcod  equ *
 
 *** ***********************
 *** * Psymon Initialization
@@ -1075,5 +1076,11 @@ RamInt:
 	FDB NMI		; NON-MASKABLE INTERRUPT
 	FDB Init	; RESTART
 	
-	
-	
+endcod  equ *
+sizcod  equ endcod-begcod
+frecod  equ $400-sizcod
+        if sizcod&~$3ff
+            warning Image must fit in 1k ROM
+        endc
+
+ END
