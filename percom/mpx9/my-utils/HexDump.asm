@@ -1,107 +1,217 @@
 ; **********************************************
-; HelloWorld.asm
+; hexdump.asm
 ;
 ; **********************************************
-
-; ASCII CHARACTER CONSTANTS
-
-CR EQU $D       ; CARRIAGE RETURN
-LF EQU $A       ; LINE FEED
-SP EQU $20      ; SPACE
-
-*****************************
-* Software Vectors
-*****************************
-RAMv            equ $ffde
-DspSByv         equ $ffe0
-DspDByv         equ $ffe2
-GetHexv         equ $ffe4
-PStringv        equ $ffe6
-InChrv          equ $ffe8
-OutChrv         equ $ffea
-ReqIOv          equ $ffec
-MonEntv         equ $ffee
+        INCLUDE mpx9.i
+        INCLUDE psymon-ext.i
+        INCLUDE jns.i
 
 **************************************************
-* SWI3 PARAMETER DEFINITIONS
+* Program (Position independant)
 **************************************************
-* PSYMON (tm) ROUTINE REFERENCES
-MONITR EQU 0 ;RETURN TO MONITOR MODE
-REQIO  EQU 1 ;REQUEST I/O
-OUTCHR EQU 2 ;OUTPUT CHARACTER TO TERMINAL
-INCHR  EQU 3 ;INPUT CHARACTER FROM TERMINAL
-PSTRNG EQU 4 ;PRINT STRING
-GETHEX EQU 5 ;GET HEX NUMBER
-DSPDBY EQU 6 ;DISPLAY DOUBLE BYTE
-DSPSBY EQU 7 ;DISPLAY SINGLE BYTE
- spc 1
-* MPX/9 ROUTINE REFERENCES
-MPX    EQU 8    ;RETURN TO MPX/9
-GETLIN EQU 9    ;GET * LINE OF INPUT
-SKPSPC EQU 10   ;SKIP SPACES IN LINE BUFFER
-GETWRD EQU 11   ;GET THE NEXT WORD IN LINE
-PROCMD EQU 12   ;PROCESS COMMAND LINE
-RPTERR EQU 13   ;REPORT ERROR
-LOCFIL EQU 14   ;LOCATE FILE IN DIRECTORY
-LOCSPC EQU 15   ;LOCATE SPACE IN DIRECTORY
-RDDRCT EQU 16   ;READ DISK DIRECTORY
-WTDRCT EQU 17   ;WRITE DISK DIRECTORY
-INTFCB EQU 18   ;INITIALIZE FCB
-OPNFIL EQU 19   ;OPEN FILE
-CLSFIL EQU 20   ;CLOSE FILE
-RDFIL  EQU 21   ;READ A FILE (BYTE)
-WTFIL  EQU 22   ;WRITE A FILE (BYTE)
-RDBLK  EQU 23   ;READ A BLOCK
-WTBLK  EQU 24   ;WRITE A BLOCK
-MEMLOD EQU 25   ;LOAD A MEMORY SEGMENT
-MEMSAV EQU 26   ;SAVE A MEMORY SEGMENT
-COMPAR EQU 27   ;COMPARE STRINGS
-BLKMOV EQU 28   ;BLOCK MOVE
-DECNUM EQU 29   ;GET DECIMAL NUMBER
-HEXNUM EQU 30   ;GET HEXADECIMAL NUMBER
-DSPDEC EQU 31   ;DISPLAY DECIMAL NUMBER & SPACE
-DELFIL EQU 32   ;DELETE A DISK FILE
-LOCDCB EQU 33   ;LOCATE DCB FOR DEVICE
-ADDDCB EQU 34   ;ADD DCB TO DEVICE LIST
-DELDCB EQU 35   ;DELETE DCB FROM DEVICE LIST
- spc 1
-SYSLIM EQU 35   ;LAST VALID CALL
+        ORG $0
 
-*****************************
-* Software Vectors
-*****************************
-; PSYMON-ext ROM CODE
-	ifdef	RAMTGT
-DumpMem2v        EQU     $f053 ; for in @ $F050 RAM ($f000-f3ff)
-	ELSE
-DumpMem2v        EQU     $F803 ; for in @ $F800 ROM ($f800-ffff)
-	ENDC
+begcod  equ *
 
- spc 1
 **************************************************
 * Main ENTRY POINT
 * Entry:
 *       X -> comamnd line arguments
 **************************************************
-        ORG $1000
 HexDump:
-        SWI3
-        FCB     HEXNUM  ; GET START ADDRESS
-        BNE     HexDumpX ; GO IF ERROR
-        PSHS    D       ; SAVE START
-        SWI3
-        FCB     HEXNUM  ; GET END ADDRESS
-        BNE     HexDumpX ; GO IF ERROR
+        USIM
+        sts     >stack,pcr       ;save the stack for error recovery
+        clr     pageflg,pcr
+        clr     fileflg,pcr
+        clr     memflg,pcr
+
+        ldy     RAMv
+        leay    CIDCB-RAM,y
+        sty     >_cidcb,pcr
+        
+        MPX9    SKPSPC
+        beq     synerr
+        bra     opti00a
+
+option  MPX9    SKPSPC  ; point to the next word
+        beq     doit    ; if end of line go...
+opti00a        
+        cmpa    #'/     ; look for option flags
+        bne     doit
+        leax    1,X
+        lda     ,x+     ; get option chanr and bump pointer
+
+        cmpa    #'F     ; is a option 'F?
+        bne     opti00  ; skip if not
+        com     >fileflg,pcr ; toggle option 'F'
+        bra     option  ; get next option
+
+opti00  cmpa    #'M    ; is a option 'M'?
+        bne     opti01  ; skip if not
+        com     >memflg,pcr ; toggle option 'M'
+        bra     option  ; get next option
+
+opti01  cmpa    #'P     ; is a option 'P'?
+        bne     opti02  ; skip if not
+        com     >pageflg,pcr ; toggle option 'P'
+        bra     option  ; get next option
+opti02:
+; opti02  
+;         cmpa    #'P     ; is a option 'P'?
+;         bne     opti03     ; skip if not
+;         com     >polflg,pcr ; toggle option 'p'
+;         bra     option  ; get next option
+        
+; opti03  
+;         cmpa    #'R     ; is a option 'R'?
+;         lbne    synerr  ; syntax error if not
+
+;         lda     ,x+             ; get next char
+;         cmpa    #':             ; should be an ':'
+;         lbne    synerr          ; syntax error if not
+
+;         swi3                    ; convert record size value
+;         fcb     DECNUM    
+
+;         stb     >recflg,pcr     ; save record size value
+
+        bra     option  ; get next option
+
+
+doit:
+        tst     >fileflg,pcr
+        bne     FileDump
+        tst     >memflg,pcr
+        bne     MemDump
+        ldb     #ERR_SN
+HexDumpX:
+        lds     >stack,pcr
+        tstb
+        rts
+
+synerr  ldb     #ERR_SN
+dskerr  bra     HexDumpX
+
+**************************************************
+MemDump:
+        MPX9    HEXNUM          ; GET START ADDRESS
+        BNE     MemDumpx        ; GO IF ERROR
+        PSHS    D               ; SAVE START
+        MPX9    HEXNUM          ; GET END ADDRESS
+        BNE     MemDumpx        ; GO IF ERROR
         TSTA
-        bne     HexDump1
+        bne     MemDump1
         TSTB
-        bne     HexDump1
-        ldb     #$10    ; default length
-HexDump1:    
+        bne     MemDump1
+        ldb     #$10            ; default length
+MemDump1:    
         PULS    X
         JSR     [DumpMem2v]
+MemDumpx:
+        bra     HexDumpX
 
-HexDumpX:
-	CLRB	; No Errors
-	PULS	PC
+        
+
+**************************************************
+FileDump:        
+        leay    infcb,pcr ; point to the fcb
+        MPX9    INTFCB          ; initialize the fcb
+        bne     dskerr          ; report disk error
+        leax    inbufr,pcr      ; point to file buffer
+        lda     #ReadFn         ; setup for read
+        MPX9    OPNFIL          ; open the file
+        bne     dskerr          ; report disk error
+
+        ldd     #0
+        std     <offset,pcr
+
+readsector:
+        leay    <infcb,pcr      ; point to fcb
+        MPX9    RDBLK           ; read the next sector
+        cmpb    #ERR_EF
+        beq     FileDumpX       ; EOF then done.
+        
+        tstb
+        bne    dskerr           ; report disk error
+        
+        leax    inbufr,pcr
+        ldb     #16
+        stb     ,-s
+paraloop:
+        ldd     offset,pcr
+        jsr     [Line16Dump]
+
+
+        * CHECK FOR CRTL-C
+        pshs    X
+        ldx     [>_cidcb,pcr]   ; get input dcb pointer
+        ldb     #StatFn         ; check port status
+        MPX9    REQIO
+        bita    #1
+        beq     NoBRK
+        ldb     #ReadFn
+        MPX9    REQIO
+        cmpa    #BRK
+        beq     FileDumpBrk
+NoBRK:  puls    X
+
+        ldd     <offset,pcr
+        addd    #16
+        std     <offset,pcr
+        dec     ,s
+        bne     paraloop
+
+        * Paging...
+        tst     >pageflg,pcr
+        beq     noPaging
+        jsr     [InChrv]
+        cmpa    #BRK
+        beq     FileDumpBrk
+noPaging:      
+
+        * Move to next sector...
+        leay    <infcb,pcr      ; point to fcb
+        LDX     FCBNXT,Y        ; GET THE NEXT BLOCK
+        STX     FCBCUR,Y
+        BEQ     FileDumpX       ; GO IF END OF FILE
+
+        leas    1,s             ; clean up stack
+        bra     readsector      ; get next sector
+
+brksmg: fcb     CR,LF
+        FCS     /<Ctrl-C>/
+FileDumpBrk:
+        leax    brksmg,pcr
+        MPX9    PSTRNG
+        clrb
+FileDumpX:
+        Lbra    HexDumpX
+
+endcod  equ *
+sizcod  equ endcod-begcod
+; frecod  equ $400-sizcod
+;         if sizcod&~$3ff
+;             ERROR image must fit in 1k ROM
+;         endc
+*
+** Working Variables
+*
+
+_cidcb  rmb     2
+
+stack   rmb     2
+
+pageflg rmb     1
+fileflg rmb     1
+memflg  rmb     1
+offset  rmw     1
+
+infcb   rmb     32
+inbufr  rmb     256
+
+endpgm  equ     *-1
+
+
+* HEXDUMP /F /P LIST.AS
+* HEXDUMP /F LIST.AS
 

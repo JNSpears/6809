@@ -497,7 +497,7 @@ lzflg   rmb     1
 conflg  rmb     1
 ffflg   rmb     1
 numflg  rmb     1
-polflg 	rmb	    1   ; JNS
+polflg 	rmb	1   ; JNS
 recflg  rmb     1   ; JNS
 reccnt  rmb     1   ; JNS
 linnum  rmb     2
