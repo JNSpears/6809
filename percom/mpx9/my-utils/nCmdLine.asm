@@ -7,6 +7,7 @@
 
          INCLUDE mpx9.i
          INCLUDE psymon-ext.i
+         INCLUDE ascii.i
          INCLUDE jns.i
 
 **************************************************

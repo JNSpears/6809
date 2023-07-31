@@ -7,16 +7,8 @@
 
 	INCLUDE mpx9.i
 	INCLUDE psymon-ext.i
-
-
-MPX9 MACRO   NOEXPAND
-	SWI3
-	FCB \1
-	ENDM
-
-USIM MACRO   NOEXPAND
-	FCB 2
-	ENDM
+   	INCLUDE ascii.i
+   	INCLUDE jns.i
 
 **************************************************
 * Program (Position independant)

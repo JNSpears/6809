@@ -5,6 +5,7 @@
         INCLUDE mpx9.i
         INCLUDE psymon-ext.i
         INCLUDE jns.i
+        INCLUDE ascii.i
 
 **************************************************
 * Program (Position independant)

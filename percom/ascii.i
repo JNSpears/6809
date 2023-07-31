@@ -7,6 +7,7 @@ CTRL_A	equ SOH
 STX		EQU $02  ;	STX	^B		Start of Text
 CTRL_B	equ STX
 ETX		EQU $03  ;	ETX	^C		End of Text
+BRK		EQU ETX
 CTRL_C	equ ETX
 EOT		EQU $04  ;	EOT	^D		End of Transmission
 CTRL_D	equ EOT

@@ -5,7 +5,10 @@
 			"path": ".",
 		},
 		{
-			"path": "/home/james/workspace/6809/percom/psymon"
+			"path": "/home/james/workspace/6809/percom/psymon",
+		},
+		{
+			"path": "/home/james/workspace/6809/percom"
 		},
 	],
 }
