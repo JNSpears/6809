@@ -3,14 +3,17 @@ tools/lwtools-4.19/
 tools/coco-disasm/
 tools/usim/
 percom/mpx9/foo1.dsk
+*.obj
 *.lst
 *.bak
 *.ihex
 *.bin
 *.cm
+*.cm1
 
 *.SY
 
 *.dsk
 
 tools/f9dasm/
+tools/pretty6502

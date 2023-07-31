@@ -27,5 +27,30 @@ ASMFLAGS=-l$*.lst $(ASMINCLUDE) $(DEFINES)
 .PHONY: clean
 CLEAN=$(RM) -f *.s19 *.ihex *.ihex *.lst *.log *.bin *.cm
 
+# RMA/RLINK
+ASM_		= lwasm --format=obj $(ASMFLAGS)
+LINKER_		= lwlink --format=raw
+LWAR_		= lwar -l -a
 
-# AEA1
+# Commands
+
+# Rules
+%.lib: %.obj
+#	@echo LWAR_LWAR_LWAR_
+	$(LWAR_) $@ $?
+
+%.obj: %.asm
+#	@echo ASM_ASM_ASM_
+	$(ASM_) $(AFLAGS) -o$@ $< 
+
+%.cm1: %.obj %.lib
+#	@echo LINKER_LINKER_LINKER_
+	$(LINKER_) $(AFLAGS) -m$*.map -slink.ld -o$@ $< 
+
+
+
+
+#.c.a:
+ #       $(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $*.o
+  #      $(AR) r $@ $*.o
+#        $(RM) $*.o
