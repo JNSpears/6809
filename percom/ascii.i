@@ -1,5 +1,4 @@
-
-	IFNDEF ASCII__I
+		IFNDEF ASCII__I
 
 NUL 	EQU $00  ;  NUL ^@	\0	Null
 SOH		EQU $01  ;	SOH	^A		Start of Heading
@@ -69,7 +68,6 @@ CTRL_Question equ ESC
 
 TILDE	EQU $7E  ; ~TILDE~
 
-
-
 ASCII__I SET 1
-	ENDC
+
+		ENDC
