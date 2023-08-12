@@ -1,42 +1,40 @@
- nam Abc1
- ttl Abc1 test
+ PRAGMA cescapes
+ nam Abc3
+ ttl Abc3 test
 *********************************************************
-* Abc1.CM                             JNS 7/29/2023     *
+* Abc3.CM                             JNS 7/29/2023     *
 *                                                       *
 *                                                       *
 *********************************************************
 
-        include mpx9.i
-        include ascii.i
-        include jns.i
+        INCLUDE psymon.i
+        INCLUDE mpx9.i
+        INCLUDE jns.i
+        INCLUDE ascii.i
 
  	section	code
 
-BEGCOD  equ     *
+; BEGCOD  equ     *
 
 **************************************************
 ** Program (Position independant)
 **************************************************
 
-Abc1 EXPORT
-Abc1:
+Abc3 EXPORT
+Abc3:
 	pshs	x
 
-	LEAX 	<Abc1,PCR
-	tfr 	X,D
-	MPX9	DSPDBY
+	tfr 	pc,d
+	leax	GreetingsMsg,PCR
+	MPX9	$41
+	fcs	/TEST3 PC=%Px msg='%Xs'\r\n/
 
-	leax	<GreetingsMsg,PCR
-	MPX9	PSTRNG
-
-Abc1X:
+Abc3X:
 	CLRB	; No Errors
 	PULS	pc,x
 
 
 **************************************************
-
-endcod  equ *-1
 
 	endsection	
 
@@ -47,8 +45,7 @@ endcod  equ *-1
  	section	data
 
 GreetingsMsg:
-	FCC /Greetings! from Abc1/
-	FCB CR,LF+$80
+	FCS /Greetings! from Abc3\r\n/
 
 	endsection	
 
@@ -62,8 +59,8 @@ GreetingsMsg:
 
 	endsection	
 
-PGMEND  equ *-1
-PGMSIZ  EQU PGMEND-BGNPGM
+; PGMEND  equ *-1
+; PGMSIZ  EQU PGMEND-BGNPGM
 
  END
 

@@ -51,8 +51,8 @@ os/MPX9.SY: os/mpx9.bin
 init: boot-sector/BootSector.bin os/MPX9.SY
 	$(MPX9DSK) $(TGTDSK) --init boot-sector/BootSector.bin os/MPX9.SY -f 
 
-$(TGTDSK): init                $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) my-utils/abc.cm1 # sub-makes
-	$(MPX9DSK) $(TGTDSK) -n -w $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) my-utils/abc.cm1 -f 
+$(TGTDSK): init                $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 # sub-makes
+	$(MPX9DSK) $(TGTDSK) -n -w $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 -f 
 
 test: $(EPROMS) $(TGTDSK) 
 	../../tools/usim/percom/percom -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
@@ -69,17 +69,22 @@ clean:
 	$(MAKE) -C my-utils clean
 # 	$(MAKE) -C FigForth clean
 	$(MAKE) -C tForth clean
+	$(MAKE) -C mpx9+ clean
 	-$(CLEAN)
 
-my-utils/abc1.obj: my-utils/abc1.asm 
-my-utils/abc2.obj: my-utils/abc2.asm 
-my-utils/abc.lib: my-utils/abc1.obj my-utils/abc2.obj
-my-utils/abc.cm1: my-utils/abc.obj my-utils/abc.lib
-	$(LINKER_) $(LDLAGS) -slink.ld -mmy-utils/abc.map -o$@ $? 
-abc: my-utils/abc.cm1
+# start.obj: mpx9+/start.asm 
+# abc1.obj: mpx9+/abc1.asm 
+# abc2.obj: mpx9+/abc2.asm 
+# mpx9+.lib: mpx9+/abc1.obj mpx9+/abc2.obj
+# mpx9+.cm1: start.obj mpx9+.lib
+# 	$(LINKER_) $(AFLAGS) -smpx9+/mpx9+.ld -mmpx9+/mpx9+.map -o$@ $< mpx9+/mpx9+.lib
 
+LDFLAGS=-m$*.map -s$*.ld
 
-# abc.lib: abc1.obj abc2.obj
-# my-utils/abc.cm1: abc.obj abc.lib
-# 	$(LINKER_) $(LDLAGS) -slink.ld -mabc.map -o$@ $? 
-# abc: my-utils/abc.cm1
+mpx9+/start.obj : mpx9+/start.asm 
+mpx9+/dbgfmt.obj : mpx9+/dbgfmt.asm 
+mpx9+/abc1.obj : mpx9+/abc1.asm 
+mpx9+/abc2.obj : mpx9+/abc2.asm 
+mpx9+/abc3.obj : mpx9+/abc3.asm 
+# mpx9+/mpx9+.lib : mpx9+/abc1.obj mpx9+/abc2.obj mpx9+/dbgfmt.obj 
+mpx9+/mpx9+.cm1 : mpx9+/start.obj mpx9+/abc1.obj mpx9+/abc2.obj mpx9+/abc3.obj mpx9+/dbgfmt.obj # mpx9+/mpx9+.lib 

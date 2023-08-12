@@ -1,4 +1,5 @@
-.SUFFIXES: .asm .bin .s19 .ihex .cm
+.SUFFIXES: .asm .bin .s19 .ihex .obj .lib .cm .cm1
+.SUFFIXES: .asm .bin .s19 .ihex .cm 
 
 MPX9DSK=../mpx9dsk/mpx9dsk.py
 TOOLS=../../tools/
@@ -8,6 +9,7 @@ ASM=lwasm
 #DEFINES=-DMPX9
 DEFINES=-DNULL_DCB -DBS_BUG -DCURDRIVE -DNEWSYSDCB 
 ASMFLAGS=-l$*.lst $(ASMINCLUDE) $(DEFINES)
+LDFLAGS=-m$*.map -s$*.ld
 
 %.hex : %.asm
 	$(ASM) $(ASMFLAGS) -fhex -o$@ $<
@@ -25,32 +27,24 @@ ASMFLAGS=-l$*.lst $(ASMINCLUDE) $(DEFINES)
 	$(ASM) $(ASMFLAGS) -fraw -o$@ $<
 
 .PHONY: clean
-CLEAN=$(RM) -f *.s19 *.ihex *.ihex *.lst *.log *.bin *.cm
+CLEAN=$(RM) -f *.s19 *.ihex *.ihex *.lst *.log *.bin *.cm *.cm1 *.lib *.map *.obj
 
 # RMA/RLINK
 ASM_		= lwasm --format=obj $(ASMFLAGS)
 LINKER_		= lwlink --format=raw
-LWAR_		= lwar -l -a
+LWAR_		= lwar -c
 
 # Commands
 
 # Rules
-%.lib: %.obj
+%.lib : %.obj
 #	@echo LWAR_LWAR_LWAR_
 	$(LWAR_) $@ $?
 
-%.obj: %.asm
+%.obj :
 #	@echo ASM_ASM_ASM_
 	$(ASM_) $(AFLAGS) -o$@ $< 
 
-%.cm1: %.obj %.lib
+%.cm1 : %.obj
 #	@echo LINKER_LINKER_LINKER_
-	$(LINKER_) $(AFLAGS) -m$*.map -slink.ld -o$@ $< 
-
-
-
-
-#.c.a:
- #       $(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $*.o
-  #      $(AR) r $@ $*.o
-#        $(RM) $*.o
+	$(LINKER_) $(LDFLAGS) -o$@ $^

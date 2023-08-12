@@ -1,15 +1,16 @@
- nam abc
- ttl abc test
+ PRAGMA cescapes
+ nam Abc2
+ ttl Abc2 test
 *********************************************************
-* abc.CM                              JNS 7/29/2023     *
-* 	TEST FOR USING LWAR & LWLINK, ALSO HAVING CODE  *
-* RELOCATE IT SELF TO JUST BELOW MPX9                   *
+* Abc2.CM                             JNS 7/29/2023     *
+*                                                       *
 *                                                       *
 *********************************************************
 
-        include mpx9.i
-        include ascii.i
-        include jns.i
+        INCLUDE psymon.i
+        INCLUDE mpx9.i
+        INCLUDE jns.i
+        INCLUDE ascii.i
 
  	section	code
 
@@ -19,60 +20,26 @@ BEGCOD  equ     *
 ** Program (Position independant)
 **************************************************
 
-Abc1 EXTERN
-Abc2 EXTERN
-
-_Start EXPORT
-_Start:
-Abc:
+Abc2 EXPORT
+Abc2:
 	pshs	x
 
-	LEAX 	atabc,PCR
-	MPX9	PSTRNG
-	LEAX 	Abc,PCR
+	LEAX 	<Abc2,PCR
 	tfr 	X,D
 	MPX9	DSPDBY
-	jsr 	CRLF
-
-	LEAX 	_e_s,PCR
-	MPX9	PSTRNG
-	ldd 	#_End-_Start
-	MPX9	DSPDBY
-	jsr 	CRLF
-
-	MPX9	GETBAS
-	leax 	-(_End-_Start),X
-	tfr  	X,Y
-	leax 	foo,PCR
-	ldd 	#_End-_Start
-	MPX9	BLKMOV	* X->src, Y->DST, D=LEN (REGISTERS PRESERVED)
-
-	jmp 	,Y
-
-foo:
-	LEAX 	newfoo,PCR
-	MPX9	PSTRNG
-	tfr 	X,D
-	MPX9	DSPDBY
-	jsr 	CRLF
 
 	leax	GreetingsMsg,PCR
 	MPX9	PSTRNG
 
-	LBSR 	Abc1
-	LBSR 	Abc2
-
-AbcX:
+Abc2X:
 	CLRB	; No Errors
 	PULS	pc,x
 
 
 **************************************************
 
-	endsection
+endcod  equ *-1
 
- 	section	cend
-_End equ *
 	endsection	
 
 **************************************************
@@ -82,11 +49,7 @@ _End equ *
  	section	data
 
 GreetingsMsg:
-	FCC /Greetings!/
-	FCB CR,LF+$80
-atabc	fcs /@abc:/
-_e_s	fcs /_End-_Start:/
-newfoo	fcs /New @foo:/
+	FCS /Greetings! from Abc2\r\n/
 
 	endsection	
 
