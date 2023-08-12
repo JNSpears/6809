@@ -6,9 +6,11 @@
 ****************************************
 
 
-        include mpx9.i
-        include ascii.i
-        include jns.i
+        INCLUDE psymon.i
+        INCLUDE mpx9.i
+        INCLUDE jns.i
+        INCLUDE ascii.i
+
 
         org     0
 BEGCOD  equ     *

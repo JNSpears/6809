@@ -5,8 +5,10 @@
 *                                                       *
 *********************************************************
 
+	INCLUDE psymon.i
 	INCLUDE mpx9.i
-	INCLUDE psymon-ext.i
+	; INCLUDE psymon-ext.i
+    ; INCLUDE jns.i
     INCLUDE ascii.i
 
 **************************************************
@@ -19,22 +21,21 @@ ListDCBs:
     clr     >sysdcbs,pcr
     
 option:
-	swi3
-	fcb     SKPSPC          ; point to the next word
+	MPX9    SKPSPC          ; point to the next word
 	beq     DoListDCB       ; No arguments
 	lda     ,x+
-	cmpa    #'/             ; look for option flags
+	cmpa    #'/  ''           ; look for option flags
 	bne     DoListDCB       ; Not a switch
 
 option_V:
 	lda     ,x+             ; get option char and bump pointer
-	cmpa    #'V             ; is a option 'V'?
+	cmpa    #'V'             ; is a option 'V'?
 	bne     Option_S        ; bad switch
 	com     >verbose,pcr    ; toggle option 'V'
 	bra     option          ; get next option
 
 Option_S:
-	cmpa    #'S             ; is a option 'S'?
+	cmpa    #'S'             ; is a option 'S'?
 	bne     synerr          ; bad switch
 	com     >sysdcbs,pcr    ; toggle option 'S'
 	bra     option          ; get next option
@@ -53,10 +54,10 @@ sysdcbloop:
 
 	ldy	    [,X++]
     ldd     DCBDId,y
-    
-    jsr	    [OutChrv]
+
+	lbsr 	CookPrt    
     tfr     b,a
-    jsr	    [OutChrv]
+	lbsr 	CookPrt    
 
     jsr     OutSp
 
@@ -67,8 +68,7 @@ sysdcbloop:
     leax    1,X
 	jsr	    [PStringv]  ; display entry name
 
-	SWI3
-	FCB		GETBAS
+	MPX9	GETBAS
 
     IFDEF NEWSYSDCB
 		ldx #$f042+1
@@ -83,16 +83,18 @@ sysdcbloop:
 diskloop:
 		ldy     ,x++
 		lda     DCBDId,y
-        jsr	    [OutChrv]
-	    lda 	DCBDId+1,y
-	    jsr	    [OutChrv]
+		bsr 	CookPrt 
 
-   		decb
+		lda 	DCBDId+1,y
+		bsr 	CookPrt    
+		
+  		decb
    		beq  	SYSDCBSDONE
 
 		lda 	#',
 		jsr	    [OutChrv]
 		BRA 	diskloop
+
 SYSDCBSDONE:
 	ELSE
 		leay 	$0190,X 		; Y --> SYSDCB
@@ -101,9 +103,9 @@ SYSDCBSDONE:
 
 		ldy 	,Y
 		ldd     DCBDId,y
-	    jsr	    [OutChrv]
+		bsr 	CookPrt    
 	    tfr     b,a
-	    jsr	    [OutChrv]
+		bsr 	CookPrt    
 
    		jsr     OutSp
     ENDC
@@ -116,10 +118,8 @@ Nosysdcbs:
 		clr		DCBLnk+1,X
 		LDD		DmyID,PCR			; set DCB Device ID 
 		STD		DCBDId,X
-		SWI3
-		FCB		ADDDCB				; add to DCB list
-		SWI3
-		FCB		DELDCB				; remove from DCB list
+		MPX9	ADDDCB				; add to DCB list
+		MPX9	DELDCB				; remove from DCB list
 		LDU		DmyDcb+DCBLnk,PCR	; Now we have a pointer to the MPX/9 Device list.
 
 ListDCB_loop:
@@ -128,20 +128,10 @@ ListDCB_loop:
 
 		; Get sanitize and print first char of DCB ID.
 		lda	    DCBDId,U
-		cmpa	#SP
-		blt		bad1
-		cmpa	#'~
-		ble		ok1
-bad1:	lda		#'?
-ok1:	jsr	    [OutChrv]
+		bsr 	CookPrt    
 		; Get sanitize and print second char of DCB ID.
 		lda	    DCBDId+1,U
-		cmpa	#SP
-		blt		bad2
-		cmpa	#'~
-		ble		ok2
-bad2:	lda		#'?
-ok2:	jsr	    [OutChrv]
+		bsr 	CookPrt    
 
 		leax	prefix,pcr
 
@@ -181,36 +171,37 @@ ListDCBX:
 		clrb
 		rts					; Return to OS
 
+		; Get sanitize and print a char in the DCB ID.
+CookPrt:
+		cmpa	#SP
+		blt		bad1
+		cmpa	#'~'
+		ble		ok1
+bad1:	lda		#'?'
+ok1:	jmp	    [OutChrv]
+
+
 prefix:
-	fcc	/ @/
-	fcb	'=+$80
-	fcc	/Stat/
-	fcb	'=+$80
-	fcc	/Drv@/
-	fcb	'=+$80
-	fcc	/IO@/
-	fcb	'=+$80
+	fcs	/ @=/
+	fcs	/Stat=/
+	fcs	/Drv@=/
+	fcs	/IO@=/
 
 DmyID:	FCC	/ZZ/	
         
 sysdcbprefix:
-	fcc	/DCB'S: CI/
-	fcb	'=+$80
+	fcs	/DCB'S: CI=/
     fdb CIDCB   
-	fcc	/CE/
-	fcb	'=+$80
+	fcs	/CE=/
     fdb CEDCB   
-	fcc	/CO/
-	fcb	'=+$80
+	fcs	/CO=/
     fdb CODCB   
-	fcc	/TP/
-	fcb	'=+$80
+	fcs	/TP=/
     fdb TPDCB   
     
     FCB 0
 
-	fcc	/DISK/
-	fcb	'=+$80
+	fcS	/DISK=/
      
 endcod  equ *-1
 
