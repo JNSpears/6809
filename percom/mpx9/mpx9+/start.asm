@@ -13,21 +13,66 @@
         INCLUDE jns.i
         INCLUDE ascii.i
 
- 	section	code
+ 	section	.text
 
-BEGCOD  equ     *
+; BEGCOD  equ     *
 
 **************************************************
 ** Program (Position independant)
 **************************************************
 
-Abc1 EXTERN
-Abc2 EXTERN
-Abc3 EXTERN
+; Abc1 EXTERN
+; Abc2 EXTERN
+; Abc3 EXTERN
+CmdLineInit EXTERN
+CmdLine EXTERN
+s_.bss EXTERN
 
 _Start EXPORT
 _Start:
 Abc:
+
+	; clr     >verbose,pcr    ; initialize variables
+
+    
+; option:
+; 	swi3
+; 	fcb     SKPSPC          ; point to the next word
+; 	beq     Init  		; No arguments
+; 	lda     ,x+
+; 	cmpa    #'/             ; look for option flags
+; 	bne     Init       ; Not a switch
+
+; option_V:
+; 	lda     ,x+             ; get option char and bump pointer
+; 	cmpa    #'V             ; is a option 'V'?
+; 	bne     Option_S        ; bad switch
+; 	com     >verbose,pcr    ; toggle option 'V'
+; 	bra     option          ; get next option
+
+; Option_S:
+; ; 	cmpa    #'S             ; is a option 'S'?
+; ; 	bne     synerr          ; bad switch
+; ; 	com     >sysdcbs,pcr    ; toggle option 'S'
+; ; 	bra     option          ; get next option
+
+; synerr:
+; 	ldb     #ERR_SN         ; Error Syntax
+; 	rts
+	
+; *****************************************************
+; Init:
+    ; tst     >verbose,pcr
+
+; START INIT
+
+	; CHECK TO SEE IF MPX9+ IS LOADED ALREADY
+	ldb 	#$FF
+	MPX9	$40
+	tstb 
+	bne   	AbcGO
+	rts
+AbcGO:
 	pshs	x
 
 	LEAX 	atabc,PCR
@@ -38,7 +83,7 @@ Abc:
 
 	LEAX 	_e_f,PCR
 	MPX9	PSTRNG
-	ldd 	#(_End-foo)
+	ldd 	#(s_.bss-foo)
 	MPX9	DSPDBY
 
 	MPX9	GETBAS		GET MPX/9 BASE
@@ -48,12 +93,12 @@ Abc:
 	MPX9	PSTRNG
 	ldd 	,S
 	MPX9	DSPDBY
-	PULS X
-	leax 	-(_End-foo),X 	STEP BACK BY SIZE OF MPX9+
+	PULS 	X
+	leax 	-(s_.bss-foo),X 	STEP BACK BY SIZE OF MPX9+
 	leax 	-$100,x 	make sure to leave room for stack (to be DP latter.)
 	tfr  	X,Y
 	leax 	foo,PCR
-	ldd 	#(_End-foo)
+	ldd 	#(s_.bss-foo)
 	MPX9	BLKMOV	* X->src, Y->DST, D=LEN (REGISTERS PRESERVED)
 
 	jmp 	,Y
@@ -66,9 +111,6 @@ foo:
 	MPX9	DSPDBY
 	jsr 	CRLF
 
-	; MPX9	GETBAS
-	; USIM
-
 	LDX 	[RAMv] POINT TO PSYMON RAM
 	LDX 	FRERAM,X POINT TO MINIDOS/9 RAM
 
@@ -80,17 +122,22 @@ foo:
 	; LEAX 	SYSCLX,PCR ESTABLISH SYSTEM CALL EXT VECTOR
 	; STX 	SCLVEC,PCR
 
-	leax	GreetingsMsg,PCR
-	MPX9	PSTRNG
+	; leax	GreetingsMsg,PCR
+	; MPX9	PSTRNG
 
-	LBSR 	Abc1
-	LBSR 	Abc2
-	; USIM
-	LBSR 	Abc3
+	; LBSR 	Abc1
+	; LBSR 	Abc2
+	; LBSR 	Abc3
 
-	lda 	#'@'
-	MPX9	$41
-	fcs	/test a=%Ac\n\r/
+	; lda 	#'@'
+	; MPX9	$41
+	; fcs	/test a=%Ac\n\r/
+
+	lbsr 	CmdLineInit
+	; LIFT COMMAND LOOP FROM MPX9.ASM#506
+	lbsr 	CmdLine
+
+
 AbcX:
 	CLRB	; No Errors
 	PULS	pc,x
@@ -100,7 +147,7 @@ AbcX:
 ; **************************************************
 SYSCAL ; CMPA #SYSLIM IS CALL VALID FOR MPX/9?
 
-* CHECK FOR SYSTEM CALL IN MPX9ii LSIT
+* CHECK FOR SYSTEM CALL IN MPX9+ LIST
  LEAY SYSOFF,PCR POINT Y AT OFFSET TABLE
 RESCM1 TST ,Y END OF TABLE?
  BEQ NotFound GO IF YES
@@ -118,13 +165,9 @@ RESCM2
  SPC 1
 NotFound
 
- ; USIM
  leay 	SCLVEC,PCR
- ; LDY 	#SCLVEC                   ,PCR
-
  ldy 	,y
  jmp 	,y
-
 
  ; JMP [SCLVEC,PCR] EXIT TO NEXT LEVEL ROUTINE
 
@@ -132,12 +175,18 @@ NotFound
 ; SYSCLX RTI DUMMY ROUTINE
  SPC 1
 
+FOURTY:
+	clrb 
+	rts 
+
 FOURTYONE EXTERN
 
  SPC 1
 * SYSTEM CALL OFFSET LOOKUP TABLE
 SYSOFF:
 
+ FCB $40
+ FDB FOURTY-SYSOFF - IS MPX9+ LOADED?
  FCB $41
  FDB FOURTYONE-SYSOFF - GET A LINE OF INPUT
 
@@ -149,10 +198,6 @@ SYSOFF:
 
 	endsection
 
- 	section	cend
-_End equ *
-	endsection	
-
 **************************************************
 ** Constants.
 **************************************************
@@ -162,27 +207,27 @@ _End equ *
 SYSVEC EQU 64 SYSTEM CALL VECTOR
 SCLVEC RMB 2 SYSTEM CALL VECTOR
 
-GreetingsMsg:
-	fcs /Greetings!\r\n/
+; GreetingsMsg:
+; 	fcs /Greetings!\r\n/
 atabc	fcs /@abc:/
 _e_f	fcs /\r\n_End-foo:/
 _MPXBAS	fcs /\r\n_MPXBAS:/
 newfoo	fcs /\r\nNew @foo:/
 
-	endsection	
+	endsection
 
 **************************************************
 ** Uninitialiazed Working Variables.
 **************************************************
 
- 	section	data
+;  	section	.bss
 
-; verbose	rmb	1
+; ; verbose	rmb	1
 
-	endsection	
+; 	endsection
 
-PGMEND  equ *-1
-PGMSIZ  EQU PGMEND-BGNPGM
+; PGMEND  equ *-1
+; PGMSIZ  EQU PGMEND-BGNPGM
 
  END
 

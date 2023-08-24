@@ -12,7 +12,7 @@
         INCLUDE jns.i
         INCLUDE ascii.i
 
- 	section	code
+ 	section	.text
 
 ; BEGCOD  equ     *
 
@@ -53,11 +53,9 @@ GreetingsMsg:
 ** Uninitialiazed Working Variables.
 **************************************************
 
- 	section	data
+ 	; section	.bss
 
-; verbose	rmb	1
-
-	endsection	
+	; endsection	
 
 ; PGMEND  equ *-1
 ; PGMSIZ  EQU PGMEND-BGNPGM

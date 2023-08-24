@@ -12,9 +12,9 @@
         INCLUDE jns.i
         INCLUDE ascii.i
 
- 	section	code
+ 	section	.text
 
-BEGCOD  equ     *
+; BEGCOD  equ     *
 
 **************************************************
 ** Program (Position independant)
@@ -38,7 +38,7 @@ Abc2X:
 
 **************************************************
 
-endcod  equ *-1
+; endcod  equ *-1
 
 	endsection	
 
@@ -57,14 +57,12 @@ GreetingsMsg:
 ** Uninitialiazed Working Variables.
 **************************************************
 
- 	section	data
+ 	; section	.bss
 
-; verbose	rmb	1
+	; endsection	
 
-	endsection	
-
-PGMEND  equ *-1
-PGMSIZ  EQU PGMEND-BGNPGM
+; PGMEND  equ *-1
+; PGMSIZ  EQU PGMEND-BGNPGM
 
  END
 

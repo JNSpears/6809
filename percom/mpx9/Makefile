@@ -86,5 +86,7 @@ mpx9+/dbgfmt.obj : mpx9+/dbgfmt.asm
 mpx9+/abc1.obj : mpx9+/abc1.asm 
 mpx9+/abc2.obj : mpx9+/abc2.asm 
 mpx9+/abc3.obj : mpx9+/abc3.asm 
+mpx9+/CmdLine.obj : mpx9+/CmdLine.asm 
 # mpx9+/mpx9+.lib : mpx9+/abc1.obj mpx9+/abc2.obj mpx9+/dbgfmt.obj 
-mpx9+/mpx9+.cm1 : mpx9+/start.obj mpx9+/abc1.obj mpx9+/abc2.obj mpx9+/abc3.obj mpx9+/dbgfmt.obj # mpx9+/mpx9+.lib 
+# mpx9+/mpx9+.cm1 : mpx9+/start.obj mpx9+/abc1.obj mpx9+/abc2.obj mpx9+/abc3.obj mpx9+/dbgfmt.obj mpx9+/CmdLine.obj # mpx9+/mpx9+.lib 
+mpx9+/mpx9+.cm1 : mpx9+/start.obj mpx9+/dbgfmt.obj mpx9+/CmdLine.obj

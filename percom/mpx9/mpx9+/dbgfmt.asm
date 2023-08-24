@@ -13,7 +13,7 @@
         INCLUDE jns.i
         INCLUDE ascii.i
 
- 	section	code
+ 	section	.text
 
 FOURTYONE EXPORT
 
@@ -77,7 +77,8 @@ FOURTYONE1:
 @ckregS
 	CMPA 	#'S'	S register?
 	BNE 	@ckregD
-	ldd 	REGX-STACK,S load reg value from stack
+	; ldd 	REGX-STACK,S load reg value from stack
+	TFR 	S,D load register value with stack register
 	bra 	@FMTWREG
 @ckregD
 	CMPA 	#'D'	D register?
@@ -87,7 +88,7 @@ FOURTYONE1:
 @ckregPC
 	CMPA 	#'P'	PC register?
 	BNE 	fmterr
-	ldd 	REGA-STACK,S load reg value from stack
+	ldd 	REGP-STACK,S load reg value from stack
 	bra 	@FMTWREG
 @FMTBREG
 	leax 	2,X 	adjust pointer
@@ -155,14 +156,11 @@ fmterr
 
 	endsection
 
- 	; section	cend
-	; endsection	
-
 **************************************************
 ** Constants.
 **************************************************
 
- 	; section	data
+	; section	data
 
 	; endsection	
 
@@ -170,11 +168,9 @@ fmterr
 ** Uninitialiazed Working Variables.
 **************************************************
 
-;  	section	data
+	; section	.bss
 
-; ; verbose	rmb	1
-
-; 	endsection	
+	; endsection	
 
 ; PGMEND  equ *-1
 ; PGMSIZ  EQU PGMEND-BGNPGM
