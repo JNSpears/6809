@@ -76,7 +76,11 @@ LOOP:
         tfr     X,D
         subd    ,S++
         tfr     D,X
+        ; MPX9    $41
+        ; fcs     /Sa=%Sx\n\r/        
  	MPX9 	PSTRNG
+        ; MPX9    $41
+        ; fcs     /Sb=%Sx\n\r/        
 
 ;  	; Initialize buffer and other variables.
 ;  	LDB 	#MaxCmdLineLen 		; SET SIZE IN B	
@@ -92,21 +96,25 @@ LOOP:
 	LBSR  	getline				; x=buffer, b=bufferlen --> a=firstchar, b=bufferlen, x=buffer
 
         ; check for history action (!h display history, TBD: !n re-execute command #n, !text re-execute command starting with text) 
- 	LEAX 	<<VAR.CmdLineBuff,U ; POINT X AT LINE BUFFER
- 	lda 	,X
+ 	; LEAX 	<<VAR.CmdLineBuff,U ; POINT X AT LINE BUFFER
+ 	; lda 	,X
  	cmpa 	#'!'
  	bne 	NotHistCmd
 
         lbsr    DoHistAction            ; returns z if nothing to execute
         beq 	NoError
 
-NotHistCmd
+NotHistCmd: 			; 01F8
         ; Execute command.
         jsr     CRLF
-	MPX9	PROCMD
+        ; MPX9    $41
+        ; fcs     /S1=%Sx\n\r/        
+	MPX9	PROCMD 		; 0209
 	beq 	NoError
 	MPX9 	RPTERR
-NoError:
+NoError: 			; 020E
+        ; MPX9    $41
+        ; fcs     /S2=%Sx\n\r/        
 	; check to see if we are done for now.
 	lda 	<<VAR.left,U
 	adda 	<<VAR.right,U
@@ -285,6 +293,9 @@ Done:
  	tst 	<<VAR.dirty,U 
  	beq 	CopyHist2Buff3		; skip add to history if not dirty
 
+; +History +History +History +History +History +History +History +History
+; +History +History +History +History +History +History +History +History
+
  	LEAX 	<<VAR.CmdLineBuff,U ; POINT X AT LINE BUFFER
  	lda 	,X
  	cmpa 	#'!'
@@ -325,6 +336,9 @@ CopyHist2Buff2:
 	ldy 	<<VAR.HBegin,U  	; 
 
 	bra  	CopyHist2Buff2
+
+; -History -History -History -History -History -History -History -History
+; -History -History -History -History -History -History -History -History
 
 CopyHist2Buff3:
 	LDA 	[1,S] GET FIRST CHARACTER OF LINE
@@ -766,6 +780,9 @@ Cmd_CtrlCurLeftX:
 
 ; *****************************************************
 
+; +History +History +History +History +History +History +History +History
+; +History +History +History +History +History +History +History +History
+
 Cmd_CurUp:
 
 ; SCAN BACKTO HEAD IF ALL 0'S THEN NO MORE HIST DO NOTHING
@@ -796,7 +813,6 @@ NoWrap2:
  BLO 	NoWrap3
  ldy 	<<VAR.HBegin,U
 NoWrap3:
-
  decb  
  beq 	Cmd_CurUpX
 
@@ -815,7 +831,6 @@ CopyCharsHist2Buffer:
  bne  	NoWrap4
  ldy 	<<VAR.HBegin,U
 NoWrap4:
-
  sta 	B,X
  incb 
  inc 	<<VAR.left,U
@@ -853,6 +868,9 @@ NoWrap1a:
 Cmd_CurDown9:
 Cmd_CurDownX:
  LBRA	GetCharLoop
+
+; -History -History -History -History -History -History -History -History
+; -History -History -History -History -History -History -History -History
 
 ; *****************************************************
 CancelCurrLine: 

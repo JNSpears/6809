@@ -21,12 +21,11 @@
 ** Program (Position independant)
 **************************************************
 
-; Abc1 EXTERN
-; Abc2 EXTERN
-; Abc3 EXTERN
-CmdLineInit EXTERN
-CmdLine EXTERN
-s_.bss EXTERN
+CmdLineInit	EXTERN
+CmdLine 	EXTERN
+s_.bss 		EXTERN
+CmdShellInit 	EXTERN
+CmdShell 	EXTERN
 
 _Start EXPORT
 _Start:
@@ -99,9 +98,9 @@ AbcGO:
 	tfr  	X,Y
 	leax 	foo,PCR
 	ldd 	#(s_.bss-foo)
-	MPX9	BLKMOV	* X->src, Y->DST, D=LEN (REGISTERS PRESERVED)
+	; MPX9	BLKMOV	* X->src, Y->DST, D=LEN (REGISTERS PRESERVED)
 
-	jmp 	,Y
+	; jmp 	,Y
 
 foo:
 	LEAX 	newfoo,PCR
@@ -122,17 +121,6 @@ foo:
 	; LEAX 	SYSCLX,PCR ESTABLISH SYSTEM CALL EXT VECTOR
 	; STX 	SCLVEC,PCR
 
-	; leax	GreetingsMsg,PCR
-	; MPX9	PSTRNG
-
-	; LBSR 	Abc1
-	; LBSR 	Abc2
-	; LBSR 	Abc3
-
-	; lda 	#'@'
-	; MPX9	$41
-	; fcs	/test a=%Ac\n\r/
-
 	lbsr 	CmdLineInit
 	; LIFT COMMAND LOOP FROM MPX9.ASM#506
 	lbsr 	CmdLine
@@ -146,7 +134,7 @@ AbcX:
 ; * SYSTEM CALL DISPATCHER - Lifted from mpx9      *
 ; **************************************************
 SYSCAL ; CMPA #SYSLIM IS CALL VALID FOR MPX/9?
-
+ ; USIM
 * CHECK FOR SYSTEM CALL IN MPX9+ LIST
  LEAY SYSOFF,PCR POINT Y AT OFFSET TABLE
 RESCM1 TST ,Y END OF TABLE?
@@ -175,20 +163,54 @@ NotFound
 ; SYSCLX RTI DUMMY ROUTINE
  SPC 1
 
+****************************************************
+* MPX9+ go to old SYSTEM CALL handler              *
+****************************************************
+****************************************************
+* ENTRY REQUIREMENTS:  A contains the MPX9 syscal# *
+*                      Stack contains complete set *
+*                      of registers minus U        *
+* EXIT CONDITIONS:  EXITS TO SELECTED ROUTINE      *
+*                                                  *
+* example                                          *
+*  PSHS   CC,A,B,DP,X,Y,PC MOCK SWI                *
+*  lda    #PROCMD                                  *
+* MPX9SYSCAL EXTERN                                *
+*  jmp    MPX9SYSCAL                               *
+*                                                  *
+*                                                  *
+* TODO: Create a Macro for this!!                  *
+*                                                  *
+****************************************************
+MPX9SYSCAL EXPORT
+MPX9SYSCAL: ; (enter a=syscal#, stack=full set of registers)
+ leay 	SCLVEC,PCR A=MPX9 SYSCAL #
+ ldy 	,y
+ jmp 	,y
+
+; **************************************************
+; * MPX9+ SYSTEM CALLS                             *
+; **************************************************
+
 FOURTY:
 	clrb 
 	rts 
 
 FOURTYONE EXTERN
 
- SPC 1
-* SYSTEM CALL OFFSET LOOKUP TABLE
+; **************************************************
+; * MPX9+ SYSTEM CALL OFFSET LOOKUP TABLE          *
+; **************************************************
 SYSOFF:
 
  FCB $40
- FDB FOURTY-SYSOFF - IS MPX9+ LOADED?
+ FDB FOURTY-SYSOFF 	- IS MPX9+ LOADED?
  FCB $41
- FDB FOURTYONE-SYSOFF - GET A LINE OF INPUT
+ FDB FOURTYONE-SYSOFF 	- GET A LINE OF INPUT
+
+NPROCM EXTERN
+ FCB PROCMD
+ FDB NPROCM-SYSOFF 	- New process command.
 
  FCB 0 END OF TABLE MARK
 
