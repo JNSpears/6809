@@ -27,7 +27,9 @@ s_.bss 		EXTERN
 CmdShellInit 	EXTERN
 CmdShell 	EXTERN
 
-_Start EXPORT
+MPX9SYSCAL	EXPORT
+_Start 		EXPORT
+
 _Start:
 Abc:
 
@@ -72,43 +74,44 @@ Abc:
 	bne   	AbcGO
 	rts
 AbcGO:
-	pshs	x
+	pshs	x ; save comand line arg pointer
 
-	LEAX 	atabc,PCR
-	MPX9	PSTRNG
-	LEAX 	Abc,PCR
-	tfr 	X,D
-	MPX9	DSPDBY
+	; LEAX 	atabc,PCR
+	; MPX9	PSTRNG
+	; LEAX 	Abc,PCR
+	; tfr 	X,D
+	; MPX9	DSPDBY
 
-	LEAX 	_e_f,PCR
-	MPX9	PSTRNG
-	ldd 	#(s_.bss-foo)
-	MPX9	DSPDBY
+	; LEAX 	_e_f,PCR
+	; MPX9	PSTRNG
+	; ldd 	#(s_.bss-foo)
+	; MPX9	DSPDBY
 
 	MPX9	GETBAS		GET MPX/9 BASE
-	pshs  	X
+	; pshs  	X
+	; LEAX 	_MPXBAS,PCR
+	; MPX9	PSTRNG
+	; ldd 	,S
+	; MPX9	DSPDBY
+	; PULS 	X
 
-	LEAX 	_MPXBAS,PCR
-	MPX9	PSTRNG
-	ldd 	,S
-	MPX9	DSPDBY
-	PULS 	X
 	leax 	-(s_.bss-foo),X 	STEP BACK BY SIZE OF MPX9+
 	leax 	-$100,x 	make sure to leave room for stack (to be DP latter.)
 	tfr  	X,Y
 	leax 	foo,PCR
 	ldd 	#(s_.bss-foo)
-	; MPX9	BLKMOV	* X->src, Y->DST, D=LEN (REGISTERS PRESERVED)
 
-	; jmp 	,Y
+	MPX9	BLKMOV	* X->src, Y->DST, D=LEN (REGISTERS PRESERVED)
+
+	jmp 	,Y
 
 foo:
-	LEAX 	newfoo,PCR
-	MPX9	PSTRNG
-	LEAX 	foo,PCR
-	tfr 	X,D
-	MPX9	DSPDBY
-	jsr 	CRLF
+	; LEAX 	newfoo,PCR
+	; MPX9	PSTRNG
+	; LEAX 	foo,PCR
+	; tfr 	X,D
+	; MPX9	DSPDBY
+	; jsr 	CRLF
 
 	LDX 	[RAMv] POINT TO PSYMON RAM
 	LDX 	FRERAM,X POINT TO MINIDOS/9 RAM
@@ -121,9 +124,15 @@ foo:
 	; LEAX 	SYSCLX,PCR ESTABLISH SYSTEM CALL EXT VECTOR
 	; STX 	SCLVEC,PCR
 
+	LEAX 	foo,PCR
+	ldd 	#(s_.bss-foo)
+	leay  	D,X
+	MPX9 	$41
+	fcs	/MPX9+ Loaded @ $%Xx- $%Yxlen $%Dx\n\r/
+
 	lbsr 	CmdLineInit
 	; LIFT COMMAND LOOP FROM MPX9.ASM#506
-	lbsr 	CmdLine
+ABC_RET	lbsr 	CmdLine
 
 
 AbcX:
@@ -182,7 +191,6 @@ NotFound
 * TODO: Create a Macro for this!!                  *
 *                                                  *
 ****************************************************
-MPX9SYSCAL EXPORT
 MPX9SYSCAL: ; (enter a=syscal#, stack=full set of registers)
  leay 	SCLVEC,PCR A=MPX9 SYSCAL #
  ldy 	,y
@@ -195,6 +203,16 @@ MPX9SYSCAL: ; (enter a=syscal#, stack=full set of registers)
 FOURTY:
 	clrb 
 	rts 
+
+**************************************************
+* SYSTEM CALL 8 (MPX) - RETURN TO MPX/9          *
+**************************************************
+MPXRET 
+ ; LEAS STACK,PCR RESET THE STACK
+ ; LDA #CR FORCE RELOAD OF LINE BUFFER
+ ; STA LINBUF,PCR
+ BRA ABC_RET
+
 
 FOURTYONE EXTERN
 
@@ -212,19 +230,24 @@ NPROCM EXTERN
  FCB PROCMD
  FDB NPROCM-SYSOFF 	- New process command.
 
+ FCB MPX		- RETURN TO MPX9+
+ FDB MPXRET-SYSOFF 	- New process command.
+  
+
+
  FCB 0 END OF TABLE MARK
 
 
 
 **************************************************
 
-	endsection
+	endsection	; section	.text
 
 **************************************************
 ** Constants.
 **************************************************
 
- 	section	data
+ 	section	.data
 
 SYSVEC EQU 64 SYSTEM CALL VECTOR
 SCLVEC RMB 2 SYSTEM CALL VECTOR
@@ -236,17 +259,17 @@ _e_f	fcs /\r\n_End-foo:/
 _MPXBAS	fcs /\r\n_MPXBAS:/
 newfoo	fcs /\r\nNew @foo:/
 
-	endsection
+	endsection	; section .data
 
 **************************************************
 ** Uninitialiazed Working Variables.
 **************************************************
 
-;  	section	.bss
+;  	section .bss
 
 ; ; verbose	rmb	1
 
-; 	endsection
+; 	endsection	; section .bss
 
 ; PGMEND  equ *-1
 ; PGMSIZ  EQU PGMEND-BGNPGM

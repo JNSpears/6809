@@ -160,9 +160,9 @@ fmterr
 ** Constants.
 **************************************************
 
-	; section	data
+	; section	.data
 
-	; endsection	
+	; endsection 	; section .data	
 
 **************************************************
 ** Uninitialiazed Working Variables.
@@ -170,7 +170,7 @@ fmterr
 
 	; section	.bss
 
-	; endsection	
+	; endsection 	; section .bss	
 
 ; PGMEND  equ *-1
 ; PGMSIZ  EQU PGMEND-BGNPGM

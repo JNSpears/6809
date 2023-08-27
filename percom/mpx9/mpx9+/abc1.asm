@@ -46,20 +46,20 @@ Abc1X:
 ** Constants.
 **************************************************
 
- 	section	data
+ 	section .data
 
 GreetingsMsg:
 	FCS /Greetings! from Abc1\r\n/
 
-	endsection	
+	endsection	; section .data	
 
 **************************************************
 ** Uninitialiazed Working Variables.
 **************************************************
 
- 	; section	.bss
+ 	; section .bss
 
-	; endsection	
+	; endsection 	; section .bss	
 
 ; PGMEND  equ *-1
 ; PGMSIZ  EQU PGMEND-BGNPGM

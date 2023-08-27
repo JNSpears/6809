@@ -46,7 +46,7 @@ Abc2X:
 ** Constants.
 **************************************************
 
- 	section	data
+ 	section	.data
 
 GreetingsMsg:
 	FCS /Greetings! from Abc2\r\n/

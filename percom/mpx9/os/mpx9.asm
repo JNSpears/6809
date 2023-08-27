@@ -392,6 +392,10 @@ MPX9EP LEAS STACK,PCR SET STACK
         SWI3
         FCB DSPDBY
 
+        LEAX >LDDOL,PCR       ; print "Loaded @ $" message
+        SWI3
+        FCB PSTRNG
+
         LEAX >MPXBAS,PCR        ; print code begining of MPX/9 memeory
         tfr X,D
         SWI3
@@ -443,7 +447,7 @@ NEWLIN FCB CR,LF+$80
 LDATMSG FCC 'Loaded @ '
         fcb '$+$80
 LDATMSG2 FCC '- '
-        fcb '$+$80
+LDDOL    fcb '$+$80
 ;JNS-
  SPC 1
 **************************************************
@@ -2361,5 +2365,5 @@ GTDCBX
 MPXEND EQU *
  SPC 1
 MPXSIZ EQU MPXEND-MPXBAS
-
+mpxcod EQU MPXEND-MPXBAS
  END MPX9EP

@@ -18,15 +18,15 @@
 * Program (Position independant)
 **************************************************
 
-        ORG     $0
+MPX9SYSCAL      EXTERN
 
 ; ************************************************
-CmdShellInit EXPORT
+CmdShellInit    EXPORT
 CmdShellInit:
 
 ;         LEAU    CmdLineInit,pcr
 ;         pshs    U
-;         leau    data,PCR
+;         leau    XXXXXX,PCR
 ;         tfr     U,D
 ;         subd    ,S++
 ;         tfr     D,U
@@ -37,7 +37,7 @@ CmdShellInit:
 ; END INIT
 
 ; ************************************************
-CmdShell EXPORT
+CmdShell        EXPORT
 CmdShell:
 
 	clrb 		; no error
@@ -61,7 +61,7 @@ CmdShell:
 *                   ROUTINE SHOULD RETURN ERROR  *
 *                     CODE IN B, 0 IF NO ERROR   *
 **************************************************
-NPROCM EXPORT
+NPROCM          EXPORT
 NPROCM 
  PSHS A,X,Y,U,PC SAVE REGISTERS & LEAVE SLOT
  LEAU CMDERR,PCR SET UP ERROR RETURN ON STACK
@@ -112,9 +112,7 @@ GoMpx9ProcCmd: ; command not found in new table, go to old command dispatcher...
  PSHS   CC,A,B,DP,X,Y,PC MOCK SWI
  ; USIM
  lda    #PROCMD
-MPX9SYSCAL EXTERN
- jmp    MPX9SYSCAL
-
+ lbra    MPX9SYSCAL
 
 ; **************************************************
 ; lookup:
@@ -150,6 +148,9 @@ ResidentCommands:
 Cmd_xx: MPX9  $41
         fcs   /test XX\n\r/
         clrb 
+
+        MPX9 MPX
+        
         rts
 **************************************************
 
@@ -159,17 +160,17 @@ Cmd_xx: MPX9  $41
 ** Constants.
 *
 
-        section data
+        ; section .data
 
-        endsection      ; section data
+        ; endsection      ; section .data
 
 *
 ** Uninitialiazed Working Variables.
 *
 
-        section .bss
+        ; section .bss
 
-        endsection      ; section .bss
+        ; endsection      ; section .bss
 
  END
 

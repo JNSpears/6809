@@ -1,7 +1,7 @@
 entry _Start
 
 section .text load 0
-section data
+section .data
 section *,bss
 
 define lensympat l_%s

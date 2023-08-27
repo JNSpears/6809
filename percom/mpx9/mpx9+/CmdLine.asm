@@ -26,7 +26,7 @@ CmdLineInit:
 
         LEAU    CmdLineInit,pcr
         pshs    U
-        leau    data,PCR
+        leau    cmdline_data,PCR
         tfr     U,D
         subd    ,S++
         tfr     D,U
@@ -64,7 +64,7 @@ LOOP:
         ; setup U to point to the data structure
         LEAU    CmdLineInit,pcr
         pshs    U
-        leau    data,PCR
+        leau    cmdline_data,PCR
         tfr     U,D
         subd    ,S++
         tfr     D,U
@@ -990,12 +990,12 @@ DoHistActionX
 ** Constants.
 *
 
-        section data
+        section 	.data
 
 prompt FCB CR,LF
  fcs '> '
 
-        endsection
+        endsection 	; section .data
 
 *
 ** Uninitialiazed Working Variables.
@@ -1022,9 +1022,9 @@ HistBuff 	rmb MaxHistBuff
 	ENDSTRUCT
 
  	; ALIGN 16
-data    VAR
+cmdline_data    VAR
 
-        endsection
+        endsection 	; section .bss
 
 ; PGMEND  equ *-1
 ; PGMSIZ  EQU PGMEND-BGNPGM
