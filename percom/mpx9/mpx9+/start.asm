@@ -130,6 +130,13 @@ foo:
 	MPX9 	$41
 	fcs	/MPX9+ Loaded @ $%Xx- $%Yxlen $%Dx\n\r/
 
+	; debug and diag help.
+	MPX9	GETBAS	GET MPX/9 MEMORY X:MPXRAM, Y:MPXBAS AND LEN (BASE 2 END)
+	leau 	D,Y
+	MPX9 	$41
+	fcs	/\tMPX9 MPXRAM:$%Xx MPXBAS:$%Yx len:$%Dx HIGH@:$%Ux\n\r/
+
+
 	lbsr 	CmdLineInit
 	; LIFT COMMAND LOOP FROM MPX9.ASM#506
 ABC_RET	lbsr 	CmdLine

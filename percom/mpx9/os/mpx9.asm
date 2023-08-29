@@ -2326,11 +2326,14 @@ CURRENT:
 *                                                *
 * ENTRY REQUIREMENTS:  none                      *
 *                                                *
-* EXIT CONDITIONS:  X --> MPXBAS                 *
-*                   OTHERS UNCHANGED             *
+* EXIT CONDITIONS: X --> MPXRAM                  *
+*                  Y --> MPXBAS                  *
+*                  D LENGTH OF MPX9 CORE (MPXSIZ)*
 **************************************************
 GTBAS:
- LEAX MPXRAM,PCR
+ LEAX    MPXRAM,PCR
+ LEAY    MPXBAS,PCR
+ LDD     #MPXSIZ
  RTS
  SPC 1
 
@@ -2365,5 +2368,4 @@ GTDCBX
 MPXEND EQU *
  SPC 1
 MPXSIZ EQU MPXEND-MPXBAS
-mpxcod EQU MPXEND-MPXBAS
  END MPX9EP
