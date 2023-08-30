@@ -81,9 +81,17 @@ clean:
 
 LDFLAGS=-m$*.map -s$*.ld
 
+KERNAL_MODS=start dbgfmt CmdLine CmdShell Kalloc
+KERNAL_SRCS=$(foreach file,$(KERNAL_MODS),mpx9+/$(file).asm)
+KERNAL_OBJS=$(KERNAL_SRCS:.asm=.obj)
+$(info KERNAL_SRCS $(KERNAL_SRCS))
+$(info KERNAL_OBJS $(KERNAL_OBJS))
+
+
 mpx9+/start.obj : mpx9+/start.asm 
 mpx9+/dbgfmt.obj : mpx9+/dbgfmt.asm 
 mpx9+/CmdShell.obj : mpx9+/CmdShell.asm 
 mpx9+/CmdLine.obj : mpx9+/CmdLine.asm 
+mpx9+/Kalloc.obj : mpx9+/Kalloc.asm 
 # mpx9+/mpx9+.lib : mpx9+/abc1.obj mpx9+/abc2.obj mpx9+/dbgfmt.obj 
-mpx9+/mpx9+.cm1 : mpx9+/start.obj mpx9+/dbgfmt.obj mpx9+/CmdLine.obj mpx9+/CmdShell.obj
+mpx9+/mpx9+.cm1 : $(KERNAL_OBJS)

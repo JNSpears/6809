@@ -12,6 +12,7 @@
         INCLUDE mpx9.i
         INCLUDE jns.i
         INCLUDE ascii.i
+        INCLUDE mpx9+.i
 
  	section	.text
 
@@ -26,54 +27,54 @@ CmdLine 	EXTERN
 s_.bss 		EXTERN
 CmdShellInit 	EXTERN
 CmdShell 	EXTERN
+KAllocInit 	EXTERN
 
 MPX9SYSCAL	EXPORT
 _Start 		EXPORT
 
 _Start:
-Abc:
-
-	; clr     >verbose,pcr    ; initialize variables
+	lda 	#$BF
+	tfr     a,dp
+	clr     <verbose	; initialize variables
 
     
-; option:
-; 	swi3
-; 	fcb     SKPSPC          ; point to the next word
-; 	beq     Init  		; No arguments
-; 	lda     ,x+
-; 	cmpa    #'/             ; look for option flags
-; 	bne     Init       ; Not a switch
+option:
+	MPX9    SKPSPC          ; point to the next word
+	beq     Init  		; No arguments
+	lda     ,x+
+	cmpa    #'/             ; look for option flags
+	bne     Init       ; Not a switch
 
-; option_V:
-; 	lda     ,x+             ; get option char and bump pointer
-; 	cmpa    #'V             ; is a option 'V'?
-; 	bne     Option_S        ; bad switch
-; 	com     >verbose,pcr    ; toggle option 'V'
-; 	bra     option          ; get next option
+option_V:
+	lda     ,x+             ; get option char and bump pointer
+	cmpa    #'V             ; is a option 'V'?
+	bne     Option_S        ; bad switch
+	com     <verbose	; toggle option 'V'
+	bra     option          ; get next option
 
-; Option_S:
+Option_S:
 ; ; 	cmpa    #'S             ; is a option 'S'?
 ; ; 	bne     synerr          ; bad switch
 ; ; 	com     >sysdcbs,pcr    ; toggle option 'S'
 ; ; 	bra     option          ; get next option
 
-; synerr:
-; 	ldb     #ERR_SN         ; Error Syntax
-; 	rts
+synerr:
+	ldb     #ERR_SN         ; Error Syntax
+	rts
 	
 ; *****************************************************
-; Init:
-    ; tst     >verbose,pcr
+Init:
+    	; tst     <verbose
 
 ; START INIT
 
 	; CHECK TO SEE IF MPX9+ IS LOADED ALREADY
 	ldb 	#$FF
-	MPX9	$40
+	MPX9	MPX9LOADED
 	tstb 
-	bne   	AbcGO
+	bne   	Good2Go
 	rts
-AbcGO:
+Good2Go:
 	pshs	x ; save comand line arg pointer
 
 	; LEAX 	atabc,PCR
@@ -105,39 +106,54 @@ AbcGO:
 
 	jmp 	,Y
 
-foo:
-	; LEAX 	newfoo,PCR
-	; MPX9	PSTRNG
-	; LEAX 	foo,PCR
-	; tfr 	X,D
-	; MPX9	DSPDBY
-	; jsr 	CRLF
+foo:	
+; **********************************************************************
+; **********************************************************************
+; ***                                                                ***
+; *** ALL CODE ABOVE THIS POINT IS NOT RELOCATED TO HIGHER MEMORY.   ***
+; ***                                                                ***
+; **********************************************************************
+; **********************************************************************
+	LDX 	[RAMv] 		POINT TO PSYMON RAM
+	LDX 	FRERAM,X 	POINT TO MINIDOS/9 RAM
 
-	LDX 	[RAMv] POINT TO PSYMON RAM
-	LDX 	FRERAM,X POINT TO MINIDOS/9 RAM
+	LDY 	SYSVEC,X
+	STY 	<SCLVEC
 
-	LDY 	SYSVEC,X 	$B1E6: 81 25 23 04 6e 9d fc a6  80 08 48 30 8c 09 ec 86 |.%#.n.....H0....|
-	STY 	SCLVEC,PCR
-
-	LEAY 	SYSCAL,PCR ESTABLISH SYSTEM CALL VECTOR
+	LEAY 	SYSCAL,PCR 	ESTABLISH SYSTEM CALL VECTOR
 	STY 	SYSVEC,X
-	; LEAX 	SYSCLX,PCR ESTABLISH SYSTEM CALL EXT VECTOR
-	; STX 	SCLVEC,PCR
 
 	LEAX 	foo,PCR
 	ldd 	#(s_.bss-foo)
 	leay  	D,X
-	MPX9 	$41
+	MPX9 	DBGFMT
 	fcs	/MPX9+ Loaded @ $%Xx- $%Yxlen $%Dx\n\r/
 
 	; debug and diag help.
+    	tst     <verbose
+    	Lbeq 	@NoDebug
 	MPX9	GETBAS	GET MPX/9 MEMORY X:MPXRAM, Y:MPXBAS AND LEN (BASE 2 END)
 	leau 	D,Y
-	MPX9 	$41
+	MPX9 	DBGFMT
 	fcs	/\tMPX9 MPXRAM:$%Xx MPXBAS:$%Yx len:$%Dx HIGH@:$%Ux\n\r/
+	LEAX 	foo,PCR
+	lbsr 	KAllocInit
+	MPX9 	DBGFMT
+	fcs	/\tMPX9+ KAMemPtr:$%Xx\n\r/
+	ldd 	#10
+	MPX9 	KALLOC
+	MPX9 	DBGFMT
+	fcs	/\tMPX9+ Kalloc --> $%Xx\n\r/
+	ldd 	#$30
+	MPX9 	KALLOC
+	MPX9 	DBGFMT
+	fcs	/\tMPX9+ Kalloc --> $%Xx\n\r/
+	ldd 	#$100
+	MPX9 	KALLOC
+	MPX9 	DBGFMT
+	fcs	/\tMPX9+ Kalloc --> $%Xx\n\r/
+@NoDebug
 
-
-	lbsr 	CmdLineInit
 	; LIFT COMMAND LOOP FROM MPX9.ASM#506
 ABC_RET	lbsr 	CmdLine
 
@@ -169,11 +185,11 @@ RESCM2
  SPC 1
 NotFound
 
- leay 	SCLVEC,PCR
- ldy 	,y
+ LDy 	<SCLVEC
+ ; ldy 	,y
  jmp 	,y
 
- ; JMP [SCLVEC,PCR] EXIT TO NEXT LEVEL ROUTINE
+ ; JMP [<SCLVEC] EXIT TO NEXT LEVEL ROUTINE
 
  SPC 1
 ; SYSCLX RTI DUMMY ROUTINE
@@ -199,8 +215,8 @@ NotFound
 *                                                  *
 ****************************************************
 MPX9SYSCAL: ; (enter a=syscal#, stack=full set of registers)
- leay 	SCLVEC,PCR A=MPX9 SYSCAL #
- ldy 	,y
+ lDy 	<SCLVEC A=MPX9 SYSCAL #
+ ; ldy 	,y
  jmp 	,y
 
 ; **************************************************
@@ -228,9 +244,9 @@ FOURTYONE EXTERN
 ; **************************************************
 SYSOFF:
 
- FCB $40
+ FCB MPX9LOADED
  FDB FOURTY-SYSOFF 	- IS MPX9+ LOADED?
- FCB $41
+ FCB DBGFMT
  FDB FOURTYONE-SYSOFF 	- GET A LINE OF INPUT
 
 NPROCM EXTERN
@@ -240,11 +256,13 @@ NPROCM EXTERN
  FCB MPX		- RETURN TO MPX9+
  FDB MPXRET-SYSOFF 	- New process command.
   
+ FCB KALLOC
+ FDB KAlloc-SYSOFF 	- GET A LINE OF INPUT
 
 
  FCB 0 END OF TABLE MARK
 
-
+KAlloc	EXTERN
 
 **************************************************
 
@@ -257,14 +275,6 @@ NPROCM EXTERN
  	section	.data
 
 SYSVEC EQU 64 SYSTEM CALL VECTOR
-SCLVEC RMB 2 SYSTEM CALL VECTOR
-
-; GreetingsMsg:
-; 	fcs /Greetings!\r\n/
-atabc	fcs /@abc:/
-_e_f	fcs /\r\n_End-foo:/
-_MPXBAS	fcs /\r\n_MPXBAS:/
-newfoo	fcs /\r\nNew @foo:/
 
 	endsection	; section .data
 
@@ -273,10 +283,20 @@ newfoo	fcs /\r\nNew @foo:/
 **************************************************
 
 ;  	section .bss
-
-; ; verbose	rmb	1
-
 ; 	endsection	; section .bss
+
+**************************************************
+** Uninitialiazed Direct Page Working Variables.
+**************************************************
+
+ 	section .dp
+
+verbose         export
+
+verbose	rmb	1
+SCLVEC 	rmw 1 SYSTEM CALL VECTOR TO MPX9 SYSTEM CALL DISPATCHER.
+
+	endsection	; section .dp
 
 ; PGMEND  equ *-1
 ; PGMSIZ  EQU PGMEND-BGNPGM
