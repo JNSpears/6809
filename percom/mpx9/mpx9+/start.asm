@@ -136,22 +136,27 @@ foo:
 	leau 	D,Y
 	MPX9 	DBGFMT
 	fcs	/\tMPX9 MPXRAM:$%Xx MPXBAS:$%Yx len:$%Dx HIGH@:$%Ux\n\r/
+;
+	; initialiaze Kernal memory allocation.
 	LEAX 	foo,PCR
 	lbsr 	KAllocInit
 	MPX9 	DBGFMT
 	fcs	/\tMPX9+ KAMemPtr:$%Xx\n\r/
-	ldd 	#10
-	MPX9 	KALLOC
-	MPX9 	DBGFMT
-	fcs	/\tMPX9+ Kalloc --> $%Xx\n\r/
-	ldd 	#$30
-	MPX9 	KALLOC
-	MPX9 	DBGFMT
-	fcs	/\tMPX9+ Kalloc --> $%Xx\n\r/
-	ldd 	#$100
-	MPX9 	KALLOC
-	MPX9 	DBGFMT
-	fcs	/\tMPX9+ Kalloc --> $%Xx\n\r/
+;
+	lbsr 	CmdLineInit
+;
+	; ldd 	#10
+	; MPX9 	KALLOC
+	; MPX9 	DBGFMT
+	; fcs	/\tMPX9+ Kalloc --> $%Xx\n\r/
+	; ldd 	#$30
+	; MPX9 	KALLOC
+	; MPX9 	DBGFMT
+	; fcs	/\tMPX9+ Kalloc --> $%Xx\n\r/
+	; ldd 	#$100
+	; MPX9 	KALLOC
+	; MPX9 	DBGFMT
+	; fcs	/\tMPX9+ Kalloc --> $%Xx\n\r/
 @NoDebug
 
 	; LIFT COMMAND LOOP FROM MPX9.ASM#506

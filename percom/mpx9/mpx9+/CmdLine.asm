@@ -11,25 +11,51 @@
         INCLUDE mpx9.i
         INCLUDE jns.i
         INCLUDE ascii.i
+        INCLUDE mpx9+.i
 
-        section .text
+MaxCmdLineLen	equ 64
+MaxHistBuff	equ 256
+
+VAR	STRUCT
+max 		rmb 1
+left		rmb 1
+right		rmb 1
+dirty		rmb 1 ; true if: user input or edit, false if: canceled, or from history
+HBegin		rmw 1
+HEnd		rmw 1
+HHead		rmw 1
+HCurr		rmw 1
+histix		rmw 1
+
+CmdLineBuff	rmb MaxCmdLineLen
+HistBuff 	rmb MaxHistBuff
+	ENDSTRUCT
 
 **************************************************
 * Program (Position independant)
 **************************************************
 
-        ORG     $0
+        section .text
 
 ; ************************************************
 CmdLineInit EXPORT
 CmdLineInit:
 
-        LEAU    CmdLineInit,pcr
-        pshs    U
-        leau    cmdline_data,PCR
-        tfr     U,D
-        subd    ,S++
-        tfr     D,U
+	; USIM
+        ; LEAU    CmdLineInit,pcr
+        ; pshs    U
+        ; leau    cmdline_data,PCR
+        ; tfr     U,D
+        ; subd    ,S++
+        ; tfr     D,U
+
+
+	ldd 	#sizeof{VAR}
+	MPX9 	KALLOC
+	MPX9 	DBGFMT
+	fcs	/\tCmdLineInit pCmdLineData --> $%Xx\n\r/
+	stx 	<pCmdLineData
+	tfr     X,U
 
         leax    VAR.HistBuff,U
         stx     <<VAR.HBegin,U
@@ -62,25 +88,19 @@ CmdLine:
 
 LOOP:
         ; setup U to point to the data structure
-        LEAU    CmdLineInit,pcr
-        pshs    U
-        leau    cmdline_data,PCR
-        tfr     U,D
-        subd    ,S++
-        tfr     D,U
+        ; LEAU    CmdLineInit,pcr
+        ; pshs    U
+        ; leau    cmdline_data,PCR
+        ; tfr     U,D
+        ; subd    ,S++
+        ; tfr     D,U
         
+	ldx 	<pCmdLineData
+	tfr     X,U
+
         ; print prompt
-        LEAX    CmdLineInit,pcr
-        pshs    X
         leaX    prompt,PCR
-        tfr     X,D
-        subd    ,S++
-        tfr     D,X
-        ; MPX9    $41
-        ; fcs     /Sa=%Sx\n\r/        
  	MPX9 	PSTRNG
-        ; MPX9    $41
-        ; fcs     /Sb=%Sx\n\r/        
 
 ;  	; Initialize buffer and other variables.
 ;  	LDB 	#MaxCmdLineLen 		; SET SIZE IN B	
@@ -92,8 +112,8 @@ LOOP:
 
  	; setup and get a line.
  	LDB 	#MaxCmdLineLen 		; SET SIZE IN B	
- 	LEAX 	<<VAR.CmdLineBuff,U ; POINT X AT LINE BUFFER
-	LBSR  	getline				; x=buffer, b=bufferlen --> a=firstchar, b=bufferlen, x=buffer
+ 	LEAX 	<<VAR.CmdLineBuff,U 	; POINT X AT LINE BUFFER
+	LBSR  	getline			; x=buffer, b=bufferlen --> a=firstchar, b=bufferlen, x=buffer
 
         ; check for history action (!h display history, TBD: !n re-execute command #n, !text re-execute command starting with text) 
  	; LEAX 	<<VAR.CmdLineBuff,U ; POINT X AT LINE BUFFER
@@ -970,13 +990,13 @@ DoHistActionX
         tstb
         rts
 
-; Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute
-; Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute
-; Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute Execute
+; History History History History History History History History History History History History History History History History
+; History History History History History History History History History History History History History History History History
+; History History History History History History History History History History History History History History History History
 
 
-
-
+prompt FCB CR,LF
+ fcs '> '
 
 
 
@@ -992,8 +1012,7 @@ DoHistActionX
 
         section 	.data
 
-prompt FCB CR,LF
- fcs '> '
+
 
         endsection 	; section .data
 
@@ -1003,28 +1022,21 @@ prompt FCB CR,LF
 
         section .bss
 
-MaxCmdLineLen	equ 64
-MaxHistBuff	equ 256
-
-VAR	STRUCT
-max 		rmb 1
-left		rmb 1
-right		rmb 1
-dirty		rmb 1 ; true if: user input or edit, false if: canceled, or from history
-HBegin		rmw 1
-HEnd		rmw 1
-HHead		rmw 1
-HCurr		rmw 1
-histix		rmw 1
-
-CmdLineBuff	rmb MaxCmdLineLen
-HistBuff 	rmb MaxHistBuff
-	ENDSTRUCT
-
  	; ALIGN 16
 cmdline_data    VAR
 
         endsection 	; section .bss
+
+**************************************************
+** Uninitialiazed Direct Page Working Variables.
+**************************************************
+
+ 	section .dp
+
+pCmdLineData 	rmw 1 POINTER TO KAlloc'ed cmdline_data structure
+
+	endsection	; section .dp
+
 
 ; PGMEND  equ *-1
 ; PGMSIZ  EQU PGMEND-BGNPGM
