@@ -40,14 +40,6 @@ HistBuff 	rmb MaxHistBuff
 CmdLineInit EXPORT
 CmdLineInit:
 
-	; USIM
-        ; LEAU    CmdLineInit,pcr
-        ; pshs    U
-        ; leau    cmdline_data,PCR
-        ; tfr     U,D
-        ; subd    ,S++
-        ; tfr     D,U
-
 	; KAlloc memory for CmdLineData and store in pCmdLineData
 	ldd 	#sizeof{VAR}
 	MPX9 	KALLOC
@@ -134,46 +126,28 @@ CmdLine:
 ;  	DECB 
 ;  	BNE 	ClrCmdBuffer
 
- 	; setup and get a line.
- 	LDB 	#MaxCmdLineLen 		; SET SIZE IN B	
- 	; LEAX 	<<VAR.CmdLineBuff,U 	; POINT X AT LINE BUFFER
+	; setup and get a line.
+	LDB 	#MaxCmdLineLen 		; SET SIZE IN B	
 	ldx 	<<VAR.pCmdLineBuff,U 	; POINT X AT LINE BUFFER
 
 	; MPX9 	DBGFMT
 	; fcs	/\tCmdLineInit B:$%Bx U:$%Ux X:$%Xx\n\r/
 
-	LBSR  	getline			; x=buffer, b=bufferlen --> a=firstchar, b=bufferlen, x=buffer
-
-
-	ldB 		<<VAR.left,U
-	addB 		<<VAR.right,U
-	STB 		<<VAR.left,U
+	LBSR	getline			; x=buffer, b=bufferlen --> a=firstchar, b=bufferlen, x=buffer
 
 	; check for history action (!h display history, TBD: !n re-execute command #n, !text re-execute command starting with text) 
- 	; LEAX 	<<VAR.CmdLineBuff,U ; POINT X AT LINE BUFFER
- 	; lda 	,X
- 	cmpa 	#'!'
- 	bne 	NotHistCmd
+	cmpa	#'!'
+	bne	CmdLineX
 
-        lbsr    DoHistAction            ; returns z if nothing to execute
-        beq 	NoError
+	lbsr	DoHistAction            ; returns z if nothing to do
+	bne	CmdLineX
 
-NotHistCmd: 			; 01F8
-        ; ; Execute command.
-        ; jsr     CRLF
-        ; ; MPX9    $41
-        ; ; fcs     /S1=%Sx\n\r/        
-	; MPX9	PROCMD 		; 0209
-	; beq 	NoError
-	; MPX9 	RPTERR
-NoError: 			; 020E
-        ; ; MPX9    $41
-        ; ; fcs     /S2=%Sx\n\r/        
-	; ; check to see if we are done for now.
+	; Force command to be blank.
+	clr	,X
+	clra 
 
-	; lbne   	LOOP
-
-	LDA 		1,X GET FIRST CHARACTER OF LINE
+CmdLineX
+	LDA 		,X GET FIRST CHARACTER OF LINE
 	TSTA 		; SET Z FLAG PER A
 
 	rts		; Return to OS
@@ -398,7 +372,11 @@ CopyHist2Buff2:
 
 CopyHist2Buff3:
 	LDA 	[1,S] GET FIRST CHARACTER OF LINE
-	LDB 	<<VAR.left,U 
+
+	; NORMALIZE COMMAND LENGTH COUNT IN REG-B
+	ldB	<<VAR.left,U
+	addB	<<VAR.right,U
+	STB	<<VAR.left,U
 
 GETLNX 
 	TSTA 	; SET Z FLAG PER A
