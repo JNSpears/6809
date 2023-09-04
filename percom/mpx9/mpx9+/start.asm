@@ -28,6 +28,8 @@ s_.bss 		EXTERN
 CmdShellInit 	EXTERN
 CmdShell 	EXTERN
 KAllocInit 	EXTERN
+KAlloc		EXTERN
+NPROCM 		EXTERN
 
 MPX9SYSCAL	EXPORT
 _Start 		EXPORT
@@ -37,20 +39,19 @@ _Start:
 	tfr     a,dp
 	clr     <verbose	; initialize variables
 
-    
 option:
-	MPX9    SKPSPC          ; point to the next word
-	beq     Init  		; No arguments
+	MPX9    SKPSPC		; point to the next word
+	beq     Init		; No arguments
 	lda     ,x+
-	cmpa    #'/             ; look for option flags
-	bne     Init       ; Not a switch
+	cmpa    #'/		; look for option flags
+	bne     Init		; Not a switch
 
 option_V:
-	lda     ,x+             ; get option char and bump pointer
-	cmpa    #'V             ; is a option 'V'?
-	bne     Option_S        ; bad switch
+	lda     ,x+		; get option char and bump pointer
+	cmpa    #'V		; is a option 'V'?
+	bne     Option_S	; bad switch
 	com     <verbose	; toggle option 'V'
-	bra     option          ; get next option
+	bra     option		; get next option
 
 Option_S:
 ; ; 	cmpa    #'S             ; is a option 'S'?
@@ -59,15 +60,11 @@ Option_S:
 ; ; 	bra     option          ; get next option
 
 synerr:
-	ldb     #ERR_SN         ; Error Syntax
+	ldb     #ERR_SN		; Error Syntax
 	rts
 	
 ; *****************************************************
 Init:
-    	; tst     <verbose
-
-; START INIT
-
 	; CHECK TO SEE IF MPX9+ IS LOADED ALREADY
 	ldb 	#$FF
 	MPX9	MPX9LOADED
@@ -88,8 +85,8 @@ Good2Go:
 	; ldd 	#(s_.bss-foo)
 	; MPX9	DSPDBY
 
-	MPX9	GETBAS		GET MPX/9 BASE
-	; pshs  	X
+	MPX9	GETBAS		; GET MPX/9 BASE
+	; pshs  X
 	; LEAX 	_MPXBAS,PCR
 	; MPX9	PSTRNG
 	; ldd 	,S
@@ -136,34 +133,22 @@ foo:
 	leau 	D,Y
 	MPX9 	DBGFMT
 	fcs	/\tMPX9 MPXRAM:$%Xx MPXBAS:$%Yx len:$%Dx HIGH@:$%Ux\n\r/
-;
+@NoDebug
+
 	; initialiaze Kernal memory allocation.
 	LEAX 	foo,PCR
 	lbsr 	KAllocInit
+
+	; debug and diag help.
+    	tst     <verbose
+    	Lbeq 	@NoDebug
 	MPX9 	DBGFMT
 	fcs	/\tMPX9+ KAMemPtr:$%Xx\n\r/
-;
-	lbsr 	CmdLineInit
-;
-	; ldd 	#10
-	; MPX9 	KALLOC
-	; MPX9 	DBGFMT
-	; fcs	/\tMPX9+ Kalloc --> $%Xx\n\r/
-	; ldd 	#$30
-	; MPX9 	KALLOC
-	; MPX9 	DBGFMT
-	; fcs	/\tMPX9+ Kalloc --> $%Xx\n\r/
-	; ldd 	#$100
-	; MPX9 	KALLOC
-	; MPX9 	DBGFMT
-	; fcs	/\tMPX9+ Kalloc --> $%Xx\n\r/
 @NoDebug
 
-	; LIFT COMMAND LOOP FROM MPX9.ASM#506
-ABC_RET	lbsr 	CmdLine
-
-
-AbcX:
+	lbsr 	CmdLineInit
+; ABC_RET:
+; AbcX:
 	CLRB	; No Errors
 	PULS	pc,x
 
@@ -171,16 +156,15 @@ AbcX:
 ; * SYSTEM CALL DISPATCHER - Lifted from mpx9      *
 ; **************************************************
 SYSCAL ; CMPA #SYSLIM IS CALL VALID FOR MPX/9?
- ; USIM
 * CHECK FOR SYSTEM CALL IN MPX9+ LIST
  LEAY SYSOFF,PCR POINT Y AT OFFSET TABLE
+
 RESCM1 TST ,Y END OF TABLE?
  BEQ NotFound GO IF YES
  CMPA ,Y+ FIND COMMAND?
  BEQ RESCM2 GO IF YES
  LEAY 2,Y ADVANCE POINTER
  BRA RESCM1 LOOP
-
 RESCM2
  LDD ,Y GET OFFSET TO ROUTINE
  LEAX SYSOFF,PCR POINT X AT OFFSET TABLE
@@ -189,16 +173,10 @@ RESCM2
  PULS CC,A,B,DP,X,Y,PC TURN SWI CALL INTO JSR
  SPC 1
 NotFound
-
- LDy 	<SCLVEC
- ; ldy 	,y
+ LDy 	<SCLVEC EXIT TO NEXT LEVEL ROUTINE
  jmp 	,y
 
  ; JMP [<SCLVEC] EXIT TO NEXT LEVEL ROUTINE
-
- SPC 1
-; SYSCLX RTI DUMMY ROUTINE
- SPC 1
 
 ****************************************************
 * MPX9+ go to old SYSTEM CALL handler              *
@@ -232,14 +210,14 @@ FOURTY:
 	clrb 
 	rts 
 
-**************************************************
-* SYSTEM CALL 8 (MPX) - RETURN TO MPX/9          *
-**************************************************
-MPXRET 
- ; LEAS STACK,PCR RESET THE STACK
- ; LDA #CR FORCE RELOAD OF LINE BUFFER
- ; STA LINBUF,PCR
- BRA ABC_RET
+****************************************************
+* SYSTEM CALL 8 (MPX) - RETURN TO MPX/9            *
+****************************************************
+; MPXRET 
+;  ; LEAS STACK,PCR RESET THE STACK
+;  ; LDA #CR FORCE RELOAD OF LINE BUFFER
+;  ; STA LINBUF,PCR
+;  BRA ABC_RET
 
 
 FOURTYONE EXTERN
@@ -251,23 +229,23 @@ SYSOFF:
 
  FCB MPX9LOADED
  FDB FOURTY-SYSOFF 	- IS MPX9+ LOADED?
+
  FCB DBGFMT
  FDB FOURTYONE-SYSOFF 	- GET A LINE OF INPUT
 
-NPROCM EXTERN
  FCB PROCMD
  FDB NPROCM-SYSOFF 	- New process command.
 
- FCB MPX		- RETURN TO MPX9+
- FDB MPXRET-SYSOFF 	- New process command.
+ ; FCB MPX		- RETURN TO MPX9+
+ ; FDB MPXRET-SYSOFF 	- New process command.
   
  FCB KALLOC
- FDB KAlloc-SYSOFF 	- GET A LINE OF INPUT
+ FDB KAlloc-SYSOFF 	- GET A HUNK OF KERNAL MEMORY
 
+ FCB GETLIN
+ FDB CmdLine-SYSOFF 	- GET A LINE OF INPUT
 
  FCB 0 END OF TABLE MARK
-
-KAlloc	EXTERN
 
 **************************************************
 
@@ -296,10 +274,10 @@ SYSVEC EQU 64 SYSTEM CALL VECTOR
 
  	section .dp
 
-verbose         export
+verbose	export
 
 verbose	rmb	1
-SCLVEC 	rmw 1 SYSTEM CALL VECTOR TO MPX9 SYSTEM CALL DISPATCHER.
+SCLVEC 	rmb	2	; SYSTEM CALL VECTOR TO MPX9 SYSTEM CALL DISPATCHER.
 
 	endsection	; section .dp
 

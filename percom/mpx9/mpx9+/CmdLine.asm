@@ -21,13 +21,12 @@ max 		rmb 1
 left		rmb 1
 right		rmb 1
 dirty		rmb 1 ; true if: user input or edit, false if: canceled, or from history
-HBegin		rmw 1
-HEnd		rmw 1
-HHead		rmw 1
-HCurr		rmw 1
-histix		rmw 1
-
-CmdLineBuff	rmb MaxCmdLineLen
+HBegin		rmb 2
+HEnd		rmb 2
+HHead		rmb 2
+HCurr		rmb 2
+histix		rmb 2
+pCmdLineBuff	rmb 2
 HistBuff 	rmb MaxHistBuff
 	ENDSTRUCT
 
@@ -49,13 +48,31 @@ CmdLineInit:
         ; subd    ,S++
         ; tfr     D,U
 
-
+	; KAlloc memory for CmdLineData and store in pCmdLineData
 	ldd 	#sizeof{VAR}
 	MPX9 	KALLOC
-	MPX9 	DBGFMT
-	fcs	/\tCmdLineInit pCmdLineData --> $%Xx\n\r/
 	stx 	<pCmdLineData
 	tfr     X,U
+
+        tst  	<verbose
+        beq      @NoDebug
+	MPX9 	DBGFMT
+	fcs	/\tCmdLineInit pCmdLineData:$%Xx\n\r/
+@NoDebug
+
+
+
+	pshs 	u
+	MPX9	GETBAS ;  GET MPX/9 MEMORY X:MPXRAM, Y:MPXBAS AND LEN (BASE 2 END)
+	leax 	$1C0,X
+	puls 	u
+	stx 	<<VAR.pCmdLineBuff,U
+
+        tst  	<verbose
+        beq      @NoDebug
+	MPX9 	DBGFMT
+	fcs	/\tCmdLineInit pCmdLineBuff:$%Xx\n\r/
+@NoDebug
 
         leax    VAR.HistBuff,U
         stx     <<VAR.HBegin,U
@@ -72,7 +89,7 @@ CmdLineInit:
         clrb
         std     <<VAR.histix,U
 
-ClrBuffer2:
+ClrBuffer2:	; Clear history buffer
         CLR     ,x+
         cmpx    <<VAR.HEnd,U
         BNE     ClrBuffer2
@@ -80,13 +97,21 @@ ClrBuffer2:
         clrb
         rts
 
-; END INIT
-
-; ************************************************
+**************************************************
+* SYSTEM CALL 9 (GETLIN) - GET INPUT LINE        *
+*                                                *
+* ENTRY REQUIREMENTS:  X POINTS AT LINE BUFFER   *
+*                      B CONTAINS BUFFER LENGTH  *
+*                                                *
+* EXIT CONDITIONS:  A CONTAINS FIRST CHARACTER,  *
+*                     NUL => LINE CANCELED       *
+*                     Z FLAG IN CC SET PER A     *
+*                   OTHERS UNCHANGED             *
+**************************************************
 CmdLine EXPORT
 CmdLine:
 
-LOOP:
+; LOOP:
         ; setup U to point to the data structure
         ; LEAU    CmdLineInit,pcr
         ; pshs    U
@@ -95,12 +120,11 @@ LOOP:
         ; subd    ,S++
         ; tfr     D,U
         
-	ldx 	<pCmdLineData
-	tfr     X,U
+	ldU 	<pCmdLineData
 
         ; print prompt
-        leaX    prompt,PCR
- 	MPX9 	PSTRNG
+        ; leaX    prompt,PCR
+ 	; MPX9 	PSTRNG
 
 ;  	; Initialize buffer and other variables.
 ;  	LDB 	#MaxCmdLineLen 		; SET SIZE IN B	
@@ -112,10 +136,20 @@ LOOP:
 
  	; setup and get a line.
  	LDB 	#MaxCmdLineLen 		; SET SIZE IN B	
- 	LEAX 	<<VAR.CmdLineBuff,U 	; POINT X AT LINE BUFFER
+ 	; LEAX 	<<VAR.CmdLineBuff,U 	; POINT X AT LINE BUFFER
+	ldx 	<<VAR.pCmdLineBuff,U 	; POINT X AT LINE BUFFER
+
+	; MPX9 	DBGFMT
+	; fcs	/\tCmdLineInit B:$%Bx U:$%Ux X:$%Xx\n\r/
+
 	LBSR  	getline			; x=buffer, b=bufferlen --> a=firstchar, b=bufferlen, x=buffer
 
-        ; check for history action (!h display history, TBD: !n re-execute command #n, !text re-execute command starting with text) 
+
+	ldB 		<<VAR.left,U
+	addB 		<<VAR.right,U
+	STB 		<<VAR.left,U
+
+	; check for history action (!h display history, TBD: !n re-execute command #n, !text re-execute command starting with text) 
  	; LEAX 	<<VAR.CmdLineBuff,U ; POINT X AT LINE BUFFER
  	; lda 	,X
  	cmpa 	#'!'
@@ -125,22 +159,23 @@ LOOP:
         beq 	NoError
 
 NotHistCmd: 			; 01F8
-        ; Execute command.
-        jsr     CRLF
-        ; MPX9    $41
-        ; fcs     /S1=%Sx\n\r/        
-	MPX9	PROCMD 		; 0209
-	beq 	NoError
-	MPX9 	RPTERR
+        ; ; Execute command.
+        ; jsr     CRLF
+        ; ; MPX9    $41
+        ; ; fcs     /S1=%Sx\n\r/        
+	; MPX9	PROCMD 		; 0209
+	; beq 	NoError
+	; MPX9 	RPTERR
 NoError: 			; 020E
-        ; MPX9    $41
-        ; fcs     /S2=%Sx\n\r/        
-	; check to see if we are done for now.
-	lda 	<<VAR.left,U
-	adda 	<<VAR.right,U
-	lbne   	LOOP
+        ; ; MPX9    $41
+        ; ; fcs     /S2=%Sx\n\r/        
+	; ; check to see if we are done for now.
 
-	clrb 		; no error
+	; lbne   	LOOP
+
+	LDA 		1,X GET FIRST CHARACTER OF LINE
+	TSTA 		; SET Z FLAG PER A
+
 	rts		; Return to OS
 
 **************************************************
@@ -316,7 +351,8 @@ Done:
 ; +History +History +History +History +History +History +History +History
 ; +History +History +History +History +History +History +History +History
 
- 	LEAX 	<<VAR.CmdLineBuff,U ; POINT X AT LINE BUFFER
+ 	; LEAX 	<<VAR.CmdLineBuff,U ; POINT X AT LINE BUFFER
+	ldx 	<<VAR.pCmdLineBuff,U 	; POINT X AT LINE BUFFER
  	lda 	,X
  	cmpa 	#'!'
  	beq 	CopyHist2Buff3
@@ -382,7 +418,6 @@ OutRightChars:
         beq     OutRightCharsX
         clrb
 OutRightChars1:
-        ; USIM
         tfr    b,a
         adda   <<VAR.max,U
         suba   <<VAR.right,U
@@ -444,18 +479,15 @@ Cmd_ESC:
 
 **************************************************
 Cmd_BS:
- ; USIM
  tst  	<<VAR.left,U 
  beq 	Cmd_BSX
 
  dec   	<<VAR.left,U 
  lda 	#BS
  MPX9  	OUTCHR
- ; USIM
 
  ; output right chars
  bsr 	OutRightChars
- ; USIM
 
  lda 	#SP
  MPX9  	OUTCHR

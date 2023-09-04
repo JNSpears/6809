@@ -23,23 +23,12 @@ MPX9SYSCAL      EXTERN
 ; ************************************************
 CmdShellInit    EXPORT
 CmdShellInit:
-
-;         LEAU    CmdLineInit,pcr
-;         pshs    U
-;         leau    XXXXXX,PCR
-;         tfr     U,D
-;         subd    ,S++
-;         tfr     D,U
-
         clrb
         rts
-
-; END INIT
 
 ; ************************************************
 CmdShell        EXPORT
 CmdShell:
-
 	clrb 		; no error
 	rts		; Return to OS
 
@@ -63,12 +52,17 @@ CmdShell:
 **************************************************
 NPROCM          EXPORT
 NPROCM 
+
+ ; PSHS X,D
+ ; TFR X,D
+ ; MPX9 DSPDBY
+ ; PULS X,D
+
  PSHS A,X,Y,U,PC SAVE REGISTERS & LEAVE SLOT
  LEAU CMDERR,PCR SET UP ERROR RETURN ON STACK
  STU 7,S
  CLRB PRESET ERROR CODE
  MPX9 SKPSPC GET TO FIRST WORD IN LINE
- ; USIM
  BEQ PROCMX GO IF END OF LINE
 
  LDA 1,X GET 2nd CHAR IN LINE
@@ -110,7 +104,6 @@ GoMpx9ProcCmd: ; command not found in new table, go to old command dispatcher...
  PULS   A,X,Y,U   RESTORE REGISTERS
  leas   2,S       drop created slot
  PSHS   CC,A,B,DP,X,Y,PC MOCK SWI
- ; USIM
  lda    #PROCMD
  lbra    MPX9SYSCAL
 

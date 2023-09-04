@@ -25,21 +25,18 @@ FOURTYONE:
 	PSHS 	Y,U,X,DP,B,A,CC 
 
 	LDX 	10,S GET RETURN ADDRESS
-	; USIM
 FOURTYONE1:
 	LDA   	,X	; GET A CHARACTER
 	ANDA  	#$7F	; MASK OFF
 
 	CMPA 	#'%' if format string.
 	lbne 	PRINTIT
-	; USIM
 	LDA 	1,X get next char, '%' OR REG-ID LETTER
 	CMPA 	#'%' if % then render %% as %
 	bne 	@ckregA
 	leax 	1,X adjust for 2 char format string
 	lBRA 	PRINTIT
 @ckregA
-	; USIM
 	CMPA 	#'A'	A register?
 	BNE 	@ckregB
 	lda 	REGA-STACK,S load reg value from stack
@@ -107,7 +104,6 @@ FOURTYONE1:
 	MPX9	DSPDEC deal with the space?
 	BRA 	contfmt2
 @FMTWREG
-	; USIM
 	pshs	d
 	leax 	2,X 	adjust pointer
 	ldb 	,x+	get format char
