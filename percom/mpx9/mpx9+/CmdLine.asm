@@ -31,7 +31,7 @@ HistBuff 	rmb MaxHistBuff
 	ENDSTRUCT
 
 **************************************************
-* Program (Position independant)
+* Program (Position independent)
 **************************************************
 
         section .text
@@ -118,22 +118,14 @@ CmdLine:
         ; leaX    prompt,PCR
  	; MPX9 	PSTRNG
 
-;  	; Initialize buffer and other variables.
-;  	LDB 	#MaxCmdLineLen 		; SET SIZE IN B	
-;  	LEAX 	<<VAR.CmdLineBuff-1,U ; POINT X AT LINE BUFFER
-; ClrCmdBuffer:
-;  	CLR 	B,X
-;  	DECB 
-;  	BNE 	ClrCmdBuffer
-
 	; setup and get a line.
 	LDB 	#MaxCmdLineLen 		; SET SIZE IN B	
-	ldx 	<<VAR.pCmdLineBuff,U 	; POINT X AT LINE BUFFER
+	ldx 	<<VAR.pCmdLineBuff,U 	; POINT X AT LINBUF
 
 	; MPX9 	DBGFMT
 	; fcs	/\tCmdLineInit B:$%Bx U:$%Ux X:$%Xx\n\r/
 
-	LBSR	getline			; x=buffer, b=bufferlen --> a=firstchar, b=bufferlen, x=buffer
+	LBSR	getline			; x=LINBUF, b=LINBUF Length --> a=firstchar, b=bufferlen, x=LINBUF
 
 	; check for history action (!h display history, TBD: !n re-execute command #n, !text re-execute command starting with text) 
 	cmpa	#'!'
@@ -158,7 +150,7 @@ CmdLineX
 * Entry: None
 * 
 * Exit: A - char with Parity removed
-*		 ALL other regs perserved, except C
+*		 ALL other regs preserved, except C
 * 
 **************************************************
 GetCharNoEcho:
@@ -175,7 +167,7 @@ GetCharNoEcho:
 * Entry: None
 * 
 * Exit: A - ACIA STATUS
-*		 ALL other regs perserved, except C
+*		 ALL other regs preserved, except C
 * 
 **************************************************
 GetConStat:
@@ -193,7 +185,7 @@ GetConStat:
 * 			only works for 0-99
 * 
 * Exit:  A - ACIA STATUS
-*	 ALL other regs perserved, except C
+*	 ALL other regs preserved, except C
 * 
 **************************************************
 OutEscBrkNChr:
@@ -238,7 +230,7 @@ OUTDIGIT:
 * 		 B - count 
 * 
 * Exit: B - zero
-*		 ALL other regs perserved, except C
+*		 ALL other regs preserved, except C
 * 
 **************************************************
 OUTNCHR: ; IN: A-CHAR B-COUNT OUT: A,B MODIFIED.
@@ -280,10 +272,10 @@ GetCharLoop:
 	CMPA 	#SP CONTROL CODE?
 	LBLO 	CheckOneChar 
 
-	CMPA 	#TILDE Invalide Ascii
+	CMPA 	#TILDE Invalid Ascii
 	LBHI 	CheckOneChar 
 
-	; save this character in buffer, output char, update left count
+	; save this character in LINBUF, output char, update left count
 	ldb 	<<VAR.left,U 
 	STA 	B,X SAVE THIS CHARACTER
 	MPX9 	OUTCHR
@@ -325,8 +317,7 @@ Done:
 ; +History +History +History +History +History +History +History +History
 ; +History +History +History +History +History +History +History +History
 
- 	; LEAX 	<<VAR.CmdLineBuff,U ; POINT X AT LINE BUFFER
-	ldx 	<<VAR.pCmdLineBuff,U 	; POINT X AT LINE BUFFER
+	ldx 	<<VAR.pCmdLineBuff,U 	; POINT X AT LINBUF
  	lda 	,X
  	cmpa 	#'!'
  	beq 	CopyHist2Buff3
@@ -473,7 +464,7 @@ Cmd_BS:
  ldb    <<VAR.right,U
  incb
  lda 	#BS
- Lbsr 	OUTNCHR	         ; output N BS characters, return cursor ot original location
+ Lbsr 	OUTNCHR	         ; output N BS characters, return cursor to original location
 
  CLR  	<<VAR.dirty,U 
  INC  	<<VAR.dirty,U    ; Mark as dirty
@@ -755,7 +746,7 @@ Cmd_CtrlCurRightX:
  LBRA	GetCharLoop
 
 ; *****************************************************
-; in a=char out b=0 AlphaNumUnder or 1 if puncuation etc. CC set per B
+; in a=char out b=0 AlphaNumUnder or 1 if punctuation etc. CC set per B
 IsAlphaNumUnder:
 	ldb #1
 
@@ -828,7 +819,7 @@ NoWrap1:
  clrb
 
 ScanBackForNull:
- ; step back to find begining and count chars of prev line.
+ ; step back to find beginning and count chars of prev line.
  cmpy 	<<VAR.HBegin,U
  bhi 	NoWrap2
  ldy 	<<VAR.HEnd,U
@@ -848,14 +839,31 @@ NoWrap3:
 
 ; DONE SCAN BACKTO HEAD, IF ALL 0'S THEN NO MORE HIST DO NOTHING
  
- Lbsr 	CancelCurrLine ; Position curston at beging of input line, EOL, clear right and left counts.
+ Lbsr 	CancelCurrLine ; Position cursor at beginning of input line, EOL, clear right and left counts.
 
  sty 	<<VAR.HCurr,U
  clrb 
+ BSR 	CopyCharsHist2Buffer
+Cmd_CurUpX:
+ LBRA	GetCharLoop
 
+
+**************************************************
+* CopyCharsHist2Buffer
+*                                                *
+* ENTRY REQUIREMENTS:  X POINTS AT LINE BUFFER   *
+*                      B CONTAINS BUFFER LENGTH  *ccccccccccccccccc
+*                                                *
+* EXIT CONDITIONS:  A CONTAINS FIRST CHARACTER,  *
+*                     NUL => LINE CANCELED       *
+*                     Z FLAG IN CC SET PER A     *
+*                   OTHERS UNCHANGED             *
+**************************************************
 CopyCharsHist2Buffer:
+ CLRB
+LOOP:
  lda 	,Y+
- beq 	Cmd_CurUp9
+ beq 	xxxx
 
  cmpy 	<<VAR.HEnd,U
  bne  	NoWrap4
@@ -865,12 +873,9 @@ NoWrap4:
  incb 
  inc 	<<VAR.left,U
  MPX9	OUTCHR
- BRA 	CopyCharsHist2Buffer
-
-Cmd_CurUp9:
-Cmd_CurUpX:
- LBRA	GetCharLoop
-
+ BRA 	LOOP
+xxxx
+ RTS
 
 ; *****************************************************
 
@@ -889,16 +894,14 @@ NoWrap1a:
  lda 	,Y+
  bne 	ScanForwardForNull
 
- Lbsr 	CancelCurrLine ; Position curston at beging of input line, EOL, clear right and left counts.
+ Lbsr 	CancelCurrLine ; Position cursor at beginning of input line, EOL, clear right and left counts.
 
  sty 	<<VAR.HCurr,U
 
- BRA 	CopyCharsHist2Buffer
-
-Cmd_CurDown9:
+ BSR 	CopyCharsHist2Buffer
 Cmd_CurDownX:
  LBRA	GetCharLoop
-
+ 
 ; -History -History -History -History -History -History -History -History
 ; -History -History -History -History -History -History -History -History
 
@@ -919,11 +922,151 @@ CancelCurrLine1:
 ; History History History History History History History History History History History History History History History History
 ; History History History History History History History History History History History History History History History History
 ; History History History History History History History History History History History History History History History History
+
+
+**************************************************
+* Do history actions       
+*                                                
+* ENTRY REQUIREMENTS:  X POINTS AT LINE BUFFER   
+*                      B number of characters in buffer  
+*                                               
+* EXIT CONDITIONS:  B == 0 !h done,  
+*                   B != 0 then !# or !text       
+*                     Z FLAG IN CC SET PER B     
+*                   OTHERS UNCHANGED   ???
+* Do history action 
+* 	!h display history
+*	!n re-execute command #n
+*	!text re-execute command starting with text 
+*
+**************************************************
 DoHistAction
 
-        ; MPX9    $41
-        ; fcs     /\n\rDHA ent S=%Sx\n\r/
+	lda 	1,X
+	cmpa 	#'0'
+	lblt 	DoDispHistory
+	cmpa 	#'9'
+	ble 	DoIndexRecall
 
+	;; ***********************************************************
+	;; !text - DoTextRecall
+	;; ***********************************************************
+DoTextRecall
+        tstb
+        rts
+
+	;; ***********************************************************
+	;; !# - DoIndexRecall
+	;; ***********************************************************
+DoIndexRecall
+	jsr 	CRLF
+	pshs 	X 
+	leax 	1,X 	; Step over '!'
+
+	; ldd 	,X
+	; MPX9 	DBGFMT
+	; fcs	/\n\r\tCMDLINE args:%Ac %Bc\n\r/
+	MPX9 	DECNUM
+	pshs 	D
+	ldd     <<VAR.histix,U 
+	pshs 	D 	; ,S -> current history line #, 2,S -> target history line #
+
+	; MPX9 	DBGFMT
+	; fcs	/\n\r\tCMDLINE target history line #:$%Dx\n\r/
+
+	; clear right and left counts.
+	clr   	<<VAR.left,U
+	clr  	<<VAR.right,U
+	clr  	<<VAR.dirty,U
+
+	ldy 	<<VAR.HCurr,U
+@loop
+	cmpy 	<<VAR.HBegin,U
+	bne  	@NoWrap1
+	ldy 	<<VAR.HEnd,U
+	leay 	<<-1,Y
+@NoWrap1:
+	lda 	,-Y 	; this should load the null at end of prev line.
+@ScanBackForNull:
+ 	; If Y gets back to VAR.HCurr,U then break out with LINBUF empty.
+	cmpy  	<<VAR.HCurr,U
+	beq 	DoIndexRecallX2	; target history line # not found in history buffer
+	; step back to find beginning and count chars of prev line.
+	cmpy 	<<VAR.HBegin,U
+	bhi 	@NoWrap2
+	ldy 	<<VAR.HEnd,U
+@NoWrap2:
+	lda 	,-Y 
+	BNE  	@ScanBackForNull
+	leay 	1,Y	; y-> first char of this line.
+	cmpy 	<<VAR.HEnd,U
+	BLO 	@NoWrap3
+	ldy 	<<VAR.HBegin,U
+@NoWrap3:
+	; Decrement current history line #
+	ldd 	,S
+	beq 	DoIndexRecallX2 ; target history line # not found in history buffer
+	subd 	#1
+	std 	,S
+	;
+	; MPX9 	DSPDEC
+	; jsr 	CRLF
+	;
+	cmpd 	2,S 	; Check to see if current history line # == target history line #
+	bne 	@loop
+
+	; FOUND entry matching target history line #
+	; USIM
+	leas 	4,S 	; Clean up stack
+	
+	puls 	X 	; recover pointer to LINBUF
+	CLRB
+@CopyCharsHist2Buffer:
+	lda 	,Y+
+	beq 	DoIndexRecallX
+	cmpy 	<<VAR.HEnd,U
+	bne  	@NoWrap4
+	ldy 	<<VAR.HBegin,U
+@NoWrap4:
+	sta 	B,X
+	incb 
+	inc 	<<VAR.left,U
+	; MPX9	OUTCHR
+	BRA 	@CopyCharsHist2Buffer
+DoIndexRecallX:
+	ldb 	<<VAR.left,U
+	lda 	#CR
+	sta 	B,X 	; Terminate command.
+	rts
+
+DoIndexRecallX2	; target history line # not found in history buffer
+	; USIM
+	leas 	4,S 	; Clean up stack
+	puls 	X 	; recover pointer to LINBUF
+	BRA 	DoIndexRecallX
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	;; ***********************************************************
+	;; ! - DoDispHistory 
+	;; ***********************************************************
+DoDispHistory
         ldy     <<VAR.HHead,U
         ldd     <<VAR.histix,U
         pshs    D       ; create temp var. for history ix := current history ix
@@ -980,18 +1123,15 @@ HistOutCmdLoop1:
         BRA     HistOutCmdLoop
 DspNxtCmd:      ; Y -> first char of next command 
         cmpy    <<VAR.HHead,U   is this the current next command?
-        beq     ExitNoCommand
+        beq     DoDispHistoryX
         jsr     CRLF
         ldd     ,s      GET IX
         MPX9    DSPDEC  DISPLAY IX
         addd    #1      INCREMENT IX
         std     ,s      SAVE IT
         bra     HistOutCmdLoop
-
-ExitNoCommand:
+DoDispHistoryX
         clrb
-
-DoHistActionX
         leas    2,S
         ; MPX9    $41
         ; fcs     /\n\rDHA ent S=%Sx\n\r/
@@ -1027,7 +1167,7 @@ prompt FCB CR,LF
         endsection 	; section .data
 
 *
-** Uninitialiazed Working Variables.
+** Uninitialized Working Variables.
 *
 
         section .bss
@@ -1038,7 +1178,7 @@ cmdline_data    VAR
         endsection 	; section .bss
 
 **************************************************
-** Uninitialiazed Direct Page Working Variables.
+** Uninitialized Direct Page Working Variables.
 **************************************************
 
  	section .dp
