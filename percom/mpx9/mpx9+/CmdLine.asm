@@ -952,8 +952,106 @@ DoHistAction
 	;; !text - DoTextRecall
 	;; ***********************************************************
 DoTextRecall
-        tstb
-        rts
+	jsr 	CRLF
+	pshs 	X 	; Save x for later.
+	; USIM
+	leax 	1,X 	; Step over '!' X now points to text to match.
+	clrb
+@l 	lda 	,X+
+	cmpa 	#CR
+	beq 	@e
+	incb
+	bra  	@l
+@e 	ldx 	,S 	; Reload X
+	leax 	1,X 	; Step over '!' X now points to text to match.
+	; USIM
+	; clear right and left counts.
+	clr   	<<VAR.left,U
+	clr  	<<VAR.right,U
+	clr  	<<VAR.dirty,U
+
+	ldy 	<<VAR.HCurr,U
+@loop
+	cmpy 	<<VAR.HBegin,U
+	bne  	@NoWrap1
+	ldy 	<<VAR.HEnd,U
+	leay 	<<-1,Y
+@NoWrap1:
+	lda 	,-Y 	; this should load the null at end of prev line.
+@ScanBackForNull:
+ 	; If Y gets back to VAR.HCurr,U then break out with LINBUF empty.
+	cmpy  	<<VAR.HCurr,U
+	beq 	DoIndexRecallX2	; target history line not found in history buffer
+	; step back to find beginning and count chars of prev line.
+	cmpy 	<<VAR.HBegin,U
+	bhi 	@NoWrap2
+	ldy 	<<VAR.HEnd,U
+@NoWrap2:
+	lda 	,-Y 
+	BNE  	@ScanBackForNull
+	leay 	1,Y	; y-> first char of this line.
+	cmpy 	<<VAR.HEnd,U
+	BLO 	@NoWrap3
+	ldy 	<<VAR.HBegin,U
+@NoWrap3:
+	;
+	; MPX9 	DSPDEC
+	; jsr 	CRLF
+	;
+	; USIM
+	bsr CMPAR ; SHORT COMPARE <=256 BYTES.
+	;
+	; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX; Check to see if current history line # == target history line #
+	;
+	bne 	@loop
+	;
+	; FOUND entry matching history line
+	; USIM
+	;
+	puls 	X 	; recover pointer to LINBUF
+	CLRB
+@CopyCharsHist2Buffer:
+	lda 	,Y+
+	beq 	DoIndexRecallX
+	cmpy 	<<VAR.HEnd,U
+	bne  	@NoWrap4
+	ldy 	<<VAR.HBegin,U
+@NoWrap4:
+	sta 	B,X
+	incb 
+	inc 	<<VAR.left,U
+	; MPX9	OUTCHR
+	BRA 	@CopyCharsHist2Buffer
+DoIndexRecallX:
+	ldb 	<<VAR.left,U
+	lda 	#CR
+	sta 	B,X 	; Terminate command.
+	rts
+
+DoIndexRecallX2	; target history line # not found in history buffer
+	; USIM
+	puls 	X 	; recover pointer to LINBUF
+	BRA 	DoIndexRecallX
+
+; LIFTED FROM MPX9.
+CMPAR 	PSHS 	B,X,Y SAVE REGISTERS
+CMPSTR 	LDA 	,X+ GET BYTE FROM '1'
+	CMPA 	,Y+ COMPARE TO BYTE IN '2'
+	BNE 	CMPARX EXIT IF UNEQUAL
+	cmpy 	<<VAR.HEnd,U
+	bne  	@NoWrap4
+	ldy 	<<VAR.HBegin,U
+@NoWrap4:
+	DECB 	LOOP THROUGH STRING
+	BNE 	CMPSTR
+CMPARX 	PULS 	B,X,Y,PC RESTORE & EXIT
+ 
+
+
+
+
+
+
 
 	;; ***********************************************************
 	;; !# - DoIndexRecall
@@ -990,7 +1088,7 @@ DoIndexRecall
 @ScanBackForNull:
  	; If Y gets back to VAR.HCurr,U then break out with LINBUF empty.
 	cmpy  	<<VAR.HCurr,U
-	beq 	DoIndexRecallX2	; target history line # not found in history buffer
+	beq 	DoIndexRecallX2a	; target history line # not found in history buffer
 	; step back to find beginning and count chars of prev line.
 	cmpy 	<<VAR.HBegin,U
 	bhi 	@NoWrap2
@@ -1005,7 +1103,7 @@ DoIndexRecall
 @NoWrap3:
 	; Decrement current history line #
 	ldd 	,S
-	beq 	DoIndexRecallX2 ; target history line # not found in history buffer
+	beq 	DoIndexRecallX2a ; target history line # not found in history buffer
 	subd 	#1
 	std 	,S
 	;
@@ -1023,7 +1121,7 @@ DoIndexRecall
 	CLRB
 @CopyCharsHist2Buffer:
 	lda 	,Y+
-	beq 	DoIndexRecallX
+	beq 	DoIndexRecallXa
 	cmpy 	<<VAR.HEnd,U
 	bne  	@NoWrap4
 	ldy 	<<VAR.HBegin,U
@@ -1033,17 +1131,16 @@ DoIndexRecall
 	inc 	<<VAR.left,U
 	; MPX9	OUTCHR
 	BRA 	@CopyCharsHist2Buffer
-DoIndexRecallX:
+DoIndexRecallXa:
 	ldb 	<<VAR.left,U
 	lda 	#CR
 	sta 	B,X 	; Terminate command.
 	rts
-
-DoIndexRecallX2	; target history line # not found in history buffer
+DoIndexRecallX2a	; target history line # not found in history buffer
 	; USIM
 	leas 	4,S 	; Clean up stack
 	puls 	X 	; recover pointer to LINBUF
-	BRA 	DoIndexRecallX
+	BRA 	DoIndexRecallXa
 
 
 
@@ -1066,17 +1163,29 @@ DoIndexRecallX2	; target history line # not found in history buffer
 	;; ***********************************************************
 	;; ! - DoDispHistory 
 	;; ***********************************************************
+XXXXX
+	clrb 
+	rts 
+
 DoDispHistory
+
+        ldd      <<VAR.histix,U
+        beq 	XXXXX
+
         ldy     <<VAR.HHead,U
         ldd     <<VAR.histix,U
         pshs    D       ; create temp var. for history ix := current history ix
 
+
+        USIM
 SkipNulls:     ; skip null(s) between commands
         cmpy    <<VAR.HEnd,U
         bne     @NoWrap
         ldy     <<VAR.HBegin,U
 @NoWrap lda     ,Y+
         beq     SkipNulls
+
+
 
         pshs    A,Y     save the pointer to the first command in the history buffer and the first character in that command.
         clrb            zero counter of number of commands in the history buffer.
