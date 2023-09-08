@@ -15,18 +15,18 @@
 
  	section	.text
 
-FOURTYONE EXPORT
+KernalDbgFmt EXPORT
 
 **************************************************
 ** Program (Position independant)
 **************************************************
 
-FOURTYONE:
+KernalDbgFmt:
 	PSHS 	Y,U,X,DP,B,A,CC 
 
 	LDX 	10,S GET RETURN ADDRESS
-FOURTYONE1:
-	LDA   	,X	; GET A CHARACTER
+
+LOOP:	LDA   	,X	; GET A CHARACTER
 	ANDA  	#$7F	; MASK OFF
 
 	CMPA 	#'%' if format string.
@@ -138,7 +138,7 @@ PRINTIT
 	MPX9   	OUTCHR	; DISPLAY IT
 contfmt
 	TST   	,X+	; WAS IT LAST?
-contfmt1	lBPL   	FOURTYONE1	; LOOP IF NOT
+contfmt1	lBPL   	LOOP	; LOOP IF NOT
 endfmt
 	STX 	10,S UPDATE RETURN ADDRESS
 	PULS 	Y,U,X,DP,B,A,CC,PC

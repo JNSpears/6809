@@ -11,6 +11,7 @@
         INCLUDE mpx9.i
         INCLUDE jns.i
         INCLUDE ascii.i
+        INCLUDE mpx9+.i
 
         section .text
 
@@ -24,6 +25,13 @@ MPX9SYSCAL      EXTERN
 CmdShellInit    EXPORT
 CmdShellInit:
         clrb
+
+        ; USIM
+
+        LDA     #$66
+        LEAX    SYSCALL_66,PCR
+        MPX9    ADDSYSCALL
+
         rts
 
 ; ************************************************
@@ -138,13 +146,28 @@ ResidentCommands:
         FCB 0 END OF TABLE MARK
 
 **************************************************
-Cmd_xx: MPX9  $41
+Cmd_xx:
+        MPX9  DBGFMT
         fcs   /test XX\n\r/
+
         clrb 
+
+        MPX9 $66
 
         MPX9 MPX
         
         rts
+
+**************************************************
+SYSCALL_66:
+
+        MPX9  DBGFMT
+        fcs   /SYSCALL $66\n\r/
+
+        clrb 
+
+        rts
+
 **************************************************
 
         endsection      ; section .text

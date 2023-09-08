@@ -1177,7 +1177,7 @@ DoDispHistory
         pshs    D       ; create temp var. for history ix := current history ix
 
 
-        USIM
+        ; USIM
 SkipNulls:     ; skip null(s) between commands
         cmpy    <<VAR.HEnd,U
         bne     @NoWrap

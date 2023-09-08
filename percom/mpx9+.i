@@ -5,9 +5,13 @@
         IFNDEF MPX9P__I
 
 
-MPX9LOADED EQU $40
-DBGFMT EQU $41
-KALLOC EQU $42
+MPX9LOADED      EQU $40
+DBGFMT          EQU $41
+KALLOC          EQU $42
+ADDSYSCALL      EQU $43
+
+
+ERR_RN          equ 18  - ERR_RN (resource not available)
 
 ; _verbose        equ     0
 verbose         extern
@@ -22,6 +26,11 @@ next            rmw 1
 prev            rmw 1
                 ENDSTRUCT
 
+SimpleList      STRUCT
+pHead           rmw 1
+pNext           rmw 1
+pEnd            rmw 1
+                ENDSTRUCT
 
 
 MPX9P__I SET 1

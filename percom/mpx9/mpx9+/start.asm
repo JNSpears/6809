@@ -37,7 +37,13 @@ _Start 		EXPORT
 _Start:
 	lda 	#$BF
 	tfr     a,dp
+
+	clra 
+	clrb
 	clr     <verbose	; initialize variables
+	; std 	<SYSOFF2.pHead 	; NO DYNAMIC SYSTEM CALL TABLE
+	; std 	<SYSOFF2.pEnd 	; zero length of allocated DYNAMIC SYSTEM CALL TABLE
+	; std 	<SYSOFF2.pNext 	; zero pointer to next entry in the DYNAMIC SYSTEM CALL TABLE
 
 option:
 	MPX9    SKPSPC		; point to the next word
@@ -117,6 +123,8 @@ foo:
 	LDY 	SYSVEC,X
 	STY 	<SCLVEC
 
+; ABOVE 4 INSTUCTIONS COULD BE MOVED UP JUST AFTER Good2Go
+
 	LEAY 	SYSCAL,PCR 	ESTABLISH SYSTEM CALL VECTOR
 	STY 	SYSVEC,X
 
@@ -146,7 +154,19 @@ foo:
 	fcs	/\tMPX9+ KAMemPtr:$%Xx\n\r/
 @NoDebug
 
+	; KAlloc memory for dynamic system call table **** MUST BE DONE BEFORE NON KAlloc INIT'S ****
+	ldd 	#31		; room for 10 syscal id and offset vectors + 1 for marker
+	MPX9 	KAllocInit	; alloc space for dynamic system call table
+	stx 	<SYSOFF2.pHead 	; save pointer to dynamic system call table
+	stx 	<SYSOFF2.pNext	; save pointer to next available entry in dynamic system call table
+	clr 	,x 		; put null at end of dynamic system call table
+	leax 	31,X 		; point to end of dynamic system call table (null marker)
+	stx 	<SYSOFF2.pEnd	; save pointer to end of dynamic system call table
+
+	; KAlloc memory for CmdLineData and store in pCmdLineData
 	lbsr 	CmdLineInit
+	lbsr 	CmdShellInit
+
 ; ABC_RET:
 ; AbcX:
 	CLRB	; No Errors
@@ -155,10 +175,12 @@ foo:
 ; **************************************************
 ; * SYSTEM CALL DISPATCHER - Lifted from mpx9      *
 ; **************************************************
-SYSCAL ; CMPA #SYSLIM IS CALL VALID FOR MPX/9?
-* CHECK FOR SYSTEM CALL IN MPX9+ LIST
+SYSCAL
+* CHECK FOR SYSTEM CALL IN MPX9+ STATIC OR DYNAMIC SYSTEM CALL TABLE
  LEAY SYSOFF,PCR POINT Y AT OFFSET TABLE
-
+**************************************************
+* SEARCH STATIC MPX9+ SYSTEM CALL TABLE
+**************************************************
 RESCM1 TST ,Y END OF TABLE?
  BEQ NotFound GO IF YES
  CMPA ,Y+ FIND COMMAND?
@@ -171,13 +193,31 @@ RESCM2
  LEAX D,X GET ROUTINE ADDRESS
  STX 8,S
  PULS CC,A,B,DP,X,Y,PC TURN SWI CALL INTO JSR
- SPC 1
+
 NotFound
- LDy 	<SCLVEC EXIT TO NEXT LEVEL ROUTINE
+**************************************************
+* SEARCH DYNAMIC MPX9+ SYSTEM CALL TABLE
+**************************************************
+ LDY <SYSOFF2.pHead POINT Y AT OFFSET TABLE
+ BEQ NotFound2 ; GO IF NO DYNAMIC SYSTEM CALL TABLE
+RESCM3 TST ,Y END OF TABLE?
+ BEQ NotFound2 GO IF YES
+ CMPA ,Y+ FIND COMMAND?
+ BEQ RESCM4 GO IF YES
+ LEAY 2,Y ADVANCE POINTER
+ BRA RESCM3 LOOP
+RESCM4
+ LDx ,Y GET address of ROUTINE
+ STX 8,S
+ PULS CC,A,B,DP,X,Y,PC TURN SWI CALL INTO JSR
+
+NotFound2
+**************************************************
+* GO BACK TO PSYMON SYSTEM CALL DISPATCHER
+**************************************************
+ ldy 	<SCLVEC EXIT TO NEXT LEVEL ROUTINE
  jmp 	,y
-
- ; JMP [<SCLVEC] EXIT TO NEXT LEVEL ROUTINE
-
+ 
 ****************************************************
 * MPX9+ go to old SYSTEM CALL handler              *
 ****************************************************
@@ -219,11 +259,45 @@ FOURTY:
 ;  ; STA LINBUF,PCR
 ;  BRA ABC_RET
 
+****************************************************
+* SYSTEM CALL 43 (ADDSYSCALL) - AddDynSystemCall
+****************************************************
+* ENTRY REQUIREMENTS:  A new SYSCALL ID 
+*                      X POINTS TO ROUTINE TO MAP TO SYSCAL
+*
+* EXIT CONDITIONS:  REGISTERS  UNCHANGED
+*                   ROUTINE SHOULD RETURN ERROR
+*                     CODE IN B, 0 IF NO ERROR
+**************************************************
+AddDynSystemCall
 
-FOURTYONE EXTERN
+; pSYSOFF2	rmb	2 	; pointer to DYNAMIC SYSTEM CALL TABLE (DSCT).
+; pSYSOFF2end 	rmb	2 	; size of pSYSOFF2end DYNAMIC SYSTEM CALL TABLE
+; pSYSOFF2next	rmb	2 	; pointer to next entry in the DYNAMIC SYSTEM CALL TABLE
+	; USIM
+	pshs 	Y
+	clrb 				; assume no error
+	ldy 	<SYSOFF2.pNext		; null if no more space
+	beq 	AddDynSystemCallXErr	; then exit with error
+	sta 	,Y+			; store new SYSCALL ID 
+	stx 	,Y++			; store 
+	cmpy 	<SYSOFF2.pEnd 		; check if at end of allocated DSCT space
+	blt 	@ok
+	ldy 	#0 			; if so then clear Y
+@ok	sty 	<SYSOFF2.pNext
+	bra 	AddDynSystemCallX
+AddDynSystemCallXErr
+	ldb 	#18 			; should be ERR_RN (resource not available)
+AddDynSystemCallX
+	tstb 
+	puls 	Y,PC 
+
+
+KernalDbgFmt EXTERN
 
 ; **************************************************
 ; * MPX9+ SYSTEM CALL OFFSET LOOKUP TABLE          *
+; * STATIC SYSTEM CALL TABLE			   *
 ; **************************************************
 SYSOFF:
 
@@ -231,7 +305,7 @@ SYSOFF:
  FDB FOURTY-SYSOFF 	- IS MPX9+ LOADED?
 
  FCB DBGFMT
- FDB FOURTYONE-SYSOFF 	- GET A LINE OF INPUT
+ FDB KernalDbgFmt-SYSOFF 	- GET A LINE OF INPUT
 
  FCB PROCMD
  FDB NPROCM-SYSOFF 	- New process command.
@@ -244,6 +318,9 @@ SYSOFF:
 
  FCB GETLIN
  FDB CmdLine-SYSOFF 	- GET A LINE OF INPUT
+
+ FCB ADDSYSCALL
+ FDB AddDynSystemCall-SYSOFF 	- add a system call to the DYNAMIC SYSTEM CALL TABLE
 
  FCB 0 END OF TABLE MARK
 
@@ -262,14 +339,14 @@ SYSVEC EQU 64 SYSTEM CALL VECTOR
 	endsection	; section .data
 
 **************************************************
-** Uninitialiazed Working Variables.
+** Uninitialized Working Variables.
 **************************************************
 
 ;  	section .bss
 ; 	endsection	; section .bss
 
 **************************************************
-** Uninitialiazed Direct Page Working Variables.
+** Uninitialized Direct Page Working Variables.
 **************************************************
 
  	section .dp
@@ -279,6 +356,11 @@ verbose	export
 verbose	rmb	1
 SCLVEC 	rmb	2	; SYSTEM CALL VECTOR TO MPX9 SYSTEM CALL DISPATCHER.
 
+SYSOFF2 	SimpleList ; MPX9+ DYNAMIC SYSTEM CALL TABLE
+; .pHead pointer to DYNAMIC SYSTEM CALL TABLE.
+; .pNext pointer to next entry in the DYNAMIC SYSTEM CALL TABLE
+; .pEnd pointer to last byte of the DYNAMIC SYSTEM CALL TABLE
+
 	endsection	; section .dp
 
 ; PGMEND  equ *-1
@@ -286,3 +368,5 @@ SCLVEC 	rmb	2	; SYSTEM CALL VECTOR TO MPX9 SYSTEM CALL DISPATCHER.
 
  END
 
+ADD SYSCALL TO ADD NEW SYSCALL TO DYNAMIC SYSTEMCALL TABLE
+ADD DYNAMIC ERROR TABLE.
