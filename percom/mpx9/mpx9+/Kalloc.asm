@@ -15,12 +15,12 @@
         section .text
 
 **************************************************
-* Program (Position independant)
+* Program (Position independent)
 **************************************************
 
 
 **************************************************
-* Initialiaze Kernel memory ALLOCATE             *
+* Initialize Kernel memory ALLOCATE              *
 *                                                *
 * ENTRY REQUIREMENTS:  X -> lowest memory address*
 *                        used by MPX9+           *
@@ -65,7 +65,7 @@ KAlloc:
 
 
 **************************************************
-* DLnkLstInit - initialiaze a Double Linked List *
+* DLnkLstInit - initialize a Double Linked List  *
 *                                                *
 * ENTRY REQUIREMENTS:  X - points to DLinkedList *
 *                        object                  *
@@ -107,7 +107,7 @@ DLnkLstInit:
         ; endsection      ; section .data
 
 **************************************************
-** Uninitialiazed Working Variables.
+** Uninitialized Working Variables.
 **************************************************
 
         ; section .bss
@@ -115,7 +115,7 @@ DLnkLstInit:
         ; endsection      ; section .bss
 
 **************************************************
-** Uninitialiazed Direct Page Working Variables.
+** Uninitialized Direct Page Working Variables.
 **************************************************
 
         section .dp
