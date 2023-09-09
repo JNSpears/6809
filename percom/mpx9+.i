@@ -9,9 +9,9 @@ MPX9LOADED      EQU $40
 DBGFMT          EQU $41
 KALLOC          EQU $42
 ADDSYSCALL      EQU $43
+ADDRPTERR       EQU $44
 
-
-ERR_RN          equ 18  - ERR_RN (resource not available)
+ERR_RN          EQU 19  - ERR_RN (resource not available)
 
 ; _verbose        equ     0
 verbose         extern

@@ -81,7 +81,7 @@ clean:
 
 LDFLAGS=-m$*.map -s$*.ld
 
-KERNAL_MODS=start dbgfmt CmdLine CmdShell Kalloc
+KERNAL_MODS=start dbgfmt CmdLine CmdShell Kalloc RptErr
 KERNAL_SRCS=$(foreach file,$(KERNAL_MODS),mpx9+/$(file).asm)
 KERNAL_OBJS=$(KERNAL_SRCS:.asm=.obj)
 $(info KERNAL_SRCS $(KERNAL_SRCS))
@@ -89,6 +89,7 @@ $(info KERNAL_OBJS $(KERNAL_OBJS))
 
 
 mpx9+/start.obj : mpx9+/start.asm 
+mpx9+/RptErr.obj : mpx9+/RptErr.asm 
 mpx9+/dbgfmt.obj : mpx9+/dbgfmt.asm 
 mpx9+/CmdShell.obj : mpx9+/CmdShell.asm 
 mpx9+/CmdLine.obj : mpx9+/CmdLine.asm 
