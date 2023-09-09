@@ -1,10 +1,8 @@
  PRAGMA cescapes
- nam abc
- ttl abc test
+ nam Start
+ ttl Start
 *********************************************************
-* abc.CM                              JNS 7/29/2023     *
-* 	TEST FOR USING LWAR & LWLINK, ALSO HAVING CODE  *
-* RELOCATE IT SELF TO JUST BELOW MPX9                   *
+*                                     JNS 7/29/2023     *
 *                                                       *
 *********************************************************
 
@@ -19,7 +17,7 @@
 ; BEGCOD  equ     *
 
 **************************************************
-** Program (Position independant)
+** Program (Position independent)
 **************************************************
 
 CmdLineInit	EXTERN
@@ -78,7 +76,7 @@ Init:
 	bne   	Good2Go
 	rts
 Good2Go:
-	pshs	x ; save comand line arg pointer
+	pshs	x ; save command line arg pointer
 
 	; LEAX 	atabc,PCR
 	; MPX9	PSTRNG
@@ -99,13 +97,13 @@ Good2Go:
 	; MPX9	DSPDBY
 	; PULS 	X
 
-	leax 	-(s_.bss-foo),X 	STEP BACK BY SIZE OF MPX9+
-	leax 	-$100,x 	make sure to leave room for stack (to be DP latter.)
+	leax 	-(s_.bss-foo),X  	; STEP BACK BY SIZE OF MPX9+
+	leax 	-$100,x 		; make sure to leave room for stack (to be DP latter.)
 	tfr  	X,Y
 	leax 	foo,PCR
 	ldd 	#(s_.bss-foo)
 
-	MPX9	BLKMOV	* X->src, Y->DST, D=LEN (REGISTERS PRESERVED)
+	MPX9	BLKMOV			; X->src, Y->DST, D=LEN (REGISTERS PRESERVED)
 
 	jmp 	,Y
 
@@ -143,7 +141,7 @@ foo:
 	fcs	/\tMPX9 MPXRAM:$%Xx MPXBAS:$%Yx len:$%Dx HIGH@:$%Ux\n\r/
 @NoDebug
 
-	; initialiaze Kernal memory allocation.
+	; initialize Kernel memory allocation.
 	LEAX 	foo,PCR
 	lbsr 	KAllocInit
 
