@@ -1,3 +1,5 @@
+        PRAGMA cescapes
+
         nam     MEMEDIT
         ttl     MEMORY EDITOR
 ****************************************
@@ -16,7 +18,7 @@
 BEGCOD  equ     *
 
         ldy     #$1234
-        usim
+        ; usim
 MLOOP   bsr     MDISP
 
         lbsr     _GetHex Exit: A - last char input, B - hex digit count, X - Hex number, C - set according to B
@@ -156,20 +158,22 @@ N1      cmpa    #'@
         rts
 N11     ldy     ,X
         rts
+
 N2      cmpa    #'+
         bne     N3
         bsr     _GetHex Exit: A - last char input, B - hex digit count, X - Hex number, C - set according to B
         beq     NEWADDRX
-        ; pshs    X
+        pshs    X
         tfr     Y,D
         addd    ,S++
 N77     tfr     D,Y
         rts
+
 N3      cmpa    #'-
         bne     N4
         bsr     _GetHex Exit: A - last char input, B - hex digit count, X - Hex number, C - set according to B
         beq     NEWADDRX
-        ; pshs    X
+        pshs    X
         tfr     Y,D
         subd    ,S++
         bra     N77
@@ -346,6 +350,37 @@ HELP:   leax    <HelpTxt,PCR
 HelpTxt fcb CR,LF,LF
         fcc 'help text'
         fcb CR,LF
+
+        fcc /CTRL-L +1 RIGHT\r\n/
+        fcc /CTRL-H -1 LEFT\r\n/
+        fcc /CTRL-J +16 DOWN\r\n/
+        fcc /CTRL-K -16 UP\r\n/
+        fcc /\r\n/
+
+        fcc /.nnnn NEW ADDRESS\r\n/
+        fcc /.@nnnn NEW ADDRESS INDIRECT\r\n/
+        fcc /.+nnnn ADD TO ADDRESS\r\n/
+        fcc /.-nnnn SUB FROM ADDRESS\r\n/
+        fcc /\r\n/
+
+        fcc /nn   NEW BYTE DATA\r\n/
+        fcc /NNNN, NEW WORD DATA\r\n/
+        fcc /"C CHARACTER VALUE\r\n/
+        fcc /!NN OR VALUE\r\n/
+        fcc /&NN AND VALUE\r\n/
+        fcc /+NN ADD VALUE\r\n/
+        fcc /-NN SUB VALUE\r\n/
+
+        fcc /SNN SEARCH\r\n/
+        fcc /S<SPACE> REPEAT SEARCH\r\n/
+        fcc /\r\n/
+
+        fcc /CTRL-E Exit\r\n/
+        fcc /\r\n/
+
+        fcc /CTRL-X CANCEL\r\n/
+        fcc /\r\n/
+
         fcS 'ENTER ANY KEY TO CONTINUE:'
         ; fcb LF+$80
 
