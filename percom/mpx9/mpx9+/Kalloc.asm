@@ -11,6 +11,7 @@
         INCLUDE mpx9.i
         INCLUDE jns.i
         INCLUDE ascii.i
+        INCLUDE mpx9+.i
 
         section .text
 
@@ -28,9 +29,9 @@
 * EXIT CONDITIONS:  B zero                       *
 *                   OTHER registers unchanged    *
 **************************************************
-KAllocInit    EXPORT
-KAllocInit:
-        stx     KAMemPtr,pcr     everything below this address is free memory.
+KernalAllocInit    EXPORT
+KernalAllocInit:
+        stx     <KAMemPtr     everything below this address is free memory.
 
         clrb
         rts
@@ -47,14 +48,27 @@ KAllocInit:
 ; *                   ROUTINE SHOULD RETURN ERROR  *
 ; *                     CODE IN B, 0 IF NO ERROR   *
 **************************************************
-KAlloc        EXPORT
-KAlloc:
+KernalAlloc        EXPORT
+KernalAlloc:
+
+	tst 	<verbose
+	beq 	@nodebug
+        MPX9  	DBGFMT
+        fcs   	/KAlloc_ D:$%Dx /
+@nodebug
         pshs    D
-        LDD     KAMemPtr,PCR
+        LDD     <KAMemPtr
         subd    ,S++
         tfr     D,X        
-        stx     KAMemPtr,PCR
+        stx     <KAMemPtr
 
+	tst 	<verbose
+	beq 	@nodebug
+        MPX9  	DBGFMT
+        fcs   	/--> X:$%Xx\r\n/
+@nodebug
+	NOP
+        
 	clrb 		; no error
 	rts		; Return to OS
 

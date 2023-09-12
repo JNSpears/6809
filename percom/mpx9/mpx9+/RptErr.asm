@@ -36,15 +36,24 @@ RptErrorInit:
 
 ; NOTE make this into a subroutine!
 
+        ; debug and diag help.
+        tst     <verbose
+        beq     @NoDebug
+        MPX9    DBGFMT
+        fcs     /**** RptErrorInit ****\n\r/
+@NoDebug
+
+
+       
+
         ; KAlloc memory for dynamic system ErrList table **** MUST BE DONE BEFORE NON KAlloc INIT'S ****
         ldd     #31             ; room for 10 System Error ID's and 2 char Error text + 1 for marker
-        MPX9    KAlloc          ; alloc space for dynamic system ErrList table
+        MPX9    KALLOC          ; alloc space for dynamic system ErrList table
         stx     <ErrList.pHead  ; save pointer to dynamic system ErrList table
         stx     <ErrList.pNext  ; save pointer to next available entry in dynamic system ErrList table
         clr     ,x              ; put null at end of dynamic system ErrList table
         leax    31,X            ; point to end of dynamic system ErrList table (null marker)
         stx     <ErrList.pEnd   ; save pointer to end of dynamic system ErrList table
-
 
         LDA     #RPTERR
         LEAX    RptError,PCR
@@ -54,9 +63,9 @@ RptErrorInit:
         LEAX    AddRptError,PCR
         MPX9    ADDSYSCALL
 
-        ; LDA     #ERR_RN
-        ; ldx     #"RN"
-        ; MPX9    ADDRPTERR
+        LDA     #ERR_RN
+        ldx     #"RN"
+        MPX9    ADDRPTERR
 
         rts
 
@@ -75,7 +84,6 @@ RptErrorInit:
 **************************************************
 ERRLIM EQU 18
 RptError
- USIM
  cmpb #ERRLIM
  bgt NewRptError
 
@@ -103,15 +111,17 @@ NewRptError
  BEQ NotFound ; GO IF NO DYNAMIC SYSTEM error TABLE
 @Loop TST ,X END OF TABLE?
  BEQ NotFound GO IF YES
- CMPA ,X+ FIND COMMAND?
+ CMPB ,X+ FIND COMMAND?
  BEQ @Found GO IF YES
  LEAY 2,X ADVANCE POINTER
  BRA @Loop
 @Found
 
+ pshs X
  LEAX <ERRHDR,PCR DISPLAY ERROR HEADER
  MPX9 PSTRNG
  ; DISPLAY ERROR 2 character name
+ PULS X
  LDA ,X+ DISPLAY IT
  MPX9 OUTCHR
  LDA ,X
@@ -153,7 +163,6 @@ AddRptError
 ; pSYSOFF2      rmb     2       ; pointer to DYNAMIC SYSTEM CALL TABLE (DSCT).
 ; pSYSOFF2end   rmb     2       ; size of pSYSOFF2end DYNAMIC SYSTEM CALL TABLE
 ; pSYSOFF2next  rmb     2       ; pointer to next entry in the DYNAMIC SYSTEM CALL TABLE
-        ; USIM
         pshs    Y
         clrb                            ; assume no error
         ldy     <ErrList.pNext          ; null if no more space

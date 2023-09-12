@@ -25,8 +25,12 @@ MPX9SYSCAL      EXTERN
 CmdShellInit    EXPORT
 CmdShellInit:
         clrb
-
-        ; USIM
+        ; debug and diag help.
+        tst     <verbose
+        beq     @NoDebug
+        MPX9    DBGFMT
+        fcs     /**** CmdShellInit ****\n\r/
+@NoDebug
 
         LDA     #$66
         LEAX    SYSCALL_66,PCR
@@ -154,7 +158,9 @@ Cmd_xx:
 
         MPX9 $66
 
-        MPX9 MPX
+        ldb     #ERR_RN
+
+        ; MPX9 MPX
         
         rts
 
@@ -163,9 +169,7 @@ SYSCALL_66:
 
         MPX9  DBGFMT
         fcs   /SYSCALL $66\n\r/
-
-        clrb 
-
+        clrb
         rts
 
 **************************************************

@@ -23,122 +23,119 @@ KernalDbgFmt EXPORT
 
 KernalDbgFmt:
 	PSHS 	Y,U,X,DP,B,A,CC 
-
 	LDX 	10,S GET RETURN ADDRESS
 
 LOOP:	LDA   	,X	; GET A CHARACTER
 	ANDA  	#$7F	; MASK OFF
-
 	CMPA 	#'%' if format string.
-	lbne 	PRINTIT
-	LDA 	1,X get next char, '%' OR REG-ID LETTER
+	lbne 	PRINTIT	; Go print the char
+	leax    1,X
+	LDA 	,X get next char, '%' OR REG-ID LETTER
 	CMPA 	#'%' if % then render %% as %
-	bne 	@ckregA
-	leax 	1,X adjust for 2 char format string
-	lBRA 	PRINTIT
-@ckregA
+	lbeq 	PRINTIT
+	leax  	1,X
+	; A = register id, X --> format char
+ckregA
 	CMPA 	#'A'	A register?
-	BNE 	@ckregB
+	BNE 	ckregB
 	lda 	REGA-STACK,S load reg value from stack
-	bra 	@FMTBREG
-@ckregB
+	bra 	FMTBREG
+ckregB
 	CMPA 	#'B'	B register?
-	BNE 	@ckregCC
+	BNE 	ckregCC
 	lda 	REGB-STACK,S load reg value from stack
-	bra 	@FMTBREG
-@ckregCC
+	bra 	FMTBREG
+ckregCC
 	CMPA 	#'C'	CC register?
-	BNE 	@ckregDP
+	BNE 	ckregDP
 	lda 	REGC-STACK,S load reg value from stack
-	bra 	@FMTBREG
-@ckregDP
+	bra 	FMTBREG
+ckregDP
 	CMPA 	#'Z'	DP register?
-	BNE 	@ckregX
+	BNE 	ckregX
 	lda 	REGD-STACK,S load reg value from stack
-	bra 	@FMTBREG
-@ckregX
+	bra 	FMTBREG
+ckregX
 	CMPA 	#'X'	X register?
-	BNE 	@ckregY
+	BNE 	ckregY
 	ldd 	REGX-STACK,S load reg value from stack
-	bra 	@FMTWREG
-@ckregY
+	bra 	FMTWREG
+ckregY
 	CMPA 	#'Y'	Y register?
-	BNE 	@ckregU
+	BNE 	ckregU
 	ldd 	REGY-STACK,S load reg value from stack
-	bra 	@FMTWREG
-@ckregU
+	bra 	FMTWREG
+ckregU
 	CMPA 	#'U'	U register?
-	BNE 	@ckregS
+	BNE 	ckregS
 	ldd 	REGU-STACK,S load reg value from stack
-	bra 	@FMTWREG
-@ckregS
+	bra 	FMTWREG
+ckregS
 	CMPA 	#'S'	S register?
-	BNE 	@ckregD
+	BNE 	ckregD
 	; ldd 	REGX-STACK,S load reg value from stack
 	TFR 	S,D load register value with stack register
-	bra 	@FMTWREG
-@ckregD
+	bra 	FMTWREG
+ckregD
 	CMPA 	#'D'	D register?
-	BNE 	@ckregPC
+	BNE 	ckregPC
 	ldd 	REGA-STACK,S load reg value from stack
-	bra 	@FMTWREG
-@ckregPC
+	bra 	FMTWREG
+ckregPC
 	CMPA 	#'P'	PC register?
 	BNE 	fmterr
 	ldd 	REGP-STACK,S load reg value from stack
-	bra 	@FMTWREG
-@FMTBREG
-	leax 	2,X 	adjust pointer
-	ldb 	,x+	get format char
-	cmpb 	#'c'
-	beq 	PRINTIT2
-	cmpb 	#'x'
-	bne 	@ckdec
-	MPX9 	DSPSBY deal with the space?
+	bra 	FMTWREG
+
+	; A = Register Value, X --> format char
+FMTBREG
+	ldb 	,X	Get format character
+	cmpb 	#'c' 	Format as Character
+	beq 	PRINTIT
+	cmpb 	#'x'	Format as Hex number
+	bne 	Bckdec
+	MPX9 	DSPSBY 	deal with the space?
 	BRA 	contfmt
-@ckdec
-	cmpb 	#'d'
+Bckdec
+	cmpb 	#'d'	Format as Decimal number
 	bne 	fmterr
 	exg 	a,b
 	clra
-	MPX9	DSPDEC deal with the space?
-	BRA 	contfmt2
-@FMTWREG
+	MPX9	DSPDEC 	deal with the space?
+	BRA 	contfmt
+
+	; D = Register Value, X --> format char
+FMTWREG
 	pshs	d
-	leax 	2,X 	adjust pointer
-	ldb 	,x+	get format char
-	cmpb 	#'x'
-	bne 	@Wckdec
+	ldb 	,x	Get format character
+	cmpb 	#'x'	Format as Hex number
+	bne 	Wckdec
 	puls 	D
 	MPX9 	DSPDBY deal with the space?
-	BRA 	contfmt2
-@Wckdec
-	cmpb 	#'d'
-	bne 	@Wckstr
+	BRA 	contfmt
+Wckdec
+	cmpb 	#'d'	Format as Decimal number
+	bne 	Wckstr
 	puls 	D
 	MPX9	DSPDEC deal with the space?
-	BRA 	contfmt2
-@Wckstr
-	cmpb 	#'s'
+	BRA 	contfmt
+Wckstr
+	cmpb 	#'s'	Format as pointer to String
 	bne 	fmterr
 	pshs 	X
-	LDX 	2,S
+	LDX 	2,S 	Get saved D from stack
 	MPX9	PSTRNG
 	puls 	X
-	leas 	2,S
-	BRA 	contfmt2
-
-PRINTIT2
-	MPX9   	OUTCHR	; DISPLAY IT
-contfmt2
-	TST   	,X	; WAS IT LAST?
-	bra 	contfmt1
+	leas 	2,S 	drop saved D
+	BRA 	contfmt
 
 PRINTIT
 	MPX9   	OUTCHR	; DISPLAY IT
+
+	; X --> a character or last character of a format
 contfmt
 	TST   	,X+	; WAS IT LAST?
-contfmt1	lBPL   	LOOP	; LOOP IF NOT
+	lBPL   	LOOP	; LOOP IF NOT
 endfmt
 	STX 	10,S UPDATE RETURN ADDRESS
 	PULS 	Y,U,X,DP,B,A,CC,PC

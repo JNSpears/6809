@@ -20,14 +20,16 @@
 ** Program (Position independent)
 **************************************************
 
-CmdLineInit	EXTERN
 CmdLine 	EXTERN
-s_.bss 		EXTERN
-CmdShellInit 	EXTERN
+CmdLineInit	EXTERN
 CmdShell 	EXTERN
-KAllocInit 	EXTERN
-KAlloc		EXTERN
+CmdShellInit 	EXTERN
+KernalAllocInit	EXTERN
+KernalAlloc	EXTERN
+KernalDbgFmt    EXTERN
 NPROCM 		EXTERN
+RptErrorInit	EXTERN
+s_.bss 		EXTERN
 
 MPX9SYSCAL	EXPORT
 _Start 		EXPORT
@@ -90,6 +92,7 @@ Good2Go:
 	; MPX9	DSPDBY
 
 	MPX9	GETBAS		; GET MPX/9 BASE
+
 	; pshs  X
 	; LEAX 	_MPXBAS,PCR
 	; MPX9	PSTRNG
@@ -143,18 +146,18 @@ foo:
 
 	; initialize Kernel memory allocation.
 	LEAX 	foo,PCR
-	lbsr 	KAllocInit
+	lbsr 	KernalAllocInit
 
 	; debug and diag help.
     	tst     <verbose
-    	Lbeq 	@NoDebug
+    	beq 	@NoDebug
 	MPX9 	DBGFMT
 	fcs	/\tMPX9+ KAMemPtr:$%Xx\n\r/
 @NoDebug
 
 	; KAlloc memory for dynamic system call table **** MUST BE DONE BEFORE NON KAlloc INIT'S ****
 	ldd 	#31		; room for 10 syscal id and offset vectors + 1 for marker
-	MPX9 	KAllocInit	; alloc space for dynamic system call table
+	MPX9 	KALLOC		; Allocate space for dynamic system call table
 	stx 	<SYSOFF2.pHead 	; save pointer to dynamic system call table
 	stx 	<SYSOFF2.pNext	; save pointer to next available entry in dynamic system call table
 	clr 	,x 		; put null at end of dynamic system call table
@@ -164,6 +167,7 @@ foo:
 	; KAlloc memory for CmdLineData and store in pCmdLineData
 	lbsr 	CmdLineInit
 	lbsr 	CmdShellInit
+	lbsr 	RptErrorInit
 
 ; ABC_RET:
 ; AbcX:
@@ -272,7 +276,6 @@ AddDynSystemCall
 ; pSYSOFF2	rmb	2 	; pointer to DYNAMIC SYSTEM CALL TABLE (DSCT).
 ; pSYSOFF2end 	rmb	2 	; size of pSYSOFF2end DYNAMIC SYSTEM CALL TABLE
 ; pSYSOFF2next	rmb	2 	; pointer to next entry in the DYNAMIC SYSTEM CALL TABLE
-	; USIM
 	pshs 	Y
 	clrb 				; assume no error
 	ldy 	<SYSOFF2.pNext		; null if no more space
@@ -291,7 +294,6 @@ AddDynSystemCallX
 	puls 	Y,PC 
 
 
-KernalDbgFmt EXTERN
 
 ; **************************************************
 ; * MPX9+ SYSTEM CALL OFFSET LOOKUP TABLE          *
@@ -312,7 +314,7 @@ SYSOFF:
  ; FDB MPXRET-SYSOFF 	- New process command.
   
  FCB KALLOC
- FDB KAlloc-SYSOFF 	- GET A HUNK OF KERNAL MEMORY
+ FDB KernalAlloc-SYSOFF 	- GET A HUNK OF KERNAL MEMORY
 
  FCB GETLIN
  FDB CmdLine-SYSOFF 	- GET A LINE OF INPUT

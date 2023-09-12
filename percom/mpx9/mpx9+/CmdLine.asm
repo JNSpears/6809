@@ -40,6 +40,13 @@ HistBuff 	rmb MaxHistBuff
 CmdLineInit EXPORT
 CmdLineInit:
 
+        ; debug and diag help.
+        tst     <verbose
+        beq     @NoDebug
+        MPX9    DBGFMT
+        fcs     /**** CmdLineInit ****\n\r/
+@NoDebug
+
 	; KAlloc memory for CmdLineData and store in pCmdLineData
 	ldd 	#sizeof{VAR}
 	MPX9 	KALLOC
@@ -954,7 +961,6 @@ DoHistAction
 DoTextRecall
 	jsr 	CRLF
 	pshs 	X 	; Save x for later.
-	; USIM
 	leax 	1,X 	; Step over '!' X now points to text to match.
 	clrb
 @l 	lda 	,X+
@@ -964,7 +970,6 @@ DoTextRecall
 	bra  	@l
 @e 	ldx 	,S 	; Reload X
 	leax 	1,X 	; Step over '!' X now points to text to match.
-	; USIM
 	; clear right and left counts.
 	clr   	<<VAR.left,U
 	clr  	<<VAR.right,U
@@ -998,7 +1003,6 @@ DoTextRecall
 	; MPX9 	DSPDEC
 	; jsr 	CRLF
 	;
-	; USIM
 	bsr CMPAR ; SHORT COMPARE <=256 BYTES.
 	;
 	; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX; Check to see if current history line # == target history line #
@@ -1006,7 +1010,6 @@ DoTextRecall
 	bne 	@loop
 	;
 	; FOUND entry matching history line
-	; USIM
 	;
 	puls 	X 	; recover pointer to LINBUF
 	CLRB
@@ -1029,7 +1032,6 @@ DoIndexRecallX:
 	rts
 
 DoIndexRecallX2	; target history line # not found in history buffer
-	; USIM
 	puls 	X 	; recover pointer to LINBUF
 	BRA 	DoIndexRecallX
 
@@ -1114,7 +1116,6 @@ DoIndexRecall
 	bne 	@loop
 
 	; FOUND entry matching target history line #
-	; USIM
 	leas 	4,S 	; Clean up stack
 	
 	puls 	X 	; recover pointer to LINBUF
@@ -1137,7 +1138,6 @@ DoIndexRecallXa:
 	sta 	B,X 	; Terminate command.
 	rts
 DoIndexRecallX2a	; target history line # not found in history buffer
-	; USIM
 	leas 	4,S 	; Clean up stack
 	puls 	X 	; recover pointer to LINBUF
 	BRA 	DoIndexRecallXa
@@ -1177,7 +1177,6 @@ DoDispHistory
         pshs    D       ; create temp var. for history ix := current history ix
 
 
-        ; USIM
 SkipNulls:     ; skip null(s) between commands
         cmpy    <<VAR.HEnd,U
         bne     @NoWrap
