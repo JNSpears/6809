@@ -10,6 +10,7 @@ DBGFMT          EQU $41
 KALLOC          EQU $42
 ADDSYSCALL      EQU $43
 ADDRPTERR       EQU $44
+ADDRESCMD       EQU $45
 
 ERR_RN          EQU 19  - ERR_RN (resource not available)
 
