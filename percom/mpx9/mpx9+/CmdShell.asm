@@ -64,6 +64,12 @@ CmdShellInit:
         LDD     #"YY"
         LEAX    Cmd_yy,PCR
         MPX9    ADDRESCMD
+
+
+        ; set/clr verbose flag
+        LDD     #"VB"
+        LEAX    Cmd_vb,PCR
+        MPX9    ADDRESCMD
         
 
         rts
@@ -250,6 +256,25 @@ Cmd_yy:
 
         MPX9  DBGFMT
         fcs   /test YYYY\n\r/
+
+        clrb 
+        rts
+
+**************************************************
+Cmd_vb:
+        MPX9  DBGFMT
+        fcs   /Cmd_vb\n\r/
+
+        clr     <verbose
+
+        MPX9    DECNUM
+        tsta
+        bne     @true
+        tstb
+        beq     @false
+@true
+        inc     <verbose
+@false
 
         clrb 
         rts
