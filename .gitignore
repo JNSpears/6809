@@ -12,6 +12,7 @@ percom/mpx9/foo1.dsk
 *.bin
 *.cm
 *.cm1
+*.md
 *.SY
 *.dsk
 

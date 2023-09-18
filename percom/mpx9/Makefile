@@ -28,6 +28,21 @@ MYUTIL_OBJS=$(MYUTIL_SRCS:.asm=.cm)
 XMYUTIL_SRCS=
 XMYUTIL_FILES=$(foreach file,$(XMYUTIL_SRCS),my-utils/$(file))
 
+LDFLAGS=-m$*.map -s$*.ld
+
+KERNAL=start dbgfmt CmdLine CmdShell Kalloc RptErr Mod
+KERNAL_SRCS=$(foreach file,$(KERNAL),mpx9+/$(file).asm)
+KERNAL_OBJS=$(KERNAL_SRCS:.asm=.obj)
+# $(info KERNAL_SRCS $(KERNAL_SRCS))
+# $(info KERNAL_OBJS $(KERNAL_OBJS))
+
+MODULES=abc1 abc4
+MODULE_SRCS=$(foreach file,$(MODULES),mpx9+/$(file).asm)
+MODULE_OBJS=$(MODULE_SRCS:.asm=.md)
+# $(info MODULE_SRCS $(MODULE_SRCS))
+# $(info MODULE_OBJS $(MODULE_OBJS))
+
+
 all: $(EPROMS) $(TGTDSK)
 
 ../psymon/psymon.ihex: ../psymon/psymon.asm
@@ -51,8 +66,8 @@ os/MPX9.SY: os/mpx9.bin
 init: boot-sector/BootSector.bin os/MPX9.SY
 	$(MPX9DSK) $(TGTDSK) --init boot-sector/BootSector.bin os/MPX9.SY -f 
 
-$(TGTDSK): init                $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 # sub-makes
-	$(MPX9DSK) $(TGTDSK) -n -w $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 -f 
+$(TGTDSK): init                $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 $(MODULE_OBJS) # sub-makes
+	$(MPX9DSK) $(TGTDSK) -n -w $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 $(MODULE_OBJS) -f 
 
 test: $(EPROMS) $(TGTDSK) 
 	../../tools/usim/percom/percom -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
@@ -72,27 +87,5 @@ clean:
 	$(MAKE) -C mpx9+ clean
 	-$(CLEAN)
 
-# start.obj: mpx9+/start.asm 
-# abc1.obj: mpx9+/abc1.asm 
-# abc2.obj: mpx9+/abc2.asm 
-# mpx9+.lib: mpx9+/abc1.obj mpx9+/abc2.obj
-# mpx9+.cm1: start.obj mpx9+.lib
-# 	$(LINKER_) $(AFLAGS) -smpx9+/mpx9+.ld -mmpx9+/mpx9+.map -o$@ $< mpx9+/mpx9+.lib
-
-LDFLAGS=-m$*.map -s$*.ld
-
-KERNAL_MODS=start dbgfmt CmdLine CmdShell Kalloc RptErr
-KERNAL_SRCS=$(foreach file,$(KERNAL_MODS),mpx9+/$(file).asm)
-KERNAL_OBJS=$(KERNAL_SRCS:.asm=.obj)
-$(info KERNAL_SRCS $(KERNAL_SRCS))
-$(info KERNAL_OBJS $(KERNAL_OBJS))
-
-
-mpx9+/start.obj : mpx9+/start.asm 
-mpx9+/RptErr.obj : mpx9+/RptErr.asm 
-mpx9+/dbgfmt.obj : mpx9+/dbgfmt.asm 
-mpx9+/CmdShell.obj : mpx9+/CmdShell.asm 
-mpx9+/CmdLine.obj : mpx9+/CmdLine.asm 
-mpx9+/Kalloc.obj : mpx9+/Kalloc.asm 
 # mpx9+/mpx9+.lib : mpx9+/abc1.obj mpx9+/abc2.obj mpx9+/dbgfmt.obj 
 mpx9+/mpx9+.cm1 : $(KERNAL_OBJS)

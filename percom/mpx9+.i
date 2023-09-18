@@ -11,8 +11,10 @@ KALLOC          EQU $42
 ADDSYSCALL      EQU $43
 ADDRPTERR       EQU $44
 ADDRESCMD       EQU $45
+ADDMOD          EQU $46
 
 ERR_RN          EQU 19  - ERR_RN (resource not available)
+ERR_NM          EQU 20  - ERR_NM (not module)
 
 ; _verbose        equ     0
 verbose         extern

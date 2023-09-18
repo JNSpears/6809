@@ -1,8 +1,8 @@
  PRAGMA cescapes
- nam Abc1
- ttl Abc1 test
+ nam Abc4
+ ttl Abc4 test
 *********************************************************
-* Abc1.CM                             JNS 7/29/2023     *
+* Abc4.CM                             JNS 7/29/2023     *
 *                                                       *
 *                                                       *
 *********************************************************
@@ -24,25 +24,24 @@ BEGCODE equ     *
 	; TWO BYTE SIGNATURE FOR MODULE, AND SAFE TO EXECUTE AS A PROGRAM.
 	nop
 	rts 
-	FDB 	Abc1 		; Entry point
+	FDB 	Abc4 		; Entry point
 	FDB	ENDCODE-BEGCODE	; code size (copied from disk)
 	FDB	ENDDATA-BEGDATA	; data size (allocated un initialiazed)
-	FCS	'ABC1'		; Module Name
+	FCS	'Abc4'		; Module Name
 
 
-; Abc1 EXPORT
-Abc1:
-	; USIM
+; Abc4 EXPORT
+Abc4:
 	pshs	x
 
-	LEAX 	<Abc1,PCR
+	LEAX 	<Abc4,PCR
 	tfr 	X,D
 	MPX9	DSPDBY
 
 	leax	GreetingsMsg,PCR
 	MPX9	PSTRNG
 
-Abc1X:
+Abc4X:
 	CLRB	; No Errors
 	PULS	pc,x
 
@@ -53,7 +52,7 @@ Abc1X:
  	; section .data
 
 GreetingsMsg:
-	FCS /Greetings! from Abc1\r\n/
+	FCS /Greetings! from Abc4\r\n/
 
 	; endsection	; section .data	
 

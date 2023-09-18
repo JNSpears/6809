@@ -262,21 +262,14 @@ Cmd_yy:
 
 **************************************************
 Cmd_vb:
-        MPX9  DBGFMT
-        fcs   /Cmd_vb\n\r/
-
         clr     <verbose
-
         MPX9    DECNUM
         tsta
         bne     @true
         tstb
         beq     @false
-@true
-        inc     <verbose
-@false
-
-        clrb 
+@true   inc     <verbose
+@false  clrb 
         rts
 
 **************************************************

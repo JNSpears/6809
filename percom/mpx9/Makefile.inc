@@ -7,7 +7,7 @@ ASMINCLUDE=-I ..
 ASM=lwasm
 #DEFINES=-DRAMTGT -DS19LOADER
 #DEFINES=-DMPX9
-DEFINES=-DNULL_DCB -DBS_BUG -DCURDRIVE -DNEWSYSDCB 
+DEFINES=-DNULL_DCB -DBS_BUG -DCURDRIVE -DNEWSYSDCB -DDEBUG
 ASMFLAGS=-l$*.lst $(ASMINCLUDE) $(DEFINES)
 LDFLAGS=-m$*.map -s$*.ld
 
@@ -26,8 +26,11 @@ LDFLAGS=-m$*.map -s$*.ld
 %.cm : %.asm
 	$(ASM) $(ASMFLAGS) -fraw -o$@ $<
 
+%.md : %.asm
+	$(ASM) $(ASMFLAGS) -fraw -o$@ $<
+
 .PHONY: clean
-CLEAN=$(RM) -f *.s19 *.ihex *.ihex *.lst *.log *.bin *.cm *.cm1 *.lib *.map *.obj
+CLEAN=$(RM) -f *.s19 *.ihex *.ihex *.lst *.log *.bin *.cm *.cm1 *.md *.lib *.map *.obj
 
 # RMA/RLINK
 ASM_		= lwasm --format=obj $(ASMFLAGS)
@@ -41,7 +44,7 @@ LWAR_		= lwar -c
 #	@echo LWAR_LWAR_LWAR_
 	$(LWAR_) $@ $?
 
-%.obj :
+%.obj : %.asm
 #	@echo ASM_ASM_ASM_
 	$(ASM_) $(AFLAGS) -o$@ $< 
 

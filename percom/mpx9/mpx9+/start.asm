@@ -30,6 +30,7 @@ KernalDbgFmt    EXTERN
 NPROCM 		EXTERN
 RptErrorInit	EXTERN
 s_.bss 		EXTERN
+ModulesInit 	EXTERN
 
 MPX9SYSCAL	EXPORT
 _Start 		EXPORT
@@ -48,12 +49,13 @@ _Start:
 option:
 	MPX9    SKPSPC		; point to the next word
 	beq     Init		; No arguments
-	lda     ,x+
+	lda     ,x
 	cmpa    #'/		; look for option flags
 	bne     Init		; Not a switch
+	leax 	1,X 		; move past switch char
+	lda     ,x+		; get option char and bump pointer
 
 option_V:
-	lda     ,x+		; get option char and bump pointer
 	cmpa    #'V		; is a option 'V'?
 	bne     Option_S	; bad switch
 	com     <verbose	; toggle option 'V'
@@ -168,10 +170,17 @@ foo:
 	lbsr 	CmdLineInit
 	lbsr 	CmdShellInit
 	lbsr 	RptErrorInit
-
-; ABC_RET:
-; AbcX:
-	CLRB	; No Errors
+	lbsr 	ModulesInit
+	ldx 	,S 		; get pointer to command line back.
+	lda  	,X
+	cmpa 	#CR
+	beq 	_StartX		; No Modules to load
+	MPX9 	ADDMOD		; todo: loop here while not CR, note modules must stop parsing args etc at a comma or semi-colon
+	bne 	_StartXE
+_StartX:
+	clrb 	; No Errors
+_StartXE:
+	tstb	; No Errors
 	PULS	pc,x
 
 ; **************************************************
