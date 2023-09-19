@@ -1,6 +1,6 @@
 include ../Makefile.inc
 
-SRCS=create.asm list.asm memtst.asm OutVectr.asm
+SRCS=create.asm list.asm memtst.asm OutVectr.asm exec.asm
 OBJS=$(SRCS:.asm=.cm)
 TGTDSK=../system.dsk
 

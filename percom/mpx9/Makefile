@@ -3,7 +3,7 @@ include Makefile.inc
 EPROMS=../psymon/psymon.ihex ../psymon/psymon-ext.ihex boot-rom/BootRom.ihex
 TGTDSK=system.dsk
 
-UTILS=create list memtst OutVectr
+UTILS=create list memtst OutVectr exec
 UTIL_SRCS=$(foreach file,$(UTILS),utils/$(file).asm)
 UTIL_OBJS=$(UTIL_SRCS:.asm=.cm)
 # $(info UTIL_SRCS $(UTIL_SRCS))
