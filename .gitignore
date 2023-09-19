@@ -3,14 +3,20 @@ tools/lwtools-4.19/
 tools/coco-disasm/
 tools/usim/
 percom/mpx9/foo1.dsk
+*.obj
+*.map
+*.lib
 *.lst
 *.bak
 *.ihex
 *.bin
 *.cm
-
+*.cm1
+*.md
 *.SY
-
 *.dsk
 
+*.sublime-workspace
 tools/f9dasm/
+tools/pretty6502
+tools/LWTools-manual.pdf

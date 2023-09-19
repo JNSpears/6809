@@ -1,4 +1,4 @@
-	INCLUDE psymon.i
+*	INCLUDE psymon.i
 
 	IFNDEF PSYMON_EXT__I
 

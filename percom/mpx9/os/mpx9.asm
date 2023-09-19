@@ -392,6 +392,10 @@ MPX9EP LEAS STACK,PCR SET STACK
         SWI3
         FCB DSPDBY
 
+        LEAX >LDDOL,PCR       ; print "Loaded @ $" message
+        SWI3
+        FCB PSTRNG
+
         LEAX >MPXBAS,PCR        ; print code begining of MPX/9 memeory
         tfr X,D
         SWI3
@@ -443,7 +447,7 @@ NEWLIN FCB CR,LF+$80
 LDATMSG FCC 'Loaded @ '
         fcb '$+$80
 LDATMSG2 FCC '- '
-        fcb '$+$80
+LDDOL    fcb '$+$80
 ;JNS-
  SPC 1
 **************************************************
@@ -506,15 +510,21 @@ MPXRET LEAS STACK,PCR RESET THE STACK
 * COMMAND LOOP                                   *
 **************************************************
 GETCMD LEAX LINBUF,PCR POINT X AT LINE BUFFER
- LBSR PROCM PROCESS CURRENT COMMAND
+ ; LBSR PROCM PROCESS CURRENT COMMAND
+ SWI3
+ FCB PROCMD
  BEQ GETCM1 GO IF NO ERRORS
- LBSR RPTER REPORT THE ERROR
+ ; LBSR RPTER REPORT THE ERROR
+ SWI3
+ FCB RPTERR
 GETCM1 LEAX <MPXPRM,PCR DISPLAY MPX/9 PROMPT
  SWI3
  FCB PSTRNG
  LEAX LINBUF,PCR POINT X AT LINE BUFFER
  LDB #64 SET SIZE IN B
- BSR GETLN FILL THE BUFFER
+ ; BSR GETLN FILL THE BUFFER
+ SWI3
+ FCB GETLIN
  BEQ GETCM1 LOOP IF NO INPUT
  LEAX NEWLIN,PCR DO CR/LF
  SWI3
@@ -2322,11 +2332,14 @@ CURRENT:
 *                                                *
 * ENTRY REQUIREMENTS:  none                      *
 *                                                *
-* EXIT CONDITIONS:  X --> MPXBAS                 *
-*                   OTHERS UNCHANGED             *
+* EXIT CONDITIONS: X --> MPXRAM                  *
+*                  Y --> MPXBAS                  *
+*                  D LENGTH OF MPX9 CORE (MPXSIZ)*
 **************************************************
 GTBAS:
- LEAX MPXRAM,PCR
+ LEAX    MPXRAM,PCR
+ LEAY    MPXBAS,PCR
+ LDD     #MPXSIZ
  RTS
  SPC 1
 
@@ -2361,5 +2374,4 @@ GTDCBX
 MPXEND EQU *
  SPC 1
 MPXSIZ EQU MPXEND-MPXBAS
-
  END MPX9EP

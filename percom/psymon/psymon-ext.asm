@@ -339,8 +339,11 @@ DmpMem:
 
 DumpMem2:
         ; entry
-        ;       x-> memory
-        ;       d=length
+        ;       x -> memory
+        ;       d = length
+        ; return
+        ;       x -> next memory location
+        ;       d changed
 
     stx     BegAdd
     leax    D,X

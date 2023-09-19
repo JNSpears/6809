@@ -2,9 +2,11 @@
 ; hexdump.asm
 ;
 ; **********************************************
+
+        INCLUDE psymon.i
         INCLUDE mpx9.i
-        INCLUDE psymon-ext.i
         INCLUDE jns.i
+
         INCLUDE ascii.i
 
 **************************************************

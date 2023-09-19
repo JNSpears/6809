@@ -1,6 +1,8 @@
- nam nCmdLine
+ PRAGMA cescapes
+ nam CmdLine
+ ttl New Comandline processor for MPX9+
 *********************************************************
-* nCmdLine.CM                           JNS 7/22/2023   *
+* CmdLine                               JNS 7/22/2023   *
 *                                                       *
 *                                                       *
 *********************************************************
@@ -9,221 +11,145 @@
         INCLUDE mpx9.i
         INCLUDE jns.i
         INCLUDE ascii.i
+        INCLUDE mpx9+.i
 
+MaxCmdLineLen	equ 64
+MaxHistBuff	equ 256
+
+VAR	STRUCT
+max 		rmb 1
+left		rmb 1
+right		rmb 1
+dirty		rmb 1 ; true if: user input or edit, false if: canceled, or from history
+HBegin		rmb 2
+HEnd		rmb 2
+HHead		rmb 2
+HCurr		rmb 2
+histix		rmb 2
+pCmdLineBuff	rmb 2
+HistBuff 	rmb MaxHistBuff
+	ENDSTRUCT
 
 **************************************************
-* Program (Position independant)
+* Program (Position independent)
 **************************************************
-        ORG     $0
-BGNPGM	EQU		*
-; *****************************************************
-Main:
-	clr     >verbose,pcr    ; initialize variables
 
-    
-option:
-	swi3
-	fcb     SKPSPC          ; point to the next word
-	beq     Init  		; No arguments
-	lda     ,x+
-	cmpa    #'/             ; look for option flags
-	bne     Init       ; Not a switch
+        section .text
 
-option_V:
-	lda     ,x+             ; get option char and bump pointer
-	cmpa    #'V             ; is a option 'V'?
-	bne     Option_S        ; bad switch
-	com     >verbose,pcr    ; toggle option 'V'
-	bra     option          ; get next option
+; ************************************************
+CmdLineInit EXPORT
+CmdLineInit:
 
-Option_S:
-; 	cmpa    #'S             ; is a option 'S'?
-; 	bne     synerr          ; bad switch
-; 	com     >sysdcbs,pcr    ; toggle option 'S'
-; 	bra     option          ; get next option
+        ; debug and diag help.
+        tst     <verbose
+        beq     @NoDebug
+        MPX9    DBGFMT
+        fcs     /**** CmdLineInit ****\n\r/
+@NoDebug
 
-synerr:
-	ldb     #ERR_SN         ; Error Syntax
-	rts
-	
-; *****************************************************
-Init:
-    tst     >verbose,pcr
-    ; beq     Nosysdcbs
+	; KAlloc memory for CmdLineData and store in pCmdLineData
+	ldd 	#sizeof{VAR}
+	MPX9 	KALLOC
+	stx 	<pCmdLineData
+	tfr     X,U
 
-; START INIT
+        tst  	<verbose
+        beq      @NoDebug
+	MPX9 	DBGFMT
+	fcs	/\tCmdLineInit pCmdLineData:$%Xx\n\r/
+@NoDebug
 
-; MaxCmdLineLen	equ	64
-; MaxHistBuff	equ 256
 
-; VAR	STRUCT
-; max 		rmb 1
-; left		rmb 1
-; right		rmb	1
-; HBegin		rmw 1
-; HEnd		rmw 1
-; HHead		rmw 1
-; HCurr		rmw 1
 
-; CmdLineBuff	rmb	MaxCmdLineLen
-; HistBuff 	rmb MaxHistBuff
-; 	ENDSTRUCT
- 	LEAU    data,pcr
+	pshs 	u
+	MPX9	GETBAS ;  GET MPX/9 MEMORY X:MPXRAM, Y:MPXBAS AND LEN (BASE 2 END)
+	leax 	$1C0,X
+	puls 	u
+	stx 	<<VAR.pCmdLineBuff,U
 
-	leax 	<VAR.HistBuff,U
-	stx  	<<VAR.HBegin,U
+        tst  	<verbose
+        beq      @NoDebug
+	MPX9 	DBGFMT
+	fcs	/\tCmdLineInit pCmdLineBuff:$%Xx\n\r/
+@NoDebug
 
-	tfr 	X,D
-	addd  	#MaxHistBuff
-	std 	<<VAR.HEnd,U
+        leax    VAR.HistBuff,U
+        stx     <<VAR.HBegin,U
 
-	stx  	<<VAR.HHead,U
+        tfr     X,D
+        addd    #MaxHistBuff
+        std     <<VAR.HEnd,U
 
-	stx  	<<VAR.HCurr,U
+        stx     <<VAR.HHead,U
 
-	clra
-	clrb
-	std  	<<VAR.histix,U
+        stx     <<VAR.HCurr,U
 
-ClrBuffer2:
- 	CLR 	,x+
- 	cmpx 	<<VAR.HEnd,U
- 	BNE 	ClrBuffer2
+        clra
+        clrb
+        std     <<VAR.histix,U
 
- 	; LEAU    data,pcr
-; END INIT
+ClrBuffer2:	; Clear history buffer
+        CLR     ,x+
+        cmpx    <<VAR.HEnd,U
+        BNE     ClrBuffer2
 
-LOOP:
-	LEAX 	>prompt,pcr			; DISPLAY PROMPT
- 	MPX9 	PSTRNG
+        clrb
+        rts
 
- 	; Initialize buffer and other variables.
- 	LDB 	#MaxCmdLineLen 		; SET SIZE IN B	
- 	LEAX 	<<VAR.CmdLineBuff-1,U ; POINT X AT LINE BUFFER
-ClrCmdBuffer:
- 	CLR 	B,X
- 	DECB 
- 	BNE 	ClrCmdBuffer
+**************************************************
+* SYSTEM CALL 9 (GETLIN) - GET INPUT LINE        *
+*                                                *
+* ENTRY REQUIREMENTS:  X POINTS AT LINE BUFFER   *
+*                      B CONTAINS BUFFER LENGTH  *
+*                                                *
+* EXIT CONDITIONS:  A CONTAINS FIRST CHARACTER,  *
+*                     NUL => LINE CANCELED       *
+*                     Z FLAG IN CC SET PER A     *
+*                   OTHERS UNCHANGED             *
+**************************************************
+CmdLine EXPORT
+CmdLine:
 
- 	; setup and get a line.
- 	LDB 	#MaxCmdLineLen 		; SET SIZE IN B	
- 	LEAX 	<<VAR.CmdLineBuff,U ; POINT X AT LINE BUFFER
-	LBSR  	getline				; x=buffer, b=bufferlen --> a=firstchar, b=bufferlen, x=buffer
+; LOOP:
+        ; setup U to point to the data structure
+        ; LEAU    CmdLineInit,pcr
+        ; pshs    U
+        ; leau    cmdline_data,PCR
+        ; tfr     U,D
+        ; subd    ,S++
+        ; tfr     D,U
+        
+	ldU 	<pCmdLineData
 
-	tst     >verbose,pcr
-	beq 	NoVerbose1
+        ; print prompt
+        ; leaX    prompt,PCR
+ 	; MPX9 	PSTRNG
 
-	; dump buffer just for debug
-	LEAX    data,pcr
-	ldd 	#sizeof{VAR} 		; SET SIZE IN B	
-	JSR     [DumpMem2v]			; dump buffer DCB data.
-NoVerbose1:
+	; setup and get a line.
+	LDB 	#MaxCmdLineLen 		; SET SIZE IN B	
+	ldx 	<<VAR.pCmdLineBuff,U 	; POINT X AT LINBUF
 
-; exec command.
- 	LEAX 	<<VAR.CmdLineBuff,U ; POINT X AT LINE BUFFER
- 	lda 	,X
- 	cmpa 	#'!'
- 	bne 	NotHistCmd
+	; MPX9 	DBGFMT
+	; fcs	/\tCmdLineInit B:$%Bx U:$%Ux X:$%Xx\n\r/
 
-; History History History History History History History History History History History History History History History History
-; History History History History History History History History History History History History History History History History
-; History History History History History History History History History History History History History History History History
-	ldy 	<<VAR.HHead,U
-	ldd 	<<VAR.histix,U
-	pshs 	D 	; create temp var.
+	LBSR	getline			; x=LINBUF, b=LINBUF Length --> a=firstchar, b=bufferlen, x=LINBUF
 
-aa:			; skip null(s) between commands
-	cmpy 	<<VAR.HEnd,U
-	bne  	NoWrap41
-	ldy 	<<VAR.HBegin,U
-NoWrap41:
-	lda 	,Y+
-	beq 	aa
+	; check for history action (!h display history, TBD: !n re-execute command #n, !text re-execute command starting with text) 
+	cmpa	#'!'
+	bne	CmdLineX
 
-	pshs 	A,Y
+	lbsr	DoHistAction            ; returns z if nothing to do
+	bne	CmdLineX
 
-	clrb
-AA00:
-	lda 	,Y+
-	bne 	AA11
-	incb 
-AA11:
-	; Wrap at end of history buffer.
-	cmpy 	<<VAR.HEnd,U
-	bne  	NoWrap40AA11
-	ldy 	<<VAR.HBegin,U
-NoWrap40AA11:
-	cmpy 	<<VAR.HHead,U
-	bne   	AA00
-
-	jsr 	CRLF
-
-	; USIM
+	; Force command to be blank.
+	clr	,X
 	clra 
-	coma
-	comb
-	addd #1
-	addd <<3,s ; set temp to current line's histix
-	std <<3,S
 
-	; USIM
-	ldd 	<<3,s
-	MPX9	DSPDEC
-	addd 	#1
-	std 	<<3,s
-	puls  	A,Y
-	tsta
-	bra 	BB1
+CmdLineX
+	LDA 		,X GET FIRST CHARACTER OF LINE
+	TSTA 		; SET Z FLAG PER A
 
-bb:	; Y -> first non null char.
-	lda 	,Y+
-BB1:
-	beq 	cc
-
-	; Wrap at end of history buffer.
-	cmpy 	<<VAR.HEnd,U
-	bne  	NoWrap40
-	ldy 	<<VAR.HBegin,U
-NoWrap40: 
-
-	; USIM
-	MPX9	OUTCHR
-	BRA 	bb
-
-cc: ; Y -> first char next command 
-	; USIM
-	; lda 	,Y+
-	cmpy 	<<VAR.HHead,U
-	beq  	dd
-	jsr 	CRLF
-
-	ldd 	,s
-	MPX9	DSPDEC
-	addd 	#1
-	std 	,s
-
-	bra     bb
-dd:
-	; USIM
-
-	BRA  	NoError
-
-
-
-
-NotHistCmd
-         jsr      CRLF
-	MPX9	PROCMD
-	beq 	NoError
-	MPX9 	RPTERR
-NoError:
-	; check to see if we are done for now.
-	lda 	<<VAR.left,U
-	adda 	<<VAR.right,U
-
-	lbne   	LOOP
-	clrb 		; no error
-	rts			; Return to OS
+	rts		; Return to OS
 
 **************************************************
 * GetCharNoEcho - GET INPUT CHAR WITH NO ECHO
@@ -231,15 +157,15 @@ NoError:
 * Entry: None
 * 
 * Exit: A - char with Parity removed
-*		 ALL other regs perserved, except C
+*		 ALL other regs preserved, except C
 * 
 **************************************************
 GetCharNoEcho:
- pshs X,B		; SAVE REGISTERS
- LDX  CIDCB		; POINT TO INPUT DCB
+ pshs X,B	; SAVE REGISTERS
+ LDX  CIDCB	; POINT TO INPUT DCB
  LDB  #ReadFn	; SET UP FOR READ
- MPX9 REQIO		; READ A CHARACTER
- ANDA #$7F		; REMOVE PARITY
+ MPX9 REQIO	; READ A CHARACTER
+ ANDA #$7F	; REMOVE PARITY
  PULS B,X,PC 	; RESTORE & RETURN
 
 **************************************************
@@ -248,54 +174,54 @@ GetCharNoEcho:
 * Entry: None
 * 
 * Exit: A - ACIA STATUS
-*		 ALL other regs perserved, except C
+*		 ALL other regs preserved, except C
 * 
 **************************************************
 GetConStat:
- pshs X,B		; SAVE REGISTERS
- LDX  CIDCB		; POINT TO INPUT DCB
+ pshs X,B	; SAVE REGISTERS
+ LDX  CIDCB	; POINT TO INPUT DCB
  LDB  #StatFn	; SET UP FOR GET STATUS
- MPX9 REQIO		; GET STATUS
+ MPX9 REQIO	; GET STATUS
  PULS B,X,PC 	; RESTORE & RETURN
 
 **************************************************
 * OutEscBrkNChr - Output Vt100 escape sequ.
 *
 * Entry: A - Final char in Esc sequence
-* 		 B - count (if 0 then no count in Esc sequence)
+* 	 B - count (if 0 then no count in Esc sequence)
 * 			only works for 0-99
 * 
-* Exit: A - ACIA STATUS
-*		 ALL other regs perserved, except C
+* Exit:  A - ACIA STATUS
+*	 ALL other regs preserved, except C
 * 
 **************************************************
 OutEscBrkNChr:
- pshs B,A 		; save registers
+ pshs B,A               ; save registers
  LDA #ESC
- MPX9 OUTCHR 	; send Escape to console
+ MPX9 OUTCHR            ; send Escape to console
  LDA #'['
- MPX9 OUTCHR 	; send [ to console
+ MPX9 OUTCHR            ; send [ to console
  tstb 			; check to see if there is a count to send 
  BEQ OutEscBrkNChr1	; if not go
 ; TWO DIGIT DECIMAL CONVERSION, NO LEADING SPACE OR ZERO
  tfr B,A
  ADDA #0
- daa 			; convert to BCD
- cmpa #9  		; 2 digits?
- ble OutEscBrkNChr2	; if not go
- TFR A,B  		; save BCD count
- asra 			; shift MSD to LSD
+ daa                    ; convert to BCD
+ cmpa #9                ; 2 digits?
+ ble OutEscBrkNChr2     ; if not go
+ TFR A,B                ; save BCD count
+ asra                   ; shift MSD to LSD
  ASRA
  ASRA
  ASRA
- BSR OUTDIGIT	; convert MSD to ascii and send to console
- TFR b,A  		; restore BCD count
+ BSR OUTDIGIT           ; convert MSD to ascii and send to console
+ TFR b,A                ; restore BCD count
 OutEscBrkNChr2:
- BSR OUTDIGIT	; convert LSD to ascii and send to console
+ BSR OUTDIGIT           ; convert LSD to ascii and send to console
 OutEscBrkNChr1:
- LDA ,S  		; get Final char in Esc sequence
- MPX9 OUTCHR 	; send to console
- PULS A,B,PC  	; RESTORE & RETURN
+ LDA ,S                 ; get Final char in Esc sequence
+ MPX9 OUTCHR            ; send to console
+ PULS A,B,PC            ; RESTORE & RETURN
 
 ; Mask digit, convert to ascii and send to console
 OUTDIGIT:
@@ -311,7 +237,7 @@ OUTDIGIT:
 * 		 B - count 
 * 
 * Exit: B - zero
-*		 ALL other regs perserved, except C
+*		 ALL other regs preserved, except C
 * 
 **************************************************
 OUTNCHR: ; IN: A-CHAR B-COUNT OUT: A,B MODIFIED.
@@ -353,10 +279,10 @@ GetCharLoop:
 	CMPA 	#SP CONTROL CODE?
 	LBLO 	CheckOneChar 
 
-	CMPA 	#TILDE Invalide Ascii
+	CMPA 	#TILDE Invalid Ascii
 	LBHI 	CheckOneChar 
 
-	; save this character in buffer, output char, update left count
+	; save this character in LINBUF, output char, update left count
 	ldb 	<<VAR.left,U 
 	STA 	B,X SAVE THIS CHARACTER
 	MPX9 	OUTCHR
@@ -392,14 +318,17 @@ Done:
 	LDB 	<<VAR.left,U 
 	STA 	B,X ; MARK END OF LINE W/ CR
 
- 	tst 	 <<VAR.dirty,U 
+ 	tst 	<<VAR.dirty,U 
  	beq 	CopyHist2Buff3		; skip add to history if not dirty
 
- 	LEAX 	<<VAR.CmdLineBuff,U ; POINT X AT LINE BUFFER
+; +History +History +History +History +History +History +History +History
+; +History +History +History +History +History +History +History +History
+
+	ldx 	<<VAR.pCmdLineBuff,U 	; POINT X AT LINBUF
  	lda 	,X
  	cmpa 	#'!'
  	beq 	CopyHist2Buff3
-    ldy 	<<VAR.HHead,U  		; Points to next line to overwrite
+        ldy 	<<VAR.HHead,U  		; Points to next line to overwrite
 CopyHist2Buff:
 	lda 	,X+
 	beq  	CopyHist2Buff1
@@ -436,9 +365,16 @@ CopyHist2Buff2:
 
 	bra  	CopyHist2Buff2
 
+; -History -History -History -History -History -History -History -History
+; -History -History -History -History -History -History -History -History
+
 CopyHist2Buff3:
 	LDA 	[1,S] GET FIRST CHARACTER OF LINE
-	LDB 	<<VAR.left,U 
+
+	; NORMALIZE COMMAND LENGTH COUNT IN REG-B
+	ldB	<<VAR.left,U
+	addB	<<VAR.right,U
+	STB	<<VAR.left,U
 
 GETLNX 
 	TSTA 	; SET Z FLAG PER A
@@ -451,20 +387,23 @@ GETLNX
 *                      U POINTS AT WORKING STORAGE   
 *                                                
 * EXIT CONDITIONS:     A, B MODIFIED
-* 					   OTHERS UNCHANGED             
+* 		       OTHERS UNCHANGED             
 **************************************************
 OutRightChars:
- clrb
+        tst     <<VAR.right,U
+        beq     OutRightCharsX
+        clrb
 OutRightChars1:
- tfr b,a
- adda <<VAR.max,U
- suba <<VAR.right,U
- lda a,x
- MPX9 OUTCHR
- incb
- cmpb <<VAR.right,U
- blt OutRightChars1
- rts
+        tfr    b,a
+        adda   <<VAR.max,U
+        suba   <<VAR.right,U
+        lda    a,x
+        MPX9   OUTCHR
+        incb
+        cmpb   <<VAR.right,U
+        blt    OutRightChars1
+OutRightCharsX:
+        rts
 
 **********************************
 * CheckOneChar
@@ -529,13 +468,13 @@ Cmd_BS:
  lda 	#SP
  MPX9  	OUTCHR
 
- ldb   <<VAR.right,U
+ ldb    <<VAR.right,U
  incb
  lda 	#BS
- Lbsr 	OUTNCHR		; output N BS characters, return cursor ot original location
+ Lbsr 	OUTNCHR	         ; output N BS characters, return cursor to original location
 
  CLR  	<<VAR.dirty,U 
- INC  	<<VAR.dirty,U ; Mark as dirty
+ INC  	<<VAR.dirty,U    ; Mark as dirty
 
 Cmd_BSX:
  BRA	GetCharLoop_2
@@ -764,12 +703,9 @@ Cmd_CurEndX:
  LBRA	GetCharLoop
 
 ; *****************************************************
-NormBuffer: 
- ; MOVE from(X)=X+max-right, to(Y)=X+left, count(D)=right
- 
-* ENTRY REQUIREMENTS:  X POINTS TO SOURCE FIELD  *
-*                      Y POINTS TO DEST. FIELD   *
-*                      D CONTAINS LENGTH         *
+; MOVE from(X)=X+max-right, to(Y)=X+left, count(D)=right
+NormBuffer:
+ pshs   X
  lda 	<<VAR.left,U
  leay  	a,x
 
@@ -779,15 +715,19 @@ NormBuffer:
  clra 
  ldb 	<<VAR.right,U
 
- BEQ NormBuffer1
+ beq NormBuffer1
+* ENTRY REQUIREMENTS:  X POINTS TO SOURCE FIELD  *
+*                      Y POINTS TO DEST. FIELD   *
+*                      D CONTAINS LENGTH         *
  MPX9 	BLKMOV
 NormBuffer1:
 
- LDA 	<<VAR.left,U
+ lda 	<<VAR.left,U
  adda 	<<VAR.right,U
  sta 	<<VAR.left,U
+ clr    <<VAR.right,U
  
- Clr  	<<VAR.right,U
+ puls   X
  rts
 
 ; *****************************************************
@@ -813,7 +753,7 @@ Cmd_CtrlCurRightX:
  LBRA	GetCharLoop
 
 ; *****************************************************
-; in a=char out b=0 AlphaNumUnder or 1 if puncuation etc. CC set per B
+; in a=char out b=0 AlphaNumUnder or 1 if punctuation etc. CC set per B
 IsAlphaNumUnder:
 	ldb #1
 
@@ -868,6 +808,9 @@ Cmd_CtrlCurLeftX:
 
 ; *****************************************************
 
+; +History +History +History +History +History +History +History +History
+; +History +History +History +History +History +History +History +History
+
 Cmd_CurUp:
 
 ; SCAN BACKTO HEAD IF ALL 0'S THEN NO MORE HIST DO NOTHING
@@ -883,7 +826,7 @@ NoWrap1:
  clrb
 
 ScanBackForNull:
- ; step back to find begining and count chars of prev line.
+ ; step back to find beginning and count chars of prev line.
  cmpy 	<<VAR.HBegin,U
  bhi 	NoWrap2
  ldy 	<<VAR.HEnd,U
@@ -898,36 +841,48 @@ NoWrap2:
  BLO 	NoWrap3
  ldy 	<<VAR.HBegin,U
 NoWrap3:
-
  decb  
  beq 	Cmd_CurUpX
 
 ; DONE SCAN BACKTO HEAD, IF ALL 0'S THEN NO MORE HIST DO NOTHING
  
- Lbsr 	CancelCurrLine ; Position curston at beging of input line, EOL, clear right and left counts.
+ Lbsr 	CancelCurrLine ; Position cursor at beginning of input line, EOL, clear right and left counts.
 
  sty 	<<VAR.HCurr,U
  clrb 
+ BSR 	CopyCharsHist2Buffer
+Cmd_CurUpX:
+ LBRA	GetCharLoop
 
+
+**************************************************
+* CopyCharsHist2Buffer
+*                                                *
+* ENTRY REQUIREMENTS:  X POINTS AT LINE BUFFER   *
+*                      B CONTAINS BUFFER LENGTH  *ccccccccccccccccc
+*                                                *
+* EXIT CONDITIONS:  A CONTAINS FIRST CHARACTER,  *
+*                     NUL => LINE CANCELED       *
+*                     Z FLAG IN CC SET PER A     *
+*                   OTHERS UNCHANGED             *
+**************************************************
 CopyCharsHist2Buffer:
+ CLRB
+LOOP:
  lda 	,Y+
- beq 	Cmd_CurUp9
+ beq 	xxxx
 
  cmpy 	<<VAR.HEnd,U
  bne  	NoWrap4
  ldy 	<<VAR.HBegin,U
 NoWrap4:
-
  sta 	B,X
  incb 
  inc 	<<VAR.left,U
  MPX9	OUTCHR
- BRA 	CopyCharsHist2Buffer
-
-Cmd_CurUp9:
-Cmd_CurUpX:
- LBRA	GetCharLoop
-
+ BRA 	LOOP
+xxxx
+ RTS
 
 ; *****************************************************
 
@@ -946,15 +901,16 @@ NoWrap1a:
  lda 	,Y+
  bne 	ScanForwardForNull
 
- Lbsr 	CancelCurrLine ; Position curston at beging of input line, EOL, clear right and left counts.
+ Lbsr 	CancelCurrLine ; Position cursor at beginning of input line, EOL, clear right and left counts.
 
  sty 	<<VAR.HCurr,U
 
- BRA 	CopyCharsHist2Buffer
-
-Cmd_CurDown9:
+ BSR 	CopyCharsHist2Buffer
 Cmd_CurDownX:
  LBRA	GetCharLoop
+ 
+; -History -History -History -History -History -History -History -History
+; -History -History -History -History -History -History -History -History
 
 ; *****************************************************
 CancelCurrLine: 
@@ -970,44 +926,378 @@ CancelCurrLine1:
 
 ; *****************************************************
 
-endcod  equ *-1
+; History History History History History History History History History History History History History History History History
+; History History History History History History History History History History History History History History History History
+; History History History History History History History History History History History History History History History History
+
+
+**************************************************
+* Do history actions       
+*                                                
+* ENTRY REQUIREMENTS:  X POINTS AT LINE BUFFER   
+*                      B number of characters in buffer  
+*                                               
+* EXIT CONDITIONS:  B == 0 !h done,  
+*                   B != 0 then !# or !text       
+*                     Z FLAG IN CC SET PER B     
+*                   OTHERS UNCHANGED   ???
+* Do history action 
+* 	!h display history
+*	!n re-execute command #n
+*	!text re-execute command starting with text 
+*
+**************************************************
+DoHistAction
+
+	lda 	1,X
+	cmpa 	#'0'
+	lblt 	DoDispHistory
+	cmpa 	#'9'
+	ble 	DoIndexRecall
+
+	;; ***********************************************************
+	;; !text - DoTextRecall
+	;; ***********************************************************
+DoTextRecall
+	jsr 	CRLF
+	pshs 	X 	; Save x for later.
+	leax 	1,X 	; Step over '!' X now points to text to match.
+	clrb
+@l 	lda 	,X+
+	cmpa 	#CR
+	beq 	@e
+	incb
+	bra  	@l
+@e 	ldx 	,S 	; Reload X
+	leax 	1,X 	; Step over '!' X now points to text to match.
+	; clear right and left counts.
+	clr   	<<VAR.left,U
+	clr  	<<VAR.right,U
+	clr  	<<VAR.dirty,U
+
+	ldy 	<<VAR.HCurr,U
+@loop
+	cmpy 	<<VAR.HBegin,U
+	bne  	@NoWrap1
+	ldy 	<<VAR.HEnd,U
+	leay 	<<-1,Y
+@NoWrap1:
+	lda 	,-Y 	; this should load the null at end of prev line.
+@ScanBackForNull:
+ 	; If Y gets back to VAR.HCurr,U then break out with LINBUF empty.
+	cmpy  	<<VAR.HCurr,U
+	beq 	DoIndexRecallX2	; target history line not found in history buffer
+	; step back to find beginning and count chars of prev line.
+	cmpy 	<<VAR.HBegin,U
+	bhi 	@NoWrap2
+	ldy 	<<VAR.HEnd,U
+@NoWrap2:
+	lda 	,-Y 
+	BNE  	@ScanBackForNull
+	leay 	1,Y	; y-> first char of this line.
+	cmpy 	<<VAR.HEnd,U
+	BLO 	@NoWrap3
+	ldy 	<<VAR.HBegin,U
+@NoWrap3:
+	;
+	; MPX9 	DSPDEC
+	; jsr 	CRLF
+	;
+	bsr CMPAR ; SHORT COMPARE <=256 BYTES.
+	;
+	; XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX; Check to see if current history line # == target history line #
+	;
+	bne 	@loop
+	;
+	; FOUND entry matching history line
+	;
+	puls 	X 	; recover pointer to LINBUF
+	CLRB
+@CopyCharsHist2Buffer:
+	lda 	,Y+
+	beq 	DoIndexRecallX
+	cmpy 	<<VAR.HEnd,U
+	bne  	@NoWrap4
+	ldy 	<<VAR.HBegin,U
+@NoWrap4:
+	sta 	B,X
+	incb 
+	inc 	<<VAR.left,U
+	; MPX9	OUTCHR
+	BRA 	@CopyCharsHist2Buffer
+DoIndexRecallX:
+	ldb 	<<VAR.left,U
+	lda 	#CR
+	sta 	B,X 	; Terminate command.
+	rts
+
+DoIndexRecallX2	; target history line # not found in history buffer
+	puls 	X 	; recover pointer to LINBUF
+	BRA 	DoIndexRecallX
+
+; LIFTED FROM MPX9.
+CMPAR 	PSHS 	B,X,Y SAVE REGISTERS
+CMPSTR 	LDA 	,X+ GET BYTE FROM '1'
+	CMPA 	,Y+ COMPARE TO BYTE IN '2'
+	BNE 	CMPARX EXIT IF UNEQUAL
+	cmpy 	<<VAR.HEnd,U
+	bne  	@NoWrap4
+	ldy 	<<VAR.HBegin,U
+@NoWrap4:
+	DECB 	LOOP THROUGH STRING
+	BNE 	CMPSTR
+CMPARX 	PULS 	B,X,Y,PC RESTORE & EXIT
+ 
+
+
+
+
+
+
+
+	;; ***********************************************************
+	;; !# - DoIndexRecall
+	;; ***********************************************************
+DoIndexRecall
+	jsr 	CRLF
+	pshs 	X 
+	leax 	1,X 	; Step over '!'
+
+	; ldd 	,X
+	; MPX9 	DBGFMT
+	; fcs	/\n\r\tCMDLINE args:%Ac %Bc\n\r/
+	MPX9 	DECNUM
+	pshs 	D
+	ldd     <<VAR.histix,U 
+	pshs 	D 	; ,S -> current history line #, 2,S -> target history line #
+
+	; MPX9 	DBGFMT
+	; fcs	/\n\r\tCMDLINE target history line #:$%Dx\n\r/
+
+	; clear right and left counts.
+	clr   	<<VAR.left,U
+	clr  	<<VAR.right,U
+	clr  	<<VAR.dirty,U
+
+	ldy 	<<VAR.HCurr,U
+@loop
+	cmpy 	<<VAR.HBegin,U
+	bne  	@NoWrap1
+	ldy 	<<VAR.HEnd,U
+	leay 	<<-1,Y
+@NoWrap1:
+	lda 	,-Y 	; this should load the null at end of prev line.
+@ScanBackForNull:
+ 	; If Y gets back to VAR.HCurr,U then break out with LINBUF empty.
+	cmpy  	<<VAR.HCurr,U
+	beq 	DoIndexRecallX2a	; target history line # not found in history buffer
+	; step back to find beginning and count chars of prev line.
+	cmpy 	<<VAR.HBegin,U
+	bhi 	@NoWrap2
+	ldy 	<<VAR.HEnd,U
+@NoWrap2:
+	lda 	,-Y 
+	BNE  	@ScanBackForNull
+	leay 	1,Y	; y-> first char of this line.
+	cmpy 	<<VAR.HEnd,U
+	BLO 	@NoWrap3
+	ldy 	<<VAR.HBegin,U
+@NoWrap3:
+	; Decrement current history line #
+	ldd 	,S
+	beq 	DoIndexRecallX2a ; target history line # not found in history buffer
+	subd 	#1
+	std 	,S
+	;
+	; MPX9 	DSPDEC
+	; jsr 	CRLF
+	;
+	cmpd 	2,S 	; Check to see if current history line # == target history line #
+	bne 	@loop
+
+	; FOUND entry matching target history line #
+	leas 	4,S 	; Clean up stack
+	
+	puls 	X 	; recover pointer to LINBUF
+	CLRB
+@CopyCharsHist2Buffer:
+	lda 	,Y+
+	beq 	DoIndexRecallXa
+	cmpy 	<<VAR.HEnd,U
+	bne  	@NoWrap4
+	ldy 	<<VAR.HBegin,U
+@NoWrap4:
+	sta 	B,X
+	incb 
+	inc 	<<VAR.left,U
+	; MPX9	OUTCHR
+	BRA 	@CopyCharsHist2Buffer
+DoIndexRecallXa:
+	ldb 	<<VAR.left,U
+	lda 	#CR
+	sta 	B,X 	; Terminate command.
+	rts
+DoIndexRecallX2a	; target history line # not found in history buffer
+	leas 	4,S 	; Clean up stack
+	puls 	X 	; recover pointer to LINBUF
+	BRA 	DoIndexRecallXa
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	;; ***********************************************************
+	;; ! - DoDispHistory 
+	;; ***********************************************************
+XXXXX
+	clrb 
+	rts 
+
+DoDispHistory
+
+        ldd      <<VAR.histix,U
+        beq 	XXXXX
+
+        ldy     <<VAR.HHead,U
+        ldd     <<VAR.histix,U
+        pshs    D       ; create temp var. for history ix := current history ix
+
+
+SkipNulls:     ; skip null(s) between commands
+        cmpy    <<VAR.HEnd,U
+        bne     @NoWrap
+        ldy     <<VAR.HBegin,U
+@NoWrap lda     ,Y+
+        beq     SkipNulls
+
+
+
+        pshs    A,Y     save the pointer to the first command in the history buffer and the first character in that command.
+        clrb            zero counter of number of commands in the history buffer.
+
+CountCmds:
+        lda     ,Y+
+        bne     NotEndOfCmd
+        incb 
+NotEndOfCmd:    ; Wrap at end of history buffer.
+        cmpy    <<VAR.HEnd,U
+        bne     @NoWrap
+        ldy     <<VAR.HBegin,U
+@NoWrap cmpy    <<VAR.HHead,U
+        bne     CountCmds
+
+        jsr     CRLF
+
+        clra 
+        coma
+        comb
+        addd    #1
+        addd    <<3,S ; set temp to current line's histix
+        std     <<3,S
+
+        ldd     <<3,s
+        MPX9    DSPDEC
+        addd    #1
+        std     <<3,s
+        puls    A,Y
+        tsta
+        bra     HistOutCmdLoop1
+
+HistOutCmdLoop:
+        ; Y -> first non null char.
+        lda     ,Y+
+HistOutCmdLoop1:   
+        beq     DspNxtCmd
+        ; Wrap at end of history buffer.
+        cmpy    <<VAR.HEnd,U
+        bne     @NoWrap
+        ldy     <<VAR.HBegin,U
+@NoWrap: 
+        MPX9    OUTCHR
+        BRA     HistOutCmdLoop
+DspNxtCmd:      ; Y -> first char of next command 
+        cmpy    <<VAR.HHead,U   is this the current next command?
+        beq     DoDispHistoryX
+        jsr     CRLF
+        ldd     ,s      GET IX
+        MPX9    DSPDEC  DISPLAY IX
+        addd    #1      INCREMENT IX
+        std     ,s      SAVE IT
+        bra     HistOutCmdLoop
+DoDispHistoryX
+        clrb
+        leas    2,S
+        ; MPX9    $41
+        ; fcs     /\n\rDHA ent S=%Sx\n\r/
+
+        ; note !n and !text will return B <> 0
+        tstb
+        rts
+
+; History History History History History History History History History History History History History History History History
+; History History History History History History History History History History History History History History History History
+; History History History History History History History History History History History History History History History History
+
+
+prompt FCB CR,LF
+ fcs '> '
+
+
+
+; endcod  equ *-1
+
+
+        endsection
+
 
 *
 ** Constants.
 *
 
-prompt FCB CR,LF
- fcs '> '
+        section 	.data
+
+
+
+        endsection 	; section .data
 
 *
-** Uninitialiazed Working Variables.
+** Uninitialized Working Variables.
 *
 
-verbose	rmb	1
+        section .bss
 
-MaxCmdLineLen	equ	64
-MaxHistBuff	equ 32
+ 	; ALIGN 16
+cmdline_data    VAR
 
-VAR	STRUCT
-max 		rmb 1
-left		rmb 1
-right		rmb	1
-dirty		rmb 1 ; true if: user input or edit, false if: canceled, or from history
-HBegin		rmw 1
-HEnd		rmw 1
-HHead		rmw 1
-HCurr		rmw 1
-histix		rmw 1
+        endsection 	; section .bss
 
-CmdLineBuff	rmb	MaxCmdLineLen
-HistBuff 	rmb MaxHistBuff
-	ENDSTRUCT
+**************************************************
+** Uninitialized Direct Page Working Variables.
+**************************************************
 
- 	ALIGN 16
-data VAR
+ 	section .dp
 
-PGMEND  equ *-1
-PGMSIZ  EQU PGMEND-BGNPGM
+pCmdLineData 	rmw 1 POINTER TO KAlloc'ed cmdline_data structure
+
+	endsection	; section .dp
+
+
+; PGMEND  equ *-1
+; PGMSIZ  EQU PGMEND-BGNPGM
 
  END
 

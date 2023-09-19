@@ -1,14 +1,14 @@
- nam nCmdLine
+ nam LoadHi
 *********************************************************
 * nCmdLine.CM                           JNS 7/22/2023   *
 *                                                       *
 *                                                       *
 *********************************************************
 
-	INCLUDE mpx9.i
-	INCLUDE psymon-ext.i
-   	INCLUDE ascii.i
-   	INCLUDE jns.i
+        INCLUDE psymon.i
+        INCLUDE mpx9.i
+        INCLUDE jns.i
+        INCLUDE ascii.i
 
 **************************************************
 * Program (Position independant)
