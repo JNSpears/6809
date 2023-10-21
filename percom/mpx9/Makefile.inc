@@ -8,7 +8,7 @@ ASM=lwasm
 #DEFINES=-DRAMTGT -DS19LOADER
 #DEFINES=-DMPX9
 DEFINES=-DNULL_DCB -DBS_BUG -DCURDRIVE -DNEWSYSDCB -DDEBUG
-ASMFLAGS=-l$*.lst $(ASMINCLUDE) $(DEFINES)
+ASMFLAGS=-l$*.lst -s --symbol-dump=$(basename $@).sym $(ASMINCLUDE) $(DEFINES)
 LDFLAGS=-m$*.map -s$*.ld
 
 %.hex : %.asm

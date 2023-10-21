@@ -73,7 +73,7 @@ test: $(EPROMS) $(TGTDSK)
 	../../tools/usim/percom/percom -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
 
 testd: $(EPROMS) $(TGTDSK) 
-	../../tools/usim/percom/percomd -d -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
+	../../tools/usim/percom/percomd  -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
 
 clean:
 	$(MAKE) -C ../psymon clean

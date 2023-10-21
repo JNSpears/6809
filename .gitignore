@@ -15,8 +15,12 @@ percom/mpx9/foo1.dsk
 *.md
 *.SY
 *.dsk
+*.sym
 
 *.sublime-workspace
 tools/f9dasm/
 tools/pretty6502
 tools/LWTools-manual.pdf
+tools/as9/
+tools/usim-save*/
+tools/usimdbg/

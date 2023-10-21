@@ -17,4 +17,4 @@ Some time in the 20-teens I pulled it all out and with the help of a new memory 
 ### TBD:
     * implement Electric Window support
     * recover Percom super basic
-    * fig forth for percom hardware
+    * fig forth for Percom hardware
