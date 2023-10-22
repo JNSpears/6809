@@ -71,6 +71,10 @@ CmdShellInit:
         LEAX    Cmd_vb,PCR
         MPX9    ADDRESCMD
         
+        ; list commands
+        LDD     #"LC"
+        LEAX    Cmd_LC,PCR
+        MPX9    ADDRESCMD
 
         rts
 
@@ -270,6 +274,51 @@ Cmd_vb:
         beq     @false
 @true   inc     <verbose
 @false  clrb 
+        rts
+
+**************************************************
+Cmd_LC:
+        **************************************************
+        * SEARCH static MPX9+ resident commands TABLE
+        **************************************************
+        leay    ResidentCommands,pcr
+Slistloop:
+        TST     ,y
+        beq     Slistdone
+
+        lda     ,y+
+        MPX9    OUTCHR
+        lda     ,y+
+        MPX9    OUTCHR
+        lda     #SP
+        MPX9    OUTCHR
+
+        leay    2,Y             ; STEP OVER THE ROUTINE OFFSET
+        bra     Slistloop
+
+        **************************************************
+        * SEARCH DYNAMIC MPX9+ resident commands TABLE
+        **************************************************
+Slistdone
+        LDY     <ResCmdList.pHead ; POINT Y AT OFFSET TABLE
+        BEQ     ListsDone   ; GO IF NO DYNAMIC SYSTEM CALL TABLE
+Dlistloop:
+        TST     ,y
+        beq     ListsDone
+
+        lda     ,y+
+        MPX9    OUTCHR
+        lda     ,y+
+        MPX9    OUTCHR
+        lda     #SP
+        MPX9    OUTCHR
+
+        leay    2,Y             ; STEP OVER THE ROUTINE OFFSET
+        bra     Dlistloop
+ListsDone
+        
+        jsr     CRLF
+        clrb 
         rts
 
 **************************************************
