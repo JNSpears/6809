@@ -16,7 +16,7 @@ percom/mpx9/foo1.dsk
 *.SY
 *.dsk
 *.sym
-
+*.o
 *.sublime-workspace
 tools/f9dasm/
 tools/pretty6502

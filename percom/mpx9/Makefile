@@ -70,10 +70,10 @@ $(TGTDSK): init                $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYU
 	$(MPX9DSK) $(TGTDSK) -n -w $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 $(MODULE_OBJS) -f 
 
 test: $(EPROMS) $(TGTDSK) 
-	../../tools/usim/percom/percom -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
+	../../tools/percom/percom -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
 
 testd: $(EPROMS) $(TGTDSK) 
-	../../tools/usim/percom/percomd  -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
+	../../tools/percom/percomd  -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
 
 clean:
 	$(MAKE) -C ../psymon clean
