@@ -12,7 +12,7 @@
 **************************************************
 * Program (Position independant)
 **************************************************
-        ORG $0
+        ORG $1000
 
 begcod  equ *
 
@@ -22,7 +22,6 @@ begcod  equ *
 *       X -> comamnd line arguments
 **************************************************
 HexDump:
-        USIM
         sts     >stack,pcr       ;save the stack for error recovery
         clr     pageflg,pcr
         clr     fileflg,pcr

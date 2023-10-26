@@ -97,7 +97,7 @@ NameX   clrb
         tstb
         rts
 
-SaveCmd FCC     "S 1/name.CM 1000 1090 1000"
+SaveCmd FCC     "S 1/NAME.CM 1000 1090 1000"
         FCB     CR
 NameBuf FCB     CR+$80
         RMB     64-1      ; name buffer
