@@ -356,9 +356,9 @@ void MPX9_DskImg::UnMount(void)
 				FILE *dskFile = fopen(this->filename, "wb");
 				if (dskFile)
 				{
-					int status = fwrite(DskImage, sizeof(DskImage[0]), sizeof(DskImage), dskFile);
-					if (status)
-						fprintf(stderr, "UnMount(%s) error status: %d\r\n", this->filename, status);
+					int written = fwrite(DskImage, sizeof(DskImage[0]), sizeof(DskImage), dskFile);
+					if (written != sizeof(DskImage))
+						fprintf(stderr, "UnMount(%s) Write error\r\n", this->filename);
 					fclose(dskFile);
 					// fprintf(stderr, "UnMount(%s) done\r\n", this->filename);
 					dirty = false;

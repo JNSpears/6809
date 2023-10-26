@@ -11,14 +11,20 @@ OBJSd		= $(SRCSd:.cpp=.o)
 
 BIN			= percom
 
-all: $(BIN)d
+all: $(BIN) $(BIN)d
 
 $(BIN):	$(OBJS) $(LIBS)
 	$(CXX) $(CCFLAGS) $(LDFLAGS) main.o Z5023.o $(USIM_PATH)term.o -L$(USIM_PATH) -lusim -o $(@)
 
-$(BIN)d:  $(OBJSd) $(LIBS) # debugger
-	$(CXX) $(CCFLAGS) $(LDFLAGS) main.o Z5023.o $(USIM_PATH)term.o -lreadline -L$(USIM_PATH) -L$(USIMDBG_PATH) -lusim -lusimdbg -o $(@)
-	
+$(BIN)d: maind.o Z5023.o  $(LIBS) # debugger
+	$(CXX) $(CCFLAGS) $(LDFLAGS) maind.o Z5023.o $(USIM_PATH)term.o -lreadline -L$(USIM_PATH) -L$(USIMDBG_PATH) -lusim -lusimdbg -o $(@)
+
+
+main.o: main.cpp
+
+maind.o: main.cpp
+	$(CXX) $(CPPFLAGS) -DUSIMDBG  $(CCFLAGS) -c $< -o $(@)
+
 .SUFFIXES:	.cpp
 
 .cpp.o:

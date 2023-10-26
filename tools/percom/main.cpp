@@ -7,9 +7,14 @@
 #include <csignal>
 #include <unistd.h>
 
+#ifdef USIMDBG
 #include "mc6809dbg.h"
-#include "mc6850.h"
 #include "termdbg.h"
+#else
+#include "mc6809.h"
+#include "term.h"
+#endif
+#include "mc6850.h"
 #include "memory.h"
 
 #include "Z5023.h"
@@ -40,8 +45,13 @@ int main(int argc, char *argv[])
 	const Word PERCOM_SBC9_ROM2_BASE = 0xF800;
 	const Word PERCOM_SBC9_ROM2_SIZE = 0x0400;
 
+#ifdef USIMDBG
 	mc6809dbg cpu;
 	TerminalDbg term(cpu);
+#else 
+	mc6809 cpu;
+	Terminal term;
+#endif
 
 	// Monitor extension.
 	const Word PERCOM_SBC9_ACIA_BASE = 0xF7FE;
@@ -175,7 +185,11 @@ int main(int argc, char *argv[])
 	fprintf(stderr, "Done loading files\r\n");
 
 	cpu.reset();
+#ifdef USIMDBG
 	cpu.debug(term);
+#else 
+	cpu.run();
+#endif
 
 	return EXIT_SUCCESS;
 }
