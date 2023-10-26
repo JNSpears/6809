@@ -3,7 +3,7 @@ include Makefile.inc
 EPROMS=../psymon/psymon.ihex ../psymon/psymon-ext.ihex boot-rom/BootRom.ihex
 TGTDSK=system.dsk
 
-UTILS=create list memtst OutVectr exec
+UTILS=create DskEdt exec list memtst OutVectr 
 UTIL_SRCS=$(foreach file,$(UTILS),utils/$(file).asm)
 UTIL_OBJS=$(UTIL_SRCS:.asm=.cm)
 # $(info UTIL_SRCS $(UTIL_SRCS))
@@ -11,15 +11,15 @@ UTIL_OBJS=$(UTIL_SRCS:.asm=.cm)
 
 XUTIL_SRCS=list.asm
 XUTIL_FILES=$(foreach file,$(XUTIL_SRCS),utils/$(file))
-$(info XUTIL_SRCS $(XUTIL_SRCS))
-$(info XUTIL_FILES $(XUTIL_FILES))
+# $(info XUTIL_SRCS $(XUTIL_SRCS))
+# $(info XUTIL_FILES $(XUTIL_FILES))
 # 	cp list.asm list.s
 # 	../$(MPX9DSK) $(TGTDSK) -f -w -n list.s
 # 	$(RM) list.s
 
 
 MYUTILS=do echo HelloWorld HexDump listdcb mycopy name \
-	set RamDiskL nCmdLine loadhi MemEdit
+	set RamDiskL loadhi MemEdit
 MYUTIL_SRCS=$(foreach file,$(MYUTILS),my-utils/$(file).asm)
 MYUTIL_OBJS=$(MYUTIL_SRCS:.asm=.cm)
 # $(info MYUTIL_SRCS $(MYUTIL_SRCS))
@@ -67,13 +67,13 @@ init: boot-sector/BootSector.bin os/MPX9.SY
 	$(MPX9DSK) $(TGTDSK) --init boot-sector/BootSector.bin os/MPX9.SY -f 
 
 $(TGTDSK): init                $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 $(MODULE_OBJS) # sub-makes
-	$(MPX9DSK) $(TGTDSK) -n -w $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 $(MODULE_OBJS) -f 
+	$(MPX9DSK) $(TGTDSK) -n -w --entry 0x1000 --buffer 0x1000 $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 $(MODULE_OBJS) -f 
 
 test: $(EPROMS) $(TGTDSK) 
 	../../tools/percom/percom -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
 
 testd: $(EPROMS) $(TGTDSK) 
-	../../tools/percom/percomd  -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
+	../../tools/percom/percomd -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
 
 clean:
 	$(MAKE) -C ../psymon clean
@@ -89,3 +89,45 @@ clean:
 
 # mpx9+/mpx9+.lib : mpx9+/abc1.obj mpx9+/abc2.obj mpx9+/dbgfmt.obj 
 mpx9+/mpx9+.cm1 : $(KERNAL_OBJS)
+
+################################################################################
+
+.ONESHELL:
+
+tests: testsetup test-all report
+
+.PHONY:
+testsetup:
+	rm -f tests/summary
+
+test-all: test1 t
+
+.PHONY:
+report:
+	@echo '--------------------------------------------------------------------'
+	@cat tests/summary | awk '{ gsub("differ", "\033[1m\033[1;31m&\033[0m"); gsub("identical", "\033[1;36m&\033[0m"); print }'
+	@echo '--------------------------------------------------------------------'
+	@echo  Resuts: `grep identical tests/summary | wc -l` of `cat tests/summary  | wc -l` passed
+	@echo '--------------------------------------------------------------------'
+
+test1: $(TGTDSK) tForth/tforth.dsk $(EPROMS)
+	../../tools/percom/percomd -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS) >tests/$(@).log 2>&1 <<EOF
+	GO
+	
+
+
+
+
+
+
+	Z
+
+
+
+
+
+
+	MPX9+
+	EOF
+	diff $(DIFFFLAGS) tests/$(@).log tests/$(@).std | tee -a tests/summary
+
