@@ -337,7 +337,7 @@ class Mpx9DskImg(object):
 		if self.dirty:
 			self.saveImage()
 
-	def initImage(self, bootloader, osimage, debug=False):
+	def initImage(self, bootloader, osimage, debug=False, normalcase=True):
 		if debug:
 			print("initImage(%s, %s)" % (bootloader, osimage))
 		self.sectors = []
@@ -362,12 +362,11 @@ class Mpx9DskImg(object):
 		if debug:
 			self.displayDir(True)
 
-		self.writeFile(osimage, 0, verbose=debug)
+		self.writeFile(osimage, 0, normalcase=normalcase, verbose=debug)
 
 		self.dirty = True
 		if debug:
 			self.displayDir(True)
-
 
 	def loadImage(self):
 		# print("loadImage()")
@@ -756,7 +755,7 @@ def main(args):
 	elif Options.delete:
 		dskimg.deleteFile(Options.delete)
 	elif Options.init is not None:
-		dskimg.initImage(*Options.init)
+		dskimg.initImage(*Options.init, normalcase=Options.normalcase)
 
 	if Options.read:
 		dskimg.readFile(Options.read)

@@ -19,6 +19,33 @@ Some time in the 20-teens I pulled it all out and with the help of a new memory 
     * recover Percom super basic
     * fig forth for Percom hardware
 
+# Building the system.
+
+ 1. Build the simulator with the debugger and Percom system configuration.
+
+    make percom
+
+ 2. Build os and system disk.
+
+    make` 
+
+ 3. Run debugger.
+
+    make testd
+
+ 4. Launch debugger, boot up os, list files on system disk, load MPX9+
+
+    go
+
+    Z
+
+    F 1
+
+    MPX9+
+
+
+# Status of all the bits and pieces...
+ 
 ## Psymon & MPX-9 OS implementation status 
 
 | Status | Item             | Note                                                                                     |
@@ -108,3 +135,4 @@ My additions to MPX-9
 (3) Implementation is different than specified in the Note.
 
 (4) Recovered from user group disks (source or binaries).
+

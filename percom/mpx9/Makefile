@@ -36,7 +36,7 @@ KERNAL_OBJS=$(KERNAL_SRCS:.asm=.obj)
 # $(info KERNAL_SRCS $(KERNAL_SRCS))
 # $(info KERNAL_OBJS $(KERNAL_OBJS))
 
-MODULES=abc1 abc4
+MODULES=#abc1 abc4
 MODULE_SRCS=$(foreach file,$(MODULES),mpx9+/$(file).asm)
 MODULE_OBJS=$(MODULE_SRCS:.asm=.md)
 # $(info MODULE_SRCS $(MODULE_SRCS))
@@ -45,28 +45,36 @@ MODULE_OBJS=$(MODULE_SRCS:.asm=.md)
 
 all: $(EPROMS) $(TGTDSK)
 
+.PHONY:
+percom:
+	make -C ../../tools/usim
+	make -C ../../tools/usimdbg
+	make -C ../../tools/percom
+
 ../psymon/psymon.ihex: ../psymon/psymon.asm
 ../psymon/psymon-ext.ihex: ../psymon/psymon.asm
 boot-rom/BootRom.ihex: boot-rom/BootRom.asm 
 boot-sector/BootSector.bin: boot-sector/BootSector.asm
-os/mpx9.bin: os/mpx9.asm
-os/MPX9.SY: os/mpx9.bin
-	mv os/mpx9.bin os/MPX9.SY
+# os/mpx9.sy: os/mpx9.asm
+# os/MPX9.SY: os/mpx9.bin
+# 	cp os/mpx9.bin os/MPX9.SY
 
-# sub-makes:
-# 	$(MAKE) -C ../psymon all
-# 	$(MAKE) -C boot-rom all
-# 	$(MAKE) -C boot-sector all
-# 	$(MAKE) -C os all
-# 	$(MAKE) -C utils all
-# 	$(MAKE) -C my-utils all
-# # 	$(MAKE) -C FigForth
-# 	$(MAKE) -C tForth
+sub-makes:
+	$(MAKE) -C ../psymon all
+	$(MAKE) -C boot-rom all
+	$(MAKE) -C boot-sector all
+	$(MAKE) -C os all
+	$(MAKE) -C utils all
+	$(MAKE) -C my-utils all
+# 	$(MAKE) -C FigForth
+	$(MAKE) -C tForth
 
-init: boot-sector/BootSector.bin os/MPX9.SY
-	$(MPX9DSK) $(TGTDSK) --init boot-sector/BootSector.bin os/MPX9.SY -f 
+# .PHONY:
+# $(TGTDSK) : boot-sector/BootSector.bin os/MPX9.SY
+# 	$(MPX9DSK) $(TGTDSK) --init boot-sector/BootSector.bin os/MPX9.SY -f 
 
-$(TGTDSK): init                $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 $(MODULE_OBJS) # sub-makes
+$(TGTDSK): boot-sector/BootSector.bin os/mpx9.sy                                               $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 $(MODULE_OBJS) # sub-makes
+	$(MPX9DSK) $(TGTDSK) -n --init boot-sector/BootSector.bin os/mpx9.sy -f 
 	$(MPX9DSK) $(TGTDSK) -n -w --entry 0x1000 --buffer 0x1000 $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 $(MODULE_OBJS) -f 
 
 test: $(EPROMS) $(TGTDSK) 
@@ -87,8 +95,8 @@ clean:
 	$(MAKE) -C mpx9+ clean
 	-$(CLEAN)
 
-# mpx9+/mpx9+.lib : mpx9+/abc1.obj mpx9+/abc2.obj mpx9+/dbgfmt.obj 
 mpx9+/mpx9+.cm1 : $(KERNAL_OBJS)
+	$(LINKER_) $(LDFLAGS) -o$@ $^
 
 ################################################################################
 

@@ -20,7 +20,7 @@ LDFLAGS=-m$*.map -s$*.ld
 %.s19 : %.asm
 	$(ASM) $(ASMFLAGS) -fsrec -o$@ $<
 
-%.bin : %.asm
+%.bin %.sy : %.asm
 	$(ASM) $(ASMFLAGS) -fraw -o$@ $<
 
 %.cm : %.asm
@@ -30,7 +30,7 @@ LDFLAGS=-m$*.map -s$*.ld
 	$(ASM) $(ASMFLAGS) -fraw -o$@ $<
 
 .PHONY: clean
-CLEAN=$(RM) -f *.s19 *.ihex *.ihex *.lst *.log *.bin *.cm *.cm1 *.md *.lib *.map *.obj
+CLEAN=$(RM) -f *.s19 *.ihex *.ihex *.lst *.log *.bin *.cm *.cm1 *.md *.lib *.map *.obj *.bin *.sy *.sym *.sublime-workspace
 
 # RMA/RLINK
 ASM_		= lwasm --format=obj $(ASMFLAGS)

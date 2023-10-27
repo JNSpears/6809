@@ -1079,7 +1079,7 @@ RamInt:
 endcod  equ *
 sizcod  equ endcod-begcod
 frecod  equ $400-sizcod
-        if sizcod&~$3ff
+        ifgt (sizcod&~$3ff)-$400
             warning Image must fit in 1k ROM
         endc
 
