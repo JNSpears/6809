@@ -1002,8 +1002,6 @@ WTDIR PSHS A,X,Y SAVE REGISTERS
  STD DCBBLK,X
  LDD #DIRSIZ*256 SET UP DIRECTORY SIZE
 
-
-
  LBSR MEMSV SAVE THE DIRECTORY
 WTDIRX PULS A,X,Y,PC RESTORE & EXIT
  IFDEF NEWSYSDCB
@@ -1184,7 +1182,7 @@ OPNFLX TSTB TEST ERROR STATUS
 *                   OTHERS UNCHANGED             *
 **************************************************
 CLSFL PSHS A,X,Y SAVE REGISTERS
- BSR OPNCHK CHECK FOR OPEN FILE
+ LBSR OPNCHK CHECK FOR OPEN FILE
  BNE CLSFLX ERROR IF NOT
  LDA #WTBIT SET UP BIT MASK
  BITA FCBSTS,Y IS WRITE REQUIRED?
@@ -1220,6 +1218,21 @@ CLSFL5 LEAS 1,S CLEAR STACK
  BNE CLSFLX GO IF FILE NOT FOUND
  LDD FCBEXT,Y UPDATE EXTENSION BYTES
  STD DIREXT,X
+
+; ; JNS
+;  LDA #'^
+;  SWI3
+;  FCB OUTCHR
+
+;        pshs X,Y
+;        lbsr   DSCRLF
+;        ldd    #16
+;        jsr    [DumpMem2v]
+;        lbsr   DSCRLF
+;        puls Y,X
+
+
+
  LDA FCBDRV,Y GET DRIVE #
  SWI3 REWRITE DIRECTORY
  FCB WTDRCT
@@ -1380,6 +1393,14 @@ RDBL PSHS A,X,Y SAVE REGISTERS
  LDB #DSKRD READ THE BLOCK
  SWI3
  FCB REQIO
+
+       ; ;JNS
+       ; pshs   D,Y,X
+       ; LDA    #'r
+       ; TFR    X,Y 
+       ; LBSR   DspDCB
+       ; puls   X,Y,D
+
  LDB DCBERR,X CHECK FOR ERRORS
  BNE RDBLX
  LDD DCBPRV,X SAVE LINKAGE DATA
@@ -1440,25 +1461,53 @@ WTBL PSHS A,X,Y SAVE REGISTERS
  STD DCBBUF,X
  LDB #ERR_EF PRESET ERROR CODE (EF)
  PSHS B
+
  LDD FCBCUR,Y GET BLOCK #
  ADDD FCBSTR,Y
  STD DCBBLK,X
  CMPD FCBEND,Y
  PULS B
  BHI WTBLX GO IF PAST END OF FILE
+
  LDD FCBPRV,Y PLUG LINKAGE VECTORS
- BEQ WTBL1
+ IFDEF WTBL_BUG
+       ; WTBL_BUG, writeing block 1 in a file wants a back link to block 0.
+       ; this will not work, the back link in block 1 will be 0 (begining of file)
+       ; instead of a link to the start block (block 0)
+       BEQ WTBL1
+ ELSE
+       ; if prev is 0 and curr is 0 then take branch to WTBL1. 
+       ; if prev is not 0 or curr is not 0 then don't take branch to WTBL1. 
+       BNE WTBL0     ; D = FCBPRV,Y != 0
+       LDD FCBCUR,Y  ; GET BLOCK #
+       BNE WTBL00    ; D = FCBCUR,Y != 0
+       BRA WTBL1     ; D == 0 
+WTBL00:
+       LDD FCBPRV,Y
+WTBL0:
+ ENDC
  ADDD FCBSTR,Y
 WTBL1 STD DCBPRV,X
+
+
  LDD FCBNXT,Y
  BEQ WTBL2
  ADDD FCBSTR,Y
 WTBL2 STD DCBNXT,X
+
  LDD FCBCNT,Y PLUG CNT, TYP, & ADD
  STD DCBCNT,X
  LDD FCBADD+1,Y
  STD DCBADD+1,X
  LDB #DSKWV WRITE THE BLOCK
+
+       ; ;JNS
+       ; pshs   D,Y,X
+       ; LDA    #'w
+       ; TFR    X,Y 
+       ; LBSR   DspDCB
+       ; puls   X,Y,D
+
  SWI3
  FCB REQIO
  LDB DCBERR,X CHECK ERROR STATUS
@@ -2369,6 +2418,52 @@ GTDCB2:
  ENDC
 GTDCBX
  rts 
+
+
+
+; DspFCB:              ; Y -> FCB
+;        pshs   X,D
+;        lbsr   DSCRLF
+;        leax   FCB0,PCR
+;        swi3 
+;        FCB    PSTRNG
+;        ldd    #32
+;        tfr    y,x
+;        jsr    [DumpMem2v]
+;        lbsr   DSCRLF
+;        leax   FCB1,PCR
+;        swi3 
+;        FCB    PSTRNG
+;        lbsr   DSCRLF
+;        puls   D,X,PC
+
+; DspDCB:              ; a = prefix char, Y -> DCB
+;        pshs   X,D
+;        lbsr   DSCRLF
+;        LDA    ,s
+;        swi3 
+;        FCB    OUTCHR
+;        leax   DCB0,PCR
+;        swi3 
+;        FCB    PSTRNG
+;        ldd    #32
+;        tfr    y,x
+;        jsr    [DumpMem2v]
+;        lbsr   DSCRLF
+;        leax   DCB1,PCR
+;        swi3 
+;        FCB    PSTRNG
+;        lbsr   DSCRLF
+;        puls   D,X,PC
+
+
+
+; DCB0: FCS "      Nxt__ ID___ Drv@_ I/O@_  Er ex Dr blk__ buff@ tr"
+; DCB1: FCS "       sc prev_ next_ ct data@  ty crc"
+
+; FCB0: FCS "       RW D# Buff@ C# @Vect TY  S-Blk E-Blk Cur+B Prv+B"
+; FCB1: FCS "       Nxt+B D-ext DataP xx xx  xx xx xx xx xx xx xx St"
+
 
 * END OF MPX/9 OPERATING SYSTEM
 MPXEND EQU *
