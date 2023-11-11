@@ -128,14 +128,6 @@ FileDump:
         std     <offset,pcr
 
 readsector:
-        leay    <infcb,pcr      ; point to fcb
-        MPX9    RDBLK           ; read the next sector
-        cmpb    #ERR_EF
-        beq     FileDumpX       ; EOF then done.
-        
-        tstb
-        bne    dskerr           ; report disk error
-        
         leax    inbufr,pcr
         ldb     #16
         stb     ,-s
@@ -178,6 +170,16 @@ noPaging:
         BEQ     FileDumpX       ; GO IF END OF FILE
 
         leas    1,s             ; clean up stack
+
+        leay    <infcb,pcr      ; point to fcb
+        MPX9    RDBLK           ; read the next sector
+        cmpb    #ERR_EF
+        beq     FileDumpX       ; EOF then done.
+        
+        tstb
+        Lbne    dskerr           ; report disk error
+        
+
         bra     readsector      ; get next sector
 
 brksmg: fcb     CR,LF
