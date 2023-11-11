@@ -2,6 +2,7 @@ include Makefile.inc
 
 EPROMS=../psymon/psymon.ihex ../psymon/psymon-ext.ihex boot-rom/BootRom.ihex
 TGTDSK=system.dsk
+BLKDSK=blank.dsk
 
 UTILS=create DskEdt exec list memtst OutVectr 
 UTIL_SRCS=$(foreach file,$(UTILS),utils/$(file).asm)
@@ -77,11 +78,19 @@ $(TGTDSK): boot-sector/BootSector.bin os/mpx9.sy                                
 	$(MPX9DSK) $(TGTDSK) -n --init boot-sector/BootSector.bin os/mpx9.sy -f 
 	$(MPX9DSK) $(TGTDSK) -n -w --entry 0x1000 --buffer 0x1000 $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 $(MODULE_OBJS) -f 
 
+$(BLKDSK): boot-sector/BootSector.bin os/mpx9.sy
+	$(MPX9DSK) $(BLKDSK) -n --init boot-sector/BootSector.bin os/mpx9.sy -f 
+	$(MPX9DSK) $(BLKDSK) -n -w --entry 0x1000 --buffer 0x1000 utils/list.cm -f 
+
+
 test: $(EPROMS) $(TGTDSK) 
-	../../tools/percom/percom -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
+	../../tools/percom/percom -1 $(TGTDSK) -2 tForth/tforth.dsk -3 $(BLKDSK) -- $(EPROMS)
 
 testd: $(EPROMS) $(TGTDSK) 
-	../../tools/percom/percomd -1 $(TGTDSK) -2 tForth/tforth.dsk -- $(EPROMS)
+	../../tools/percom/percomd -1 $(TGTDSK) -2 tForth/tforth.dsk -3 $(BLKDSK) -- $(EPROMS)
+
+testdv: $(EPROMS) $(TGTDSK) 
+	../../tools/percom/percomd -v -v -1 $(TGTDSK) -2 tForth/tforth.dsk -3 $(BLKDSK) -- $(EPROMS)
 
 clean:
 	$(MAKE) -C ../psymon clean
