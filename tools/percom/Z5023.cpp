@@ -11,7 +11,13 @@
 // #ifdef MC6809DBG
 #include "hexadump.h"
 // #endif
-#include <cstring>
+#include <iostream>
+//#include <fstream>
+#include <iomanip>
+
+#include <bits/stdc++.h>
+
+using namespace std;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,26 +31,29 @@ Z5023::Z5023() {
 	SectorBit = false;
 	IndexBit = false;
 	Sector = 0;
-	Track = 0;
 	ReadIndex = 0;
 	freeze_sector = false;
 	sector_sample_count = 0;
 	debug = 0;
 	WriteGate = 0;
 
-	mountedDisks[0].Mount("foo1.dsk");
-	mountedDisks[1].Mount("foo2.dsk");
-	mountedDisks[2].Mount("foo3.dsk");
-	mountedDisks[3].Mount("foo4.dsk");
+	Mount(1, "foo1.dsk");
+	Mount(2, "foo2.dsk");
+	Mount(3, "foo3.dsk");
+	Mount(4, "foo4.dsk");
+	Track[0] = 0;
+	Track[1] = 0;
+	Track[2] = 0;
+	Track[3] = 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 Z5023::~Z5023() {
 	// TODO Auto-generated destructor stub
-	mountedDisks[0].UnMount();
-	mountedDisks[1].UnMount();
-	mountedDisks[2].UnMount();
-	mountedDisks[3].UnMount();
+	UnMount(1);
+	UnMount(2);
+	UnMount(3);
+	UnMount(4);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +79,6 @@ void Z5023::tick(uint8_t ticks)
 Byte Z5023::read(Word offset)
 {
 	Byte retval = 0;
-	int current_phy_drive = 0;
 
 	switch (offset)
 	{
@@ -101,8 +109,10 @@ Byte Z5023::read(Word offset)
 			}
 			break;
 		};
-		// if ((debug >= 2) && ((ReadIndex < 14) || (ReadIndex > 260)))
-		// 	fprintf(stderr, "Z5023::read(1) (n:%d) --> %02x\r\n", ReadIndex, retval);
+		
+		if ((debug >= 2) && ((ReadIndex < 14) || (ReadIndex > 260)))
+			fprintf(stderr, "Z5023::read(1) (ix:%d) --> %02x\r\n", ReadIndex, retval);
+		
 		ReadIndex++;
 		break;
 
@@ -154,13 +164,13 @@ Byte Z5023::read(Word offset)
 			if (current_phy_drive == -1)
 				current_phy_drive = 3;
 
-			if (debug >= 1)
-				fprintf(stderr, "Z5023::read(3) write sector current_phy_drive: %d\r\n", current_phy_drive);
+			// if (debug >= 1)
+			// 	fprintf(stderr, "Z5023::read(3) write sector current_phy_drive: %d\r\n", current_phy_drive);
 			mountedDisks[current_phy_drive].WriteSector(((Byte*)&currSectorImage)[0], ((Byte*)&currSectorImage)[1], (Byte*)&currSectorImage);
 		}
 
 		retval 	= (current_drive<<6)
-				| ((Track == 0)?0:0x2)
+				| ((Track[current_phy_drive] == 0)?0:0x2)
 				| (motor_on?0:0x4) // 0 active
 				| (WriteGate?0:0x8) // O active
 				| (SectorBit?0x10:0)
@@ -168,7 +178,7 @@ Byte Z5023::read(Word offset)
 			;
 		// if (debug >= 2)
 		// 	fprintf(stderr, "Z5023::read(3) IndexBit:%d SectorBit:%d motor_on:%d Sector:%d TrackZ:%d Trk:%d (cycles=%ld) --> 0x%02x\r\n",
-		// 		(int)IndexBit, (int)SectorBit, motor_on, Sector, (Track == 0), Track, cycles, retval);
+		// 		(int)IndexBit, (int)SectorBit, motor_on, Sector, (Track[current_phy_drive] == 0), Track[current_phy_drive], cycles, retval);
 		break;
 
 	case 4:
@@ -185,11 +195,11 @@ Byte Z5023::read(Word offset)
 		if (debug >= 1)
 		{
 			fprintf(stderr, "Z5023::read(4) read sector current_drive: %d\r\n", current_drive);
-			fprintf(stderr, "Z5023::read(4) read sector current_phy_drive: %d\r\n", current_phy_drive);
+			// fprintf(stderr, "Z5023::read(4) read sector current_phy_drive: %d\r\n", current_phy_drive);
 			fprintf(stderr, "Z5023::read(4) read sector FILENAME: %s\r\n", mountedDisks[current_phy_drive].filename);			
 		}
 
-		mountedDisks[current_phy_drive].ReadSector(Track, Sector, (Byte*)&currSectorImage);
+		mountedDisks[current_phy_drive].ReadSector(Track[current_phy_drive], Sector, (Byte*)&currSectorImage);
 
 		retval = 0xff;
 		break;
@@ -236,10 +246,10 @@ void Z5023::write(Word offset, Byte val)
 			if (ReadIndex >= 0)
 				((Byte*)(&currSectorImage))[ReadIndex] = val;
 			
-			// if ((debug >= 2)
-			//  // && ((ReadIndex < 14) || (ReadIndex > 260))
-			//  )
-			// 	fprintf(stderr, "Z5023::write(1) (n:%d) <-- %02x\r\n", ReadIndex, val);
+			if ((debug >= 2)
+			 && ((ReadIndex < 14) || (ReadIndex > 260))
+			 )
+				fprintf(stderr, "Z5023::write(1) (ix:%d) <-- %02x\r\n", ReadIndex, val);
 
 			if (ReadIndex == 266)
 			{
@@ -253,7 +263,7 @@ void Z5023::write(Word offset, Byte val)
 		//	*** CC03		Data to select drive and head movement direction:
 		//	*** 			bit 4 		direction of head movement: 1 = in, 0 = out
 		//	*** 			bit 5 		step pulse bit; causes data transfer head to
-		//	*** 					jump to next track in direction given by bit 4
+		//	*** 					jump to next Track[current_phy_drive] in direction given by bit 4
 		//	*** 			bits 6, 7	binary number of drive to be selected
 		direction = ((val>>4) & 1);
 		step_pulse = ((val>>5) & 1);
@@ -261,11 +271,11 @@ void Z5023::write(Word offset, Byte val)
 		step_offset = (direction ? +1 : -1);
 		if (step_pulse)
 		{
-			Track += step_offset;
+			Track[current_phy_drive] += step_offset;
 		}
 		if (debug >= 2)
 			fprintf(stderr, "Z5023::write(@=%02x,v=%02x) cDr:%d Step:%d StepDir:%d Trk:%d \r\n",
-				offset, val, current_drive, step_pulse, step_offset, Track);
+				offset, val, current_drive, step_pulse, step_offset, Track[current_phy_drive]);
 		break;
 
 	case 4:
@@ -303,6 +313,38 @@ void Z5023::write(Word offset, Byte val)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void Z5023::Mount(int drive, const char* filename)
+{
+	// map user drives to phy drives.
+	if (drive < 1 || drive > 4)
+	{
+		cerr << "Drive out of bounds 1..4\r" << endl;
+		return;
+	}
+	mountedDisks[drive-1].Mount(filename);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void Z5023::UnMount(int drive)
+{
+	// map user drives to phy drives.
+	if (drive < 1 || drive > 4)
+	{
+		cerr << "Drive out of bounds 1..4\r" << endl;
+		return;
+	}
+	mountedDisks[drive-1].UnMount();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void Z5023::Info()
+{
+	mountedDisks[0].Info(1);
+	mountedDisks[1].Info(2);
+	mountedDisks[2].Info(3);
+	mountedDisks[3].Info(4);
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -320,6 +362,12 @@ MPX9_DskImg::~MPX9_DskImg()
 {
 	if (dirty)
 		UnMount();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+void	MPX9_DskImg::Info(int drive)
+{
+	fprintf(stderr, "Drive:%d file: %-40s dirty:%d\r\n", drive, this->filename, dirty);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -364,6 +412,9 @@ void MPX9_DskImg::UnMount(void)
 					dirty = false;
 				}
 		}
+		filename = NULL;
+		memset(DskImage, 0, sizeof(DskImage));
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

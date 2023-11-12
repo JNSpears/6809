@@ -9,7 +9,7 @@
 
 #ifdef USIMDBG
 #include "mc6809dbg.h"
-#include "termdbg.h"
+#include "termdbgp.h"
 #else
 #include "mc6809.h"
 #include "term.h"
@@ -18,7 +18,10 @@
 #include "memory.h"
 
 #include "Z5023.h"
-#include "parser.hpp"
+
+
+auto lfd400ctrl = std::make_shared<Z5023>();
+
 
 int main(int argc, char *argv[])
 {
@@ -47,7 +50,7 @@ int main(int argc, char *argv[])
 
 #ifdef USIMDBG
 	mc6809dbg cpu;
-	TerminalDbg term(cpu);
+	TerminalDbgPercom term(cpu);
 #else 
 	mc6809 cpu;
 	Terminal term;
@@ -100,7 +103,6 @@ int main(int argc, char *argv[])
 	auto lfd400rom1 = std::make_shared<ROM>(PERCOM_LDF400_ROM_SIZE);
 	auto lfd400rom2 = std::make_shared<ROM>(PERCOM_LDF400_ROM_SIZE);
 	auto lfd400rom3 = std::make_shared<ROM>(PERCOM_LDF400_ROM_SIZE);
-	auto lfd400ctrl = std::make_shared<Z5023>();
 
 	cpu.attach(lfd400rom1, PERCOM_LDF400_ROM1_BASE, ~(PERCOM_LDF400_ROM_SIZE - 1));
 	cpu.attach(lfd400rom2, PERCOM_LDF400_ROM2_BASE, ~(PERCOM_LDF400_ROM_SIZE - 1));
@@ -173,16 +175,13 @@ int main(int argc, char *argv[])
 	lfd400ctrl->mountedDisks[2].debug = lfd400ctrl->debug;
 	lfd400ctrl->mountedDisks[3].debug = lfd400ctrl->debug;
 
-	lfd400ctrl->mountedDisks[0].Mount(dsk1);
-	fprintf(stderr, "loading DskFile 1,: %s \r\n", dsk1);
-	lfd400ctrl->mountedDisks[1].Mount(dsk2);
-	fprintf(stderr, "loading DskFile 2,: %s \r\n", dsk2);
-	lfd400ctrl->mountedDisks[2].Mount(dsk3);
-	fprintf(stderr, "loading DskFile 3,: %s \r\n", dsk3);
-	lfd400ctrl->mountedDisks[3].Mount(dsk4);
-	fprintf(stderr, "loading DskFile 4,: %s \r\n", dsk3);
+	lfd400ctrl->Mount(1, dsk1);
+	lfd400ctrl->Mount(2, dsk2);
+	lfd400ctrl->Mount(3, dsk3);
+	lfd400ctrl->Mount(4, dsk4);
+	lfd400ctrl->Info();
 
-	fprintf(stderr, "Done loading files\r\n");
+	fprintf(stderr, "\r\nDone loading/mounting files.\r\n");
 
 	cpu.reset();
 #ifdef USIMDBG

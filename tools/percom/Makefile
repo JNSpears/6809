@@ -3,10 +3,10 @@ USIMDBG_PATH	= ../usimdbg/
 
 CPPFLAGS = -O3  -I ../usim -I ../usimdbg --std=c++17
   
-SRCS		= main.cpp Z5023.cpp 
+SRCS		= main.cpp Z5023.cpp
 OBJS		= $(SRCS:.cpp=.o)
 
-SRCSd		= main.cpp Z5023.cpp
+SRCSd		= main.cpp Z5023.cpp termdbgp.cpp
 OBJSd		= $(SRCSd:.cpp=.o)
 
 BIN			= percom
@@ -14,10 +14,10 @@ BIN			= percom
 all: $(BIN) $(BIN)d
 
 $(BIN):	$(OBJS) $(LIBS)
-	$(CXX) $(CCFLAGS) $(LDFLAGS) main.o Z5023.o $(USIM_PATH)term.o -L$(USIM_PATH) -lusim -o $(@)
+	$(CXX) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(USIM_PATH)term.o -L$(USIM_PATH) -lusim -o $(@)
 
-$(BIN)d: maind.o Z5023.o  $(LIBS) # debugger
-	$(CXX) $(CCFLAGS) $(LDFLAGS) maind.o Z5023.o $(USIM_PATH)term.o -lreadline -L$(USIM_PATH) -L$(USIMDBG_PATH) -lusim -lusimdbg -o $(@)
+$(BIN)d: maind.o Z5023.o termdbgp.o $(LIBS) # debugger
+	$(CXX) $(CCFLAGS) $(LDFLAGS) maind.o Z5023.o termdbgp.o $(USIM_PATH)term.o -lreadline -L$(USIM_PATH) -L$(USIMDBG_PATH) -lusim -lusimdbg -o $(@)
 
 
 main.o: main.cpp

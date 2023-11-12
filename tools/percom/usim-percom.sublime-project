@@ -4549,7 +4549,7 @@
 					1,
 					"insert",
 					{
-						"characters": "%"
+						"characters": "%",
 					},
 					"AQAAAB0CAAAAAAAAHgIAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAdAgAAAAAAAB0CAAAAAAAAAAAAAAAA8L8"
@@ -4559,7 +4559,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAAB4CAAAAAAAAHwIAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAeAgAAAAAAAB4CAAAAAAAAAAAAAAAA8L8"
@@ -4577,7 +4577,7 @@
 					1,
 					"insert",
 					{
-						"characters": "=%"
+						"characters": "=%",
 					},
 					"AgAAAB4CAAAAAAAAHwIAAAAAAAAAAAAAHwIAAAAAAAAgAgAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAeAgAAAAAAAB4CAAAAAAAAAAAAAAAA8L8"
@@ -4587,7 +4587,7 @@
 					1,
 					"insert",
 					{
-						"characters": "ld"
+						"characters": "ld",
 					},
 					"AgAAACACAAAAAAAAIQIAAAAAAAAAAAAAIQIAAAAAAAAiAgAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAgAgAAAAAAACACAAAAAAAAAAAAAAAA8L8"
@@ -4597,7 +4597,7 @@
 					1,
 					"insert",
 					{
-						"characters": ","
+						"characters": ",",
 					},
 					"AQAAACMCAAAAAAAAJAIAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAjAgAAAAAAACMCAAAAAAAAAAAAAAAA8L8"
@@ -4607,7 +4607,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAACQCAAAAAAAAJQIAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAkAgAAAAAAACQCAAAAAAAAAAAAAAAA8L8"
@@ -4635,7 +4635,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAADMCAAAAAAAANAIAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAzAgAAAAAAADMCAAAAAAAAAAAAAAAA8L8"
@@ -4653,7 +4653,7 @@
 					1,
 					"insert",
 					{
-						"characters": " %"
+						"characters": " %",
 					},
 					"AgAAAEECAAAAAAAAQgIAAAAAAAAAAAAAQgIAAAAAAABDAgAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABBAgAAAAAAAEECAAAAAAAAAAAAAAAA8L8"
@@ -4663,7 +4663,7 @@
 					1,
 					"insert",
 					{
-						"characters": " xxx"
+						"characters": " xxx",
 					},
 					"BAAAAEMCAAAAAAAARAIAAAAAAAAAAAAARAIAAAAAAABFAgAAAAAAAAAAAABFAgAAAAAAAEYCAAAAAAAAAAAAAEYCAAAAAAAARwIAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABDAgAAAAAAAEMCAAAAAAAAAAAAAAAA8L8"
@@ -4691,7 +4691,7 @@
 					1,
 					"insert",
 					{
-						"characters": ";"
+						"characters": ";",
 					},
 					"AQAAAFkCAAAAAAAAWgIAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABZAgAAAAAAAFkCAAAAAAAAAAAAAAAA8L8"
@@ -4701,7 +4701,7 @@
 					1,
 					"insert",
 					{
-						"characters": "%"
+						"characters": "%",
 					},
 					"AQAAAB0CAAAAAAAAHgIAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAdAgAAAAAAAB0CAAAAAAAAAAAAAAAA8L8"
@@ -4711,7 +4711,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"AgAAAPMBAAAAAAAA9AEAAAAAAAAAAAAA9AEAAAAAAAD1AQAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAADzAQAAAAAAAPMBAAAAAAAAAAAAAAAA8L8"
@@ -4745,7 +4745,7 @@
 					1,
 					"insert",
 					{
-						"characters": "pc"
+						"characters": "pc",
 					},
 					"AwAAAP0BAAAAAAAA/gEAAAAAAAAAAAAA/gEAAAAAAAD+AQAAAAAAAA0AAABleGVjSGlzdG9yeUl4/gEAAAAAAAD/AQAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAD9AQAAAAAAAAoCAAAAAAAAAAAAAAAA8L8"
@@ -4755,7 +4755,7 @@
 					1,
 					"insert",
 					{
-						"characters": "pc"
+						"characters": "pc",
 					},
 					"AwAAAAoCAAAAAAAACwIAAAAAAAAAAAAACwIAAAAAAAALAgAAAAAAAA0AAABleGVjSGlzdG9yeUl4CwIAAAAAAAAMAgAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAKAgAAAAAAABcCAAAAAAAAAAAAAAAA8L8"
@@ -4773,7 +4773,7 @@
 					1,
 					"insert",
 					{
-						"characters": "u"
+						"characters": "u",
 					},
 					"AQAAAAICAAAAAAAAAwIAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAACAgAAAAAAAAICAAAAAAAAAAAAAAAA8L8"
@@ -4791,7 +4791,7 @@
 					1,
 					"insert",
 					{
-						"characters": "X"
+						"characters": "X",
 					},
 					"AQAAAAICAAAAAAAAAwIAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAACAgAAAAAAAAICAAAAAAAAAAAAAAAA8L8"
@@ -4811,7 +4811,7 @@
 					1,
 					"insert",
 					{
-						"characters": "printf("
+						"characters": "printf(",
 					},
 					"BwAAABkEAAAAAAAAGgQAAAAAAAAAAAAAGgQAAAAAAAAbBAAAAAAAAAAAAAAbBAAAAAAAABwEAAAAAAAAAAAAABwEAAAAAAAAHQQAAAAAAAAAAAAAHQQAAAAAAAAeBAAAAAAAAAAAAAAeBAAAAAAAAB8EAAAAAAAAAAAAAB8EAAAAAAAAIAQAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAZBAAAAAAAABkEAAAAAAAAAAAAAAAA8L8"
@@ -4821,7 +4821,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\""
+						"characters": "\"",
 					},
 					"AQAAACAEAAAAAAAAIQQAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAgBAAAAAAAACAEAAAAAAAAAAAAAAAA8L8"
@@ -4839,7 +4839,7 @@
 					1,
 					"insert",
 					{
-						"characters": "()\\"
+						"characters": "()\\",
 					},
 					"AwAAACoEAAAAAAAAKwQAAAAAAAAAAAAAKwQAAAAAAAAsBAAAAAAAAAAAAAAsBAAAAAAAAC0EAAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAqBAAAAAAAACoEAAAAAAAAAAAAAAAA8L8"
@@ -5052,7 +5052,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"AQAAAJwEAAAAAAAAnQQAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAACcBAAAAAAAAJwEAAAAAAAAAAAAAAAA8L8"
@@ -5114,7 +5114,7 @@
 					1,
 					"insert",
 					{
-						"characters": "do"
+						"characters": "do",
 					},
 					"AwAAAJEEAAAAAAAAkgQAAAAAAAAAAAAAWAMAAAAAAABYAwAAAAAAAAEAAAAJkQQAAAAAAACSBAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAkQQAAAAAAACRBAAAAAAAAAAAAAAAAPC/"
@@ -5231,7 +5231,7 @@
 					1,
 					"insert",
 					{
-						"characters": ">"
+						"characters": ">",
 					},
 					"AgAAAL4EAAAAAAAAvwQAAAAAAAAAAAAAvwQAAAAAAAC/BAAAAAAAAAIAAAA9PQ",
 					"AQAAAAAAAAABAAAAvgQAAAAAAADABAAAAAAAAAAAAAAAAPC/"
@@ -5249,7 +5249,7 @@
 					1,
 					"toggle_comment",
 					{
-						"block": false
+						"block": false,
 					},
 					"AgAAAIEFAAAAAAAAhAUAAAAAAAAAAAAAdQUAAAAAAAB4BQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAdQUAAAAAAACIBQAAAAAAAAAAAAAAAPC/"
@@ -5269,7 +5269,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"AwAAAJwCAAAAAAAAnQIAAAAAAAAAAAAAnQIAAAAAAACeAgAAAAAAAAAAAAAaBAAAAAAAABoEAAAAAAAAAwAAAAkJCQ",
 					"AQAAAAAAAAABAAAAnAIAAAAAAACcAgAAAAAAAAAAAAAAAPC/"
@@ -5309,7 +5309,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"BAAAAKACAAAAAAAAoQIAAAAAAAAAAAAAoQIAAAAAAACiAgAAAAAAAAAAAAChAgAAAAAAAKECAAAAAAAAAQAAAAmhAgAAAAAAAKMCAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAoAIAAAAAAACgAgAAAAAAAAAAAAAAAPC/"
@@ -5327,7 +5327,7 @@
 					1,
 					"insert",
 					{
-						"characters": " ="
+						"characters": " =",
 					},
 					"AgAAAKwCAAAAAAAArQIAAAAAAAAAAAAArQIAAAAAAACuAgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAArAIAAAAAAACsAgAAAAAAAAAAAAAAAPC/"
@@ -5355,7 +5355,7 @@
 					1,
 					"insert",
 					{
-						"characters": "("
+						"characters": "(",
 					},
 					"AQAAAM0EAAAAAAAAzgQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAzQQAAAAAAADNBAAAAAAAAAAAAAAAAPC/"
@@ -5365,7 +5365,7 @@
 					1,
 					"insert",
 					{
-						"characters": ")"
+						"characters": ")",
 					},
 					"AQAAAN8EAAAAAAAA4AQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA3wQAAAAAAADfBAAAAAAAAAAAAAAAAPC/"
@@ -5375,7 +5375,7 @@
 					1,
 					"insert",
 					{
-						"characters": "()"
+						"characters": "()",
 					},
 					"AgAAAM0EAAAAAAAAzgQAAAAAAAAAAAAAzgQAAAAAAADPBAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAzQQAAAAAAADNBAAAAAAAAAAAAAAAAPC/"
@@ -5385,7 +5385,7 @@
 					1,
 					"insert",
 					{
-						"characters": " $"
+						"characters": " $",
 					},
 					"AgAAAM8EAAAAAAAA0AQAAAAAAAAAAAAA0AQAAAAAAADRBAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAzwQAAAAAAADPBAAAAAAAAAAAAAAAAPC/"
@@ -5464,7 +5464,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n\n"
+						"characters": "\n\n",
 					},
 					"AgAAAIMAAAAAAAAAhAAAAAAAAAAAAAAAhAAAAAAAAACFAAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAgwAAAAAAAACDAAAAAAAAAAAAAAAAAPC/"
@@ -5669,7 +5669,7 @@
 					1,
 					"toggle_comment",
 					{
-						"block": false
+						"block": false,
 					},
 					"CQAAAD4CAAAAAAAAQQIAAAAAAAAAAAAAKAIAAAAAAAArAgAAAAAAAAAAAAAMAgAAAAAAAA8CAAAAAAAAAAAAAAoCAAAAAAAADQIAAAAAAAAAAAAA7gEAAAAAAADxAQAAAAAAAAAAAADqAQAAAAAAAO0BAAAAAAAAAAAAANUBAAAAAAAA2AEAAAAAAAAAAAAA0wEAAAAAAADWAQAAAAAAAAAAAAC4AQAAAAAAALsBAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAuAEAAAAAAAA/AgAAAAAAAAAAAAAAAPC/"
@@ -5679,7 +5679,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"AQAAALcBAAAAAAAAuAEAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAtwEAAAAAAAC3AQAAAAAAAAAAAAAAAPC/"
@@ -5731,7 +5731,7 @@
 					1,
 					"insert_snippet",
 					{
-						"contents": "{$0}"
+						"contents": "{$0}",
 					},
 					"AQAAAIMBAAAAAAAAhQEAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAgwEAAAAAAACDAQAAAAAAAAAAAAAAAPC/"
@@ -5741,7 +5741,7 @@
 					1,
 					"run_macro_file",
 					{
-						"file": "res://Packages/Default/Add Line in Braces.sublime-macro"
+						"file": "res://Packages/Default/Add Line in Braces.sublime-macro",
 					},
 					"AwAAAIQBAAAAAAAAhQEAAAAAAAAAAAAAhQEAAAAAAACGAQAAAAAAAAAAAACFAQAAAAAAAIYBAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAhAEAAAAAAACEAQAAAAAAAAAAAAAAAPC/"
@@ -5801,7 +5801,7 @@
 					1,
 					"insert",
 					{
-						"characters": ";"
+						"characters": ";",
 					},
 					"AQAAAL4DAAAAAAAAvwMAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAvgMAAAAAAAC+AwAAAAAAAAAAAAAAAPC/"
@@ -5819,7 +5819,7 @@
 					1,
 					"toggle_comment",
 					{
-						"block": false
+						"block": false,
 					},
 					"AgAAAEkDAAAAAAAATAMAAAAAAAAAAAAALQMAAAAAAAAwAwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAALAMAAAAAAACwAwAAAAAAAAAAAAAAAAAA"
@@ -5840,7 +5840,7 @@
 					1,
 					"toggle_comment",
 					{
-						"block": false
+						"block": false,
 					},
 					"AgAAAN4EAAAAAAAA4QQAAAAAAAAAAAAA0gQAAAAAAADVBAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA0AQAAAAAAADmBAAAAAAAAAAAAAAAAAAA"
@@ -5850,7 +5850,7 @@
 					1,
 					"insert",
 					{
-						"characters": " //"
+						"characters": " //",
 					},
 					"AwAAAMIGAAAAAAAAwwYAAAAAAAAAAAAAwwYAAAAAAADEBgAAAAAAAAAAAADEBgAAAAAAAMUGAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAwgYAAAAAAADCBgAAAAAAAAAAAAAAAPC/"
@@ -5860,7 +5860,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAAMUGAAAAAAAAxgYAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAxQYAAAAAAADFBgAAAAAAAAAAAAAAAPC/"
@@ -5870,7 +5870,7 @@
 					1,
 					"insert",
 					{
-						"characters": "force"
+						"characters": "force",
 					},
 					"BQAAAMYGAAAAAAAAxwYAAAAAAAAAAAAAxwYAAAAAAADIBgAAAAAAAAAAAADIBgAAAAAAAMkGAAAAAAAAAAAAAMkGAAAAAAAAygYAAAAAAAAAAAAAygYAAAAAAADLBgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAxgYAAAAAAADGBgAAAAAAAAAAAAAAAPC/"
@@ -5880,7 +5880,7 @@
 					1,
 					"insert",
 					{
-						"characters": " break"
+						"characters": " break",
 					},
 					"BgAAAMsGAAAAAAAAzAYAAAAAAAAAAAAAzAYAAAAAAADNBgAAAAAAAAAAAADNBgAAAAAAAM4GAAAAAAAAAAAAAM4GAAAAAAAAzwYAAAAAAAAAAAAAzwYAAAAAAADQBgAAAAAAAAAAAADQBgAAAAAAANEGAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAywYAAAAAAADLBgAAAAAAAAAAAAAAAPC/"
@@ -5890,7 +5890,7 @@
 					1,
 					"insert",
 					{
-						"characters": " to"
+						"characters": " to",
 					},
 					"AwAAANEGAAAAAAAA0gYAAAAAAAAAAAAA0gYAAAAAAADTBgAAAAAAAAAAAADTBgAAAAAAANQGAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA0QYAAAAAAADRBgAAAAAAAAAAAAAAAPC/"
@@ -5900,7 +5900,7 @@
 					1,
 					"insert",
 					{
-						"characters": " debugger"
+						"characters": " debugger",
 					},
 					"CQAAANQGAAAAAAAA1QYAAAAAAAAAAAAA1QYAAAAAAADWBgAAAAAAAAAAAADWBgAAAAAAANcGAAAAAAAAAAAAANcGAAAAAAAA2AYAAAAAAAAAAAAA2AYAAAAAAADZBgAAAAAAAAAAAADZBgAAAAAAANoGAAAAAAAAAAAAANoGAAAAAAAA2wYAAAAAAAAAAAAA2wYAAAAAAADcBgAAAAAAAAAAAADcBgAAAAAAAN0GAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA1AYAAAAAAADUBgAAAAAAAAAAAAAAAPC/"
@@ -5910,7 +5910,7 @@
 					1,
 					"insert",
 					{
-						"characters": "L"
+						"characters": "L",
 					},
 					"AQAAAIENAAAAAAAAgg0AAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAgQ0AAAAAAACBDQAAAAAAAAAAAAAAAPC/"
@@ -5928,7 +5928,7 @@
 					1,
 					"insert",
 					{
-						"characters": "L"
+						"characters": "L",
 					},
 					"AQAAAIANAAAAAAAAgQ0AAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAgA0AAAAAAACADQAAAAAAAAAAAAAAAPC/"
@@ -5938,7 +5938,7 @@
 					1,
 					"insert",
 					{
-						"characters": "L"
+						"characters": "L",
 					},
 					"AgAAAEILAAAAAAAAQwsAAAAAAAAAAAAAQwsAAAAAAABDCwAAAAAAAAEAAABU",
 					"AQAAAAAAAAABAAAAQwsAAAAAAABCCwAAAAAAAAAAAAAAAPC/"
@@ -5948,7 +5948,7 @@
 					1,
 					"insert",
 					{
-						"characters": "live"
+						"characters": "live",
 					},
 					"BAAAAFULAAAAAAAAVgsAAAAAAAAAAAAAVgsAAAAAAABXCwAAAAAAAAAAAABXCwAAAAAAAFgLAAAAAAAAAAAAAFgLAAAAAAAAWQsAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAVQsAAAAAAABVCwAAAAAAAAAAAAAAAPC/"
@@ -5958,7 +5958,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAAFkLAAAAAAAAWgsAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAWQsAAAAAAABZCwAAAAAAAAAAAAAAAPC/"
@@ -5986,7 +5986,7 @@
 					1,
 					"insert",
 					{
-						"characters": "t"
+						"characters": "t",
 					},
 					"AQAAAFoLAAAAAAAAWwsAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAWgsAAAAAAABaCwAAAAAAAAAAAAAAAPC/"
@@ -5996,7 +5996,7 @@
 					1,
 					"insert",
 					{
-						"characters": "(usim"
+						"characters": "(usim",
 					},
 					"BQAAAGALAAAAAAAAYQsAAAAAAAAAAAAAYQsAAAAAAABiCwAAAAAAAAAAAABiCwAAAAAAAGMLAAAAAAAAAAAAAGMLAAAAAAAAZAsAAAAAAAAAAAAAZAsAAAAAAABlCwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAYAsAAAAAAABgCwAAAAAAAAAAAAAAAPC/"
@@ -6016,7 +6016,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAAGYLAAAAAAAAZwsAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAZgsAAAAAAABmCwAAAAAAAAAAAAAAAPC/"
@@ -6034,7 +6034,7 @@
 					1,
 					"insert",
 					{
-						"characters": "T"
+						"characters": "T",
 					},
 					"AQAAAJUMAAAAAAAAlgwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAlQwAAAAAAACVDAAAAAAAAAAAAAAAAPC/"
@@ -6052,7 +6052,7 @@
 					1,
 					"insert",
 					{
-						"characters": "T"
+						"characters": "T",
 					},
 					"AQAAALUMAAAAAAAAtgwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAtQwAAAAAAAC1DAAAAAAAAAAAAAAAAPC/"
@@ -6183,7 +6183,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n\n\n"
+						"characters": "\n\n\n",
 					},
 					"CAAAALoaAAAAAAAAuxoAAAAAAAAAAAAAuxoAAAAAAAC8GgAAAAAAAAAAAAC8GgAAAAAAAL0aAAAAAAAAAAAAAL0aAAAAAAAAvhoAAAAAAAAAAAAAuxoAAAAAAAC7GgAAAAAAAAEAAAAJvRoAAAAAAAC+GgAAAAAAAAAAAAC+GgAAAAAAAL8aAAAAAAAAAAAAALwaAAAAAAAAvBoAAAAAAAABAAAACQ",
 					"AQAAAAAAAAABAAAAuhoAAAAAAAC6GgAAAAAAAAAAAAAAAPC/"
@@ -6234,7 +6234,7 @@
 						"format": "text",
 						"keep_prefix": false,
 						"must_insert": false,
-						"trigger": "nFrames"
+						"trigger": "nFrames",
 					},
 					"AgAAAKUaAAAAAAAApRoAAAAAAAADAAAAbmZypRoAAAAAAACsGgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAqBoAAAAAAACoGgAAAAAAAAAAAAAAAPC/"
@@ -6280,7 +6280,7 @@
 					1,
 					"insert",
 					{
-						"characters": "."
+						"characters": ".",
 					},
 					"AQAAAGsGAAAAAAAAbAYAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAawYAAAAAAABrBgAAAAAAAAAAAAAAAPC/"
@@ -6290,7 +6290,7 @@
 					1,
 					"insert",
 					{
-						"characters": "ord"
+						"characters": "ord",
 					},
 					"AwAAAHkBAAAAAAAAegEAAAAAAAAAAAAAegEAAAAAAAB7AQAAAAAAAAAAAAB7AQAAAAAAAHwBAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAeQEAAAAAAAB5AQAAAAAAAAAAAAAAAPC/"
@@ -6316,7 +6316,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n\n"
+						"characters": "\n\n",
 					},
 					"AgAAAL4BAAAAAAAAvwEAAAAAAAAAAAAAvwEAAAAAAADAAQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAvgEAAAAAAAC+AQAAAAAAAAAAAAAAAPC/"
@@ -6342,7 +6342,7 @@
 					1,
 					"insert",
 					{
-						"characters": "B"
+						"characters": "B",
 					},
 					"AQAAAJ0HAAAAAAAAngcAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAnQcAAAAAAACdBwAAAAAAAAAAAAAAAPC/"
@@ -6424,7 +6424,7 @@
 					1,
 					"insert",
 					{
-						"characters": " ========"
+						"characters": " ========",
 					},
 					"CQAAAJUFAAAAAAAAlgUAAAAAAAAAAAAAlgUAAAAAAACXBQAAAAAAAAAAAACXBQAAAAAAAJgFAAAAAAAAAAAAAJgFAAAAAAAAmQUAAAAAAAAAAAAAmQUAAAAAAACaBQAAAAAAAAAAAACaBQAAAAAAAJsFAAAAAAAAAAAAAJsFAAAAAAAAnAUAAAAAAAAAAAAAnAUAAAAAAACdBQAAAAAAAAAAAACdBQAAAAAAAJ4FAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAlQUAAAAAAACVBQAAAAAAAAAAAAAAAPC/"
@@ -6444,7 +6444,7 @@
 					1,
 					"insert",
 					{
-						"characters": "==============================="
+						"characters": "===============================",
 					},
 					"HwAAAOEFAAAAAAAA4gUAAAAAAAAAAAAA4gUAAAAAAADjBQAAAAAAAAAAAADjBQAAAAAAAOQFAAAAAAAAAAAAAOQFAAAAAAAA5QUAAAAAAAAAAAAA5QUAAAAAAADmBQAAAAAAAAAAAADmBQAAAAAAAOcFAAAAAAAAAAAAAOcFAAAAAAAA6AUAAAAAAAAAAAAA6AUAAAAAAADpBQAAAAAAAAAAAADpBQAAAAAAAOoFAAAAAAAAAAAAAOoFAAAAAAAA6wUAAAAAAAAAAAAA6wUAAAAAAADsBQAAAAAAAAAAAADsBQAAAAAAAO0FAAAAAAAAAAAAAO0FAAAAAAAA7gUAAAAAAAAAAAAA7gUAAAAAAADvBQAAAAAAAAAAAADvBQAAAAAAAPAFAAAAAAAAAAAAAPAFAAAAAAAA8QUAAAAAAAAAAAAA8QUAAAAAAADyBQAAAAAAAAAAAADyBQAAAAAAAPMFAAAAAAAAAAAAAPMFAAAAAAAA9AUAAAAAAAAAAAAA9AUAAAAAAAD1BQAAAAAAAAAAAAD1BQAAAAAAAPYFAAAAAAAAAAAAAPYFAAAAAAAA9wUAAAAAAAAAAAAA9wUAAAAAAAD4BQAAAAAAAAAAAAD4BQAAAAAAAPkFAAAAAAAAAAAAAPkFAAAAAAAA+gUAAAAAAAAAAAAA+gUAAAAAAAD7BQAAAAAAAAAAAAD7BQAAAAAAAPwFAAAAAAAAAAAAAPwFAAAAAAAA/QUAAAAAAAAAAAAA/QUAAAAAAAD+BQAAAAAAAAAAAAD+BQAAAAAAAP8FAAAAAAAAAAAAAP8FAAAAAAAAAAYAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA4QUAAAAAAADhBQAAAAAAAAAAAAAAAPC/"
@@ -6488,7 +6488,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n\n"
+						"characters": "\n\n",
 					},
 					"AgAAAAEGAAAAAAAAAgYAAAAAAAAAAAAAAgYAAAAAAAADBgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAAQYAAAAAAAABBgAAAAAAAAAAAAAAAPC/"
@@ -6530,7 +6530,7 @@
 					1,
 					"insert",
 					{
-						"characters": "}"
+						"characters": "}",
 					},
 					"AQAAAFIGAAAAAAAAUwYAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAUgYAAAAAAABSBgAAAAAAAAAAAAAAAPC/"
@@ -6540,7 +6540,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n\n"
+						"characters": "\n\n",
 					},
 					"AgAAAFMGAAAAAAAAVAYAAAAAAAAAAAAAVAYAAAAAAABVBgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAUwYAAAAAAABTBgAAAAAAAAAAAAAAAPC/"
@@ -6590,7 +6590,7 @@
 					1,
 					"insert",
 					{
-						"characters": "void"
+						"characters": "void",
 					},
 					"BQAAAAMGAAAAAAAABAYAAAAAAAAAAAAABAYAAAAAAAAEBgAAAAAAAAQAAABib29sBAYAAAAAAAAFBgAAAAAAAAAAAAAFBgAAAAAAAAYGAAAAAAAAAAAAAAYGAAAAAAAABwYAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAAwYAAAAAAAAHBgAAAAAAAAAAAAAAAPC/"
@@ -6701,7 +6701,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"AgAAADYGAAAAAAAANwYAAAAAAAAAAAAANwYAAAAAAAA4BgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAANgYAAAAAAAA2BgAAAAAAAAAAAAAAAPC/"
@@ -6743,7 +6743,7 @@
 					1,
 					"insert",
 					{
-						"characters": "Brk"
+						"characters": "Brk",
 					},
 					"BAAAABIaAAAAAAAAExoAAAAAAAAAAAAAExoAAAAAAAATGgAAAAAAALoAAABmb3IgKGludCBpeD0wOyBpeCA8IE1BWF9CUkVBS1BPSU5UUzsgaXgrKykKCQl7CgkJCWlmIChleGVjX2JyZWFrcG9pbnRzW2l4XSA9PSBCUkVBS1BPSU5UX1VOVVNFRCB8fCBleGVjX2JyZWFrcG9pbnRzW2l4XSA9PSBhZGRyKQoJCQl7CgkJCQlleGVjX2JyZWFrcG9pbnRzW2l4XSA9IGFkZHI7CgkJCQlicmVhazsKCQkJfQoJCX0TGgAAAAAAABQaAAAAAAAAAAAAABQaAAAAAAAAFRoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAEhoAAAAAAADMGgAAAAAAAAAAAAAAAPC/"
@@ -6823,7 +6823,7 @@
 					1,
 					"insert",
 					{
-						"characters": ";"
+						"characters": ";",
 					},
 					"AQAAACsaAAAAAAAALBoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAKxoAAAAAAAArGgAAAAAAAAAAAAAAAPC/"
@@ -6833,7 +6833,7 @@
 					1,
 					"insert",
 					{
-						"characters": "di"
+						"characters": "di",
 					},
 					"AwAAAE8aAAAAAAAAUBoAAAAAAAAAAAAAUBoAAAAAAABQGgAAAAAAAJ4AAABmb3IgKGludCBpeD0wOyBpeCA8IE1BWF9CUkVBS1BPSU5UUzsgaXgrKykKCQl7CgkJCWlmIChleGVjX2JyZWFrcG9pbnRzW2l4XSAhPSBCUkVBS1BPSU5UX1VOVVNFRCkKCQkJewoJCQkJcHJpbnRmKCJcdCUwNHhcclxuIiwgZXhlY19icmVha3BvaW50c1tpeF0pOwoJCQl9CgkJfVAaAAAAAAAAURoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAATxoAAAAAAADtGgAAAAAAAAAAAAAAAPC/"
@@ -6851,7 +6851,7 @@
 					1,
 					"insert",
 					{
-						"characters": "brk"
+						"characters": "brk",
 					},
 					"AwAAAE8aAAAAAAAAUBoAAAAAAAAAAAAAUBoAAAAAAABRGgAAAAAAAAAAAABRGgAAAAAAAFIaAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAATxoAAAAAAABPGgAAAAAAAAAAAAAAAPC/"
@@ -6865,7 +6865,7 @@
 						"format": "text",
 						"keep_prefix": false,
 						"must_insert": false,
-						"trigger": "BrkTrc"
+						"trigger": "BrkTrc",
 					},
 					"AgAAAE8aAAAAAAAATxoAAAAAAAADAAAAYnJrTxoAAAAAAABVGgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAUhoAAAAAAABSGgAAAAAAAAAAAAAAAPC/"
@@ -6875,7 +6875,7 @@
 					1,
 					"insert",
 					{
-						"characters": "."
+						"characters": ".",
 					},
 					"AQAAAFUaAAAAAAAAVhoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAVRoAAAAAAABVGgAAAAAAAAAAAAAAAPC/"
@@ -6885,7 +6885,7 @@
 					1,
 					"insert",
 					{
-						"characters": "disp"
+						"characters": "disp",
 					},
 					"BAAAAFYaAAAAAAAAVxoAAAAAAAAAAAAAVxoAAAAAAABYGgAAAAAAAAAAAABYGgAAAAAAAFkaAAAAAAAAAAAAAFkaAAAAAAAAWhoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAVhoAAAAAAABWGgAAAAAAAAAAAAAAAPC/"
@@ -6899,7 +6899,7 @@
 						"format": "text",
 						"keep_prefix": false,
 						"must_insert": false,
-						"trigger": "dispTrace"
+						"trigger": "dispTrace",
 					},
 					"AgAAAFYaAAAAAAAAVhoAAAAAAAAEAAAAZGlzcFYaAAAAAAAAXxoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAWhoAAAAAAABaGgAAAAAAAAAAAAAAAPC/"
@@ -6928,7 +6928,7 @@
 					1,
 					"insert",
 					{
-						"characters": "e"
+						"characters": "e",
 					},
 					"AQAAAFoaAAAAAAAAWxoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAWhoAAAAAAABaGgAAAAAAAAAAAAAAAPC/"
@@ -6963,7 +6963,7 @@
 					1,
 					"insert",
 					{
-						"characters": "trc"
+						"characters": "trc",
 					},
 					"AwAAAIEaAAAAAAAAghoAAAAAAAAAAAAAghoAAAAAAACDGgAAAAAAAAAAAACDGgAAAAAAAIQaAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAgRoAAAAAAACBGgAAAAAAAAAAAAAAAPC/"
@@ -6981,7 +6981,7 @@
 					1,
 					"insert",
 					{
-						"characters": "."
+						"characters": ".",
 					},
 					"AQAAAH4aAAAAAAAAfxoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAfhoAAAAAAAB+GgAAAAAAAAAAAAAAAPC/"
@@ -6991,7 +6991,7 @@
 					1,
 					"insert",
 					{
-						"characters": "br"
+						"characters": "br",
 					},
 					"AgAAAH4aAAAAAAAAfxoAAAAAAAAAAAAAfxoAAAAAAACAGgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAfhoAAAAAAAB+GgAAAAAAAAAAAAAAAPC/"
@@ -7016,7 +7016,7 @@
 					1,
 					"insert",
 					{
-						"characters": "clea"
+						"characters": "clea",
 					},
 					"BQAAAIUaAAAAAAAAhhoAAAAAAAAAAAAAhhoAAAAAAACGGgAAAAAAAAIAAABDbIYaAAAAAAAAhxoAAAAAAAAAAAAAhxoAAAAAAACIGgAAAAAAAAAAAACIGgAAAAAAAIkaAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAhRoAAAAAAACHGgAAAAAAAAAAAAAAAPC/"
@@ -7092,7 +7092,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAABIFAAAAAAAAEwUAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAEgUAAAAAAAASBQAAAAAAAAAAAAAAAPC/"
@@ -7122,7 +7122,7 @@
 					1,
 					"insert",
 					{
-						"characters": "clea"
+						"characters": "clea",
 					},
 					"BQAAAJIaAAAAAAAAkxoAAAAAAAAAAAAAkxoAAAAAAACTGgAAAAAAAAsAAABjbGVhckJyZWFrc5MaAAAAAAAAlBoAAAAAAAAAAAAAlBoAAAAAAACVGgAAAAAAAAAAAACVGgAAAAAAAJYaAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAkhoAAAAAAACdGgAAAAAAAAAAAAAAAPC/"
@@ -7136,7 +7136,7 @@
 						"format": "text",
 						"keep_prefix": false,
 						"must_insert": false,
-						"trigger": "clearExecBreak"
+						"trigger": "clearExecBreak",
 					},
 					"AgAAAJIaAAAAAAAAkhoAAAAAAAAEAAAAY2xlYZIaAAAAAAAAoBoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAlhoAAAAAAACWGgAAAAAAAAAAAAAAAPC/"
@@ -7146,7 +7146,7 @@
 					1,
 					"insert",
 					{
-						"characters": "pc"
+						"characters": "pc",
 					},
 					"AgAAAMgJAAAAAAAAyQkAAAAAAAAAAAAAyQkAAAAAAADKCQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAyAkAAAAAAADICQAAAAAAAAAAAAAAAPC/"
@@ -7172,7 +7172,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\t\t\t"
+						"characters": "\t\t\t",
 					},
 					"AwAAAMsLAAAAAAAAzAsAAAAAAAAAAAAAzAsAAAAAAADNCwAAAAAAAAAAAADNCwAAAAAAAM4LAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAywsAAAAAAADLCwAAAAAAAAAAAAAAAPC/"
@@ -7190,7 +7190,7 @@
 					1,
 					"insert",
 					{
-						"characters": "end-"
+						"characters": "end-",
 					},
 					"BAAAALwEAAAAAAAAvQQAAAAAAAAAAAAAvQQAAAAAAAC+BAAAAAAAAAAAAAC+BAAAAAAAAL8EAAAAAAAAAAAAAL8EAAAAAAAAwAQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAvAQAAAAAAAC8BAAAAAAAAAAAAAAAAPC/"
@@ -7208,7 +7208,7 @@
 					1,
 					"insert",
 					{
-						"characters": "3"
+						"characters": "3",
 					},
 					"AQAAAKoEAAAAAAAAqwQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAqgQAAAAAAACqBAAAAAAAAAAAAAAAAPC/"
@@ -7274,7 +7274,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n\n"
+						"characters": "\n\n",
 					},
 					"AgAAAOUbAAAAAAAA5hsAAAAAAAAAAAAA5hsAAAAAAADnGwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA5RsAAAAAAADlGwAAAAAAAAAAAAAAAPC/"
@@ -7316,7 +7316,7 @@
 					1,
 					"insert_snippet",
 					{
-						"contents": "($0)"
+						"contents": "($0)",
 					},
 					"AQAAAPscAAAAAAAA/RwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA+xwAAAAAAAD7HAAAAAAAAAAAAAAAAPC/"
@@ -7326,7 +7326,7 @@
 					1,
 					"insert",
 					{
-						"characters": "of"
+						"characters": "of",
 					},
 					"AgAAAPwcAAAAAAAA/RwAAAAAAAAAAAAA/RwAAAAAAAD+HAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA/BwAAAAAAAD8HAAAAAAAAAAAAAAAAPC/"
@@ -7340,7 +7340,7 @@
 						"format": "text",
 						"keep_prefix": false,
 						"must_insert": false,
-						"trigger": "offset"
+						"trigger": "offset",
 					},
 					"AgAAAPwcAAAAAAAA/BwAAAAAAAACAAAAb2b8HAAAAAAAAAIdAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA/hwAAAAAAAD+HAAAAAAAAAAAAAAAAPC/"
@@ -7350,7 +7350,7 @@
 					1,
 					"insert",
 					{
-						"characters": ","
+						"characters": ",",
 					},
 					"AQAAAAIdAAAAAAAAAx0AAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAAh0AAAAAAAACHQAAAAAAAAAAAAAAAPC/"
@@ -7360,7 +7360,7 @@
 					1,
 					"insert",
 					{
-						"characters": " val"
+						"characters": " val",
 					},
 					"BAAAAAMdAAAAAAAABB0AAAAAAAAAAAAABB0AAAAAAAAFHQAAAAAAAAAAAAAFHQAAAAAAAAYdAAAAAAAAAAAAAAYdAAAAAAAABx0AAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAAx0AAAAAAAADHQAAAAAAAAAAAAAAAPC/"
@@ -7404,7 +7404,7 @@
 					1,
 					"insert",
 					{
-						"characters": "Byte"
+						"characters": "Byte",
 					},
 					"BAAAACAcAAAAAAAAIRwAAAAAAAAAAAAAIRwAAAAAAAAiHAAAAAAAAAAAAAAiHAAAAAAAACMcAAAAAAAAAAAAACMcAAAAAAAAJBwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAIBwAAAAAAAAgHAAAAAAAAAAAAAAAAPC/"
@@ -7414,7 +7414,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAACQcAAAAAAAAJRwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAJBwAAAAAAAAkHAAAAAAAAAAAAAAAAPC/"
@@ -7424,7 +7424,7 @@
 					1,
 					"insert",
 					{
-						"characters": "val;"
+						"characters": "val;",
 					},
 					"BAAAACUcAAAAAAAAJhwAAAAAAAAAAAAAJhwAAAAAAAAnHAAAAAAAAAAAAAAnHAAAAAAAACgcAAAAAAAAAAAAACgcAAAAAAAAKRwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAJRwAAAAAAAAlHAAAAAAAAAAAAAAAAPC/"
@@ -7442,7 +7442,7 @@
 					1,
 					"insert",
 					{
-						"characters": " ="
+						"characters": " =",
 					},
 					"AgAAACgcAAAAAAAAKRwAAAAAAAAAAAAAKRwAAAAAAAAqHAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAKBwAAAAAAAAoHAAAAAAAAAAAAAAAAPC/"
@@ -7452,7 +7452,7 @@
 					1,
 					"insert",
 					{
-						"characters": " U"
+						"characters": " U",
 					},
 					"AgAAACocAAAAAAAAKxwAAAAAAAAAAAAAKxwAAAAAAAAsHAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAKhwAAAAAAAAqHAAAAAAAAAAAAAAAAPC/"
@@ -7472,7 +7472,7 @@
 					1,
 					"insert",
 					{
-						"characters": "re"
+						"characters": "re",
 					},
 					"AgAAADAcAAAAAAAAMRwAAAAAAAAAAAAAMRwAAAAAAAAyHAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAMBwAAAAAAAAwHAAAAAAAAAAAAAAAAPC/"
@@ -7486,7 +7486,7 @@
 						"format": "text",
 						"keep_prefix": false,
 						"must_insert": false,
-						"trigger": "read"
+						"trigger": "read",
 					},
 					"AgAAADAcAAAAAAAAMBwAAAAAAAACAAAAcmUwHAAAAAAAADQcAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAMhwAAAAAAAAyHAAAAAAAAAAAAAAAAPC/"
@@ -7496,7 +7496,7 @@
 					1,
 					"insert_snippet",
 					{
-						"contents": "($0)"
+						"contents": "($0)",
 					},
 					"AQAAADQcAAAAAAAANhwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAANBwAAAAAAAA0HAAAAAAAAAAAAAAAAPC/"
@@ -7506,7 +7506,7 @@
 					1,
 					"insert",
 					{
-						"characters": "off"
+						"characters": "off",
 					},
 					"AwAAADUcAAAAAAAANhwAAAAAAAAAAAAANhwAAAAAAAA3HAAAAAAAAAAAAAA3HAAAAAAAADgcAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAANRwAAAAAAAA1HAAAAAAAAAAAAAAAAPC/"
@@ -7744,7 +7744,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n\n"
+						"characters": "\n\n",
 					},
 					"AgAAAAMIAAAAAAAABAgAAAAAAAAAAAAABAgAAAAAAAAFCAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAAwgAAAAAAAADCAAAAAAAAAAAAAAAAPC/"
@@ -7762,7 +7762,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n\n"
+						"characters": "\n\n",
 					},
 					"AgAAAJwIAAAAAAAAnQgAAAAAAAAAAAAAnQgAAAAAAACeCAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAnAgAAAAAAACcCAAAAAAAAAAAAAAAAPC/"
@@ -7946,7 +7946,7 @@
 					1,
 					"insert",
 					{
-						"characters": "!"
+						"characters": "!",
 					},
 					"AgAAAEkIAAAAAAAASggAAAAAAAAAAAAASggAAAAAAABKCAAAAAAAAAEAAAA9",
 					"AQAAAAAAAAABAAAASQgAAAAAAABKCAAAAAAAAAAAAAAAAPC/"
@@ -7974,7 +7974,7 @@
 					1,
 					"insert_snippet",
 					{
-						"contents": "($0)"
+						"contents": "($0)",
 					},
 					"AQAAAGwIAAAAAAAAbggAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAbAgAAAAAAABsCAAAAAAAAAAAAAAAAPC/"
@@ -7995,7 +7995,7 @@
 					1,
 					"insert",
 					{
-						"characters": "%0"
+						"characters": "%0",
 					},
 					"AgAAAG4IAAAAAAAAbwgAAAAAAAAAAAAAbwgAAAAAAABwCAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAbggAAAAAAABuCAAAAAAAAAAAAAAAAPC/"
@@ -8009,7 +8009,7 @@
 						"format": "text",
 						"keep_prefix": false,
 						"must_insert": false,
-						"trigger": "04X"
+						"trigger": "04X",
 					},
 					"AgAAAG8IAAAAAAAAbwgAAAAAAAABAAAAMG8IAAAAAAAAcggAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAcAgAAAAAAABwCAAAAAAAAAAAAAAAAPC/"
@@ -8039,7 +8039,7 @@
 					1,
 					"insert",
 					{
-						"characters": ","
+						"characters": ",",
 					},
 					"AQAAAHcIAAAAAAAAeAgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAdwgAAAAAAAB3CAAAAAAAAAAAAAAAAPC/"
@@ -8049,7 +8049,7 @@
 					1,
 					"insert",
 					{
-						"characters": " exe"
+						"characters": " exe",
 					},
 					"BAAAAHgIAAAAAAAAeQgAAAAAAAAAAAAAeQgAAAAAAAB6CAAAAAAAAAAAAAB6CAAAAAAAAHsIAAAAAAAAAAAAAHsIAAAAAAAAfAgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAeAgAAAAAAAB4CAAAAAAAAAAAAAAAAPC/"
@@ -8074,7 +8074,7 @@
 					1,
 					"insert_snippet",
 					{
-						"contents": "[$0]"
+						"contents": "[$0]",
 					},
 					"AQAAAIkIAAAAAAAAiwgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAiQgAAAAAAACJCAAAAAAAAAAAAAAAAPC/"
@@ -8084,7 +8084,7 @@
 					1,
 					"insert",
 					{
-						"characters": "i"
+						"characters": "i",
 					},
 					"AQAAAIoIAAAAAAAAiwgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAiggAAAAAAACKCAAAAAAAAAAAAAAAAPC/"
@@ -8098,7 +8098,7 @@
 						"format": "text",
 						"keep_prefix": false,
 						"must_insert": false,
-						"trigger": "ix"
+						"trigger": "ix",
 					},
 					"AgAAAIoIAAAAAAAAiggAAAAAAAABAAAAaYoIAAAAAAAAjAgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAiwgAAAAAAACLCAAAAAAAAAAAAAAAAPC/"
@@ -8116,7 +8116,7 @@
 					1,
 					"insert",
 					{
-						"characters": " frame;"
+						"characters": " frame;",
 					},
 					"BwAAANwIAAAAAAAA3QgAAAAAAAAAAAAA3QgAAAAAAADeCAAAAAAAAAAAAADeCAAAAAAAAN8IAAAAAAAAAAAAAN8IAAAAAAAA4AgAAAAAAAAAAAAA4AgAAAAAAADhCAAAAAAAAAAAAADhCAAAAAAAAOIIAAAAAAAAAAAAAOIIAAAAAAAA4wgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA3AgAAAAAAADcCAAAAAAAAAAAAAAAAPC/"
@@ -8136,7 +8136,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\nframe"
+						"characters": "\nframe",
 					},
 					"BwAAAOMIAAAAAAAA5AgAAAAAAAAAAAAA5AgAAAAAAADlCAAAAAAAAAAAAADlCAAAAAAAAOYIAAAAAAAAAAAAAOYIAAAAAAAA5wgAAAAAAAAAAAAA5wgAAAAAAADoCAAAAAAAAAAAAADoCAAAAAAAAOkIAAAAAAAAAAAAAOkIAAAAAAAA6ggAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA4wgAAAAAAADjCAAAAAAAAAAAAAAAAPC/"
@@ -8146,7 +8146,7 @@
 					1,
 					"insert",
 					{
-						"characters": " ."
+						"characters": " .",
 					},
 					"AgAAAOoIAAAAAAAA6wgAAAAAAAAAAAAA6wgAAAAAAADsCAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA6ggAAAAAAADqCAAAAAAAAAAAAAAAAPC/"
@@ -8164,7 +8164,7 @@
 					1,
 					"insert",
 					{
-						"characters": ".address"
+						"characters": ".address",
 					},
 					"CAAAAOoIAAAAAAAA6wgAAAAAAAAAAAAA6wgAAAAAAADsCAAAAAAAAAAAAADsCAAAAAAAAO0IAAAAAAAAAAAAAO0IAAAAAAAA7ggAAAAAAAAAAAAA7ggAAAAAAADvCAAAAAAAAAAAAADvCAAAAAAAAPAIAAAAAAAAAAAAAPAIAAAAAAAA8QgAAAAAAAAAAAAA8QgAAAAAAADyCAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA6ggAAAAAAADqCAAAAAAAAAAAAAAAAPC/"
@@ -8182,7 +8182,7 @@
 					1,
 					"insert",
 					{
-						"characters": " ="
+						"characters": " =",
 					},
 					"AgAAAO8IAAAAAAAA8AgAAAAAAAAAAAAA8AgAAAAAAADxCAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA7wgAAAAAAADvCAAAAAAAAAAAAAAAAPC/"
@@ -8192,7 +8192,7 @@
 					1,
 					"insert",
 					{
-						"characters": " addr"
+						"characters": " addr",
 					},
 					"BQAAAPEIAAAAAAAA8ggAAAAAAAAAAAAA8ggAAAAAAADzCAAAAAAAAAAAAADzCAAAAAAAAPQIAAAAAAAAAAAAAPQIAAAAAAAA9QgAAAAAAAAAAAAA9QgAAAAAAAD2CAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA8QgAAAAAAADxCAAAAAAAAAAAAAAAAPC/"
@@ -8432,7 +8432,7 @@
 					1,
 					"insert",
 					{
-						"characters": "word"
+						"characters": "word",
 					},
 					"BAAAAP8IAAAAAAAAAAkAAAAAAAAAAAAAAAkAAAAAAAABCQAAAAAAAAAAAAABCQAAAAAAAAIJAAAAAAAAAAAAAAIJAAAAAAAAAwkAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA/wgAAAAAAAD/CAAAAAAAAAAAAAAAAPC/"
@@ -8500,7 +8500,7 @@
 					1,
 					"insert",
 					{
-						"characters": "byte"
+						"characters": "byte",
 					},
 					"BAAAAJEJAAAAAAAAkgkAAAAAAAAAAAAAkgkAAAAAAACTCQAAAAAAAAAAAACTCQAAAAAAAJQJAAAAAAAAAAAAAJQJAAAAAAAAlQkAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAkQkAAAAAAACRCQAAAAAAAAAAAAAAAPC/"
@@ -8552,7 +8552,7 @@
 					1,
 					"insert",
 					{
-						"characters": "Byte"
+						"characters": "Byte",
 					},
 					"BAAAAL0KAAAAAAAAvgoAAAAAAAAAAAAAvgoAAAAAAAC/CgAAAAAAAAAAAAC/CgAAAAAAAMAKAAAAAAAAAAAAAMAKAAAAAAAAwQoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAvQoAAAAAAAC9CgAAAAAAAAAAAAAAAPC/"
@@ -8742,7 +8742,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAAEkFAAAAAAAASgUAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAASQUAAAAAAABJBQAAAAAAAAAAAAAAAPC/"
@@ -8894,7 +8894,7 @@
 					1,
 					"insert",
 					{
-						"characters": "$0"
+						"characters": "$0",
 					},
 					"AgAAAJ0FAAAAAAAAngUAAAAAAAAAAAAAngUAAAAAAACfBQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAnQUAAAAAAACdBQAAAAAAAAAAAAAAAPC/"
@@ -8944,7 +8944,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAAKMFAAAAAAAApAUAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAowUAAAAAAACjBQAAAAAAAAAAAAAAAPC/"
@@ -8964,7 +8964,7 @@
 					1,
 					"insert",
 					{
-						"characters": "data"
+						"characters": "data",
 					},
 					"BAAAAL8FAAAAAAAAwAUAAAAAAAAAAAAAwAUAAAAAAADBBQAAAAAAAAAAAADBBQAAAAAAAMIFAAAAAAAAAAAAAMIFAAAAAAAAwwUAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAvwUAAAAAAAC/BQAAAAAAAAAAAAAAAPC/"
@@ -8974,7 +8974,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAAMMFAAAAAAAAxAUAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAwwUAAAAAAADDBQAAAAAAAAAAAAAAAPC/"
@@ -8992,7 +8992,7 @@
 					1,
 					"insert",
 					{
-						"characters": ","
+						"characters": ",",
 					},
 					"AQAAAMMFAAAAAAAAxAUAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAwwUAAAAAAADDBQAAAAAAAAAAAAAAAPC/"
@@ -9118,7 +9118,7 @@
 					1,
 					"insert",
 					{
-						"characters": "e"
+						"characters": "e",
 					},
 					"AQAAAI4GAAAAAAAAjwYAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAjgYAAAAAAACOBgAAAAAAAAAAAAAAAPC/"
@@ -9164,7 +9164,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAALMEAAAAAAAAtAQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAswQAAAAAAACzBAAAAAAAAAAAAAAAAPC/"
@@ -9242,7 +9242,7 @@
 					1,
 					"insert",
 					{
-						"characters": "exev"
+						"characters": "exev",
 					},
 					"BQAAANsNAAAAAAAA3A0AAAAAAAAAAAAA3A0AAAAAAADcDQAAAAAAAAkAAAB3cml0ZUJ5dGXcDQAAAAAAAN0NAAAAAAAAAAAAAN0NAAAAAAAA3g0AAAAAAAAAAAAA3g0AAAAAAADfDQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA2w0AAAAAAADkDQAAAAAAAAAAAAAAAPC/"
@@ -9328,7 +9328,7 @@
 					1,
 					"insert",
 					{
-						"characters": "v"
+						"characters": "v",
 					},
 					"AQAAAIwLAAAAAAAAjQsAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAjAsAAAAAAACMCwAAAAAAAAAAAAAAAAAA"
@@ -9370,7 +9370,7 @@
 					1,
 					"insert",
 					{
-						"characters": ","
+						"characters": ",",
 					},
 					"AQAAAN0KAAAAAAAA3goAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA3QoAAAAAAADdCgAAAAAAAAAAAAAAAPC/"
@@ -9380,7 +9380,7 @@
 					1,
 					"insert",
 					{
-						"characters": ";"
+						"characters": ";",
 					},
 					"AQAAACgLAAAAAAAAKQsAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAKAsAAAAAAAAoCwAAAAAAAAAAAAAAAPC/"
@@ -9410,7 +9410,7 @@
 					1,
 					"insert",
 					{
-						"characters": ";"
+						"characters": ";",
 					},
 					"AQAAAA0MAAAAAAAADgwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAADQwAAAAAAAANDAAAAAAAAAAAAAAAAPC/"
@@ -9420,7 +9420,7 @@
 					1,
 					"insert",
 					{
-						"characters": ";"
+						"characters": ";",
 					},
 					"AQAAAMoMAAAAAAAAywwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAygwAAAAAAADKDAAAAAAAAAAAAAAAAPC/"
@@ -9461,7 +9461,7 @@
 					1,
 					"insert",
 					{
-						"characters": ";"
+						"characters": ";",
 					},
 					"AQAAAFsOAAAAAAAAXA4AAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAWw4AAAAAAABbDgAAAAAAAAAAAAAAAPC/"
@@ -9505,7 +9505,7 @@
 					1,
 					"insert",
 					{
-						"characters": "b"
+						"characters": "b",
 					},
 					"AgAAAH4NAAAAAAAAfw0AAAAAAAAAAAAAfw0AAAAAAAB/DQAAAAAAAAEAAABC",
 					"AQAAAAAAAAABAAAAfg0AAAAAAAB/DQAAAAAAAAAAAAAAAPC/"
@@ -9515,7 +9515,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"AgAAAOAiAAAAAAAA4SIAAAAAAAAAAAAA4SIAAAAAAADiIgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA4CIAAAAAAADgIgAAAAAAAAAAAAAAAPC/"
@@ -9597,7 +9597,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAAP4iAAAAAAAA/yIAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA/iIAAAAAAAD+IgAAAAAAAAAAAAAAAPC/"
@@ -9734,7 +9734,7 @@
 					1,
 					"insert",
 					{
-						"characters": ";"
+						"characters": ";",
 					},
 					"AQAAAO8kAAAAAAAA8CQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA7yQAAAAAAADvJAAAAAAAAAAAAAAAAPC/"
@@ -9784,7 +9784,7 @@
 					1,
 					"insert",
 					{
-						"characters": "W"
+						"characters": "W",
 					},
 					"AgAAAJ8FAAAAAAAAoAUAAAAAAAAAAAAAoAUAAAAAAACgBQAAAAAAAAEAAABS",
 					"AQAAAAAAAAABAAAAnwUAAAAAAACgBQAAAAAAAAAAAAAAAPC/"
@@ -9869,7 +9869,7 @@
 					1,
 					"insert",
 					{
-						"characters": "::"
+						"characters": "::",
 					},
 					"AgAAAK8lAAAAAAAAsCUAAAAAAAAAAAAAsCUAAAAAAACxJQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAryUAAAAAAACvJQAAAAAAAAAAAAAAAPC/"
@@ -9913,7 +9913,7 @@
 					1,
 					"insert",
 					{
-						"characters": "usim"
+						"characters": "usim",
 					},
 					"BAAAALskAAAAAAAAvCQAAAAAAAAAAAAAvCQAAAAAAAC9JAAAAAAAAAAAAAC9JAAAAAAAAL4kAAAAAAAAAAAAAL4kAAAAAAAAvyQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAuyQAAAAAAAC7JAAAAAAAAAAAAAAAAPC/"
@@ -10041,7 +10041,7 @@
 					1,
 					"insert",
 					{
-						"characters": "+1"
+						"characters": "+1",
 					},
 					"AgAAAJQlAAAAAAAAlSUAAAAAAAAAAAAAlSUAAAAAAACWJQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAlCUAAAAAAACUJQAAAAAAAAAAAAAAAGZA"
@@ -10096,7 +10096,7 @@
 					1,
 					"insert",
 					{
-						"characters": "tmp"
+						"characters": "tmp",
 					},
 					"BAAAAA8lAAAAAAAAECUAAAAAAAAAAAAAECUAAAAAAAAQJQAAAAAAAAMAAAB2YWwQJQAAAAAAABElAAAAAAAAAAAAABElAAAAAAAAEiUAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAADyUAAAAAAAASJQAAAAAAAAAAAAAAAPC/"
@@ -10137,7 +10137,7 @@
 					1,
 					"insert_snippet",
 					{
-						"contents": "'$0'"
+						"contents": "'$0'",
 					},
 					"AQAAAPkkAAAAAAAA+yQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA+SQAAAAAAAD5JAAAAAAAAAAAAAAAAPC/"
@@ -10157,7 +10157,7 @@
 					1,
 					"insert",
 					{
-						"characters": "w"
+						"characters": "w",
 					},
 					"AQAAAPskAAAAAAAA/CQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA+yQAAAAAAAD7JAAAAAAAAAAAAAAAAPC/"
@@ -10217,7 +10217,7 @@
 					1,
 					"insert",
 					{
-						"characters": " %"
+						"characters": " %",
 					},
 					"AgAAAAQlAAAAAAAABSUAAAAAAAAAAAAABSUAAAAAAAAGJQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAABCUAAAAAAAAEJQAAAAAAAAAAAAAAAPC/"
@@ -10227,7 +10227,7 @@
 					1,
 					"insert",
 					{
-						"characters": "04x"
+						"characters": "04x",
 					},
 					"AwAAAAYlAAAAAAAAByUAAAAAAAAAAAAAByUAAAAAAAAIJQAAAAAAAAAAAAAIJQAAAAAAAAklAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAABiUAAAAAAAAGJQAAAAAAAAAAAAAAAPC/"
@@ -10237,7 +10237,7 @@
 					1,
 					"insert",
 					{
-						"characters": "M["
+						"characters": "M[",
 					},
 					"AgAAAP0kAAAAAAAA/iQAAAAAAAAAAAAA/iQAAAAAAAD/JAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA/SQAAAAAAAD9JAAAAAAAAAAAAAAAAPC/"
@@ -10247,7 +10247,7 @@
 					1,
 					"insert",
 					{
-						"characters": "]"
+						"characters": "]",
 					},
 					"AQAAAAMlAAAAAAAABCUAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAAyUAAAAAAAADJQAAAAAAAAAAAAAAAPC/"
@@ -10257,7 +10257,7 @@
 					1,
 					"insert",
 					{
-						"characters": ","
+						"characters": ",",
 					},
 					"AQAAAA0lAAAAAAAADiUAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAADSUAAAAAAAANJQAAAAAAAAAAAAAAAPC/"
@@ -10267,7 +10267,7 @@
 					1,
 					"insert",
 					{
-						"characters": " offs"
+						"characters": " offs",
 					},
 					"BQAAAA4lAAAAAAAADyUAAAAAAAAAAAAADyUAAAAAAAAQJQAAAAAAAAAAAAAQJQAAAAAAABElAAAAAAAAAAAAABElAAAAAAAAEiUAAAAAAAAAAAAAEiUAAAAAAAATJQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAADiUAAAAAAAAOJQAAAAAAAAAAAAAAAPC/"
@@ -10277,7 +10277,7 @@
 					1,
 					"insert",
 					{
-						"characters": "et"
+						"characters": "et",
 					},
 					"AgAAABMlAAAAAAAAFCUAAAAAAAAAAAAAFCUAAAAAAAAVJQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAEyUAAAAAAAATJQAAAAAAAAAAAAAAAPC/"
@@ -10287,7 +10287,7 @@
 					1,
 					"insert",
 					{
-						"characters": ","
+						"characters": ",",
 					},
 					"AQAAABUlAAAAAAAAFiUAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAFSUAAAAAAAAVJQAAAAAAAAAAAAAAAPC/"
@@ -10297,7 +10297,7 @@
 					1,
 					"insert",
 					{
-						"characters": " temp"
+						"characters": " temp",
 					},
 					"BQAAABYlAAAAAAAAFyUAAAAAAAAAAAAAFyUAAAAAAAAYJQAAAAAAAAAAAAAYJQAAAAAAABklAAAAAAAAAAAAABklAAAAAAAAGiUAAAAAAAAAAAAAGiUAAAAAAAAbJQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAFiUAAAAAAAAWJQAAAAAAAAAAAAAAAPC/"
@@ -10307,7 +10307,7 @@
 					1,
 					"insert",
 					{
-						"characters": ";"
+						"characters": ";",
 					},
 					"AQAAABwlAAAAAAAAHSUAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAHCUAAAAAAAAcJQAAAAAAAAAAAAAAAPC/"
@@ -10325,7 +10325,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\""
+						"characters": "\"",
 					},
 					"AQAAAPkkAAAAAAAA+iQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA+SQAAAAAAAD5JAAAAAAAAAAAAAAAAPC/"
@@ -10343,7 +10343,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\""
+						"characters": "\"",
 					},
 					"AQAAAAwlAAAAAAAADSUAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAADCUAAAAAAAAMJQAAAAAAAAAAAAAAAPC/"
@@ -10353,7 +10353,7 @@
 					1,
 					"insert",
 					{
-						"characters": "tmp"
+						"characters": "tmp",
 					},
 					"BAAAABclAAAAAAAAGCUAAAAAAAAAAAAAGCUAAAAAAAAYJQAAAAAAAAQAAAB0ZW1wGCUAAAAAAAAZJQAAAAAAAAAAAAAZJQAAAAAAABolAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAFyUAAAAAAAAbJQAAAAAAAAAAAAAAAPC/"
@@ -10363,7 +10363,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\\r\\n"
+						"characters": "\\r\\n",
 					},
 					"BAAAAAwlAAAAAAAADSUAAAAAAAAAAAAADSUAAAAAAAAOJQAAAAAAAAAAAAAOJQAAAAAAAA8lAAAAAAAAAAAAAA8lAAAAAAAAECUAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAADCUAAAAAAAAMJQAAAAAAAAAAAAAAAPC/"
@@ -10381,7 +10381,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n\t"
+						"characters": "\n\t",
 					},
 					"AgAAACALAAAAAAAAIQsAAAAAAAAAAAAAIQsAAAAAAAAiCwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAIAsAAAAAAAAgCwAAAAAAAAAAAAAAAPC/"
@@ -10399,7 +10399,7 @@
 					1,
 					"insert",
 					{
-						"characters": "bts"
+						"characters": "bts",
 					},
 					"AwAAAPgKAAAAAAAA+QoAAAAAAAAAAAAA+QoAAAAAAAD6CgAAAAAAAAAAAAD6CgAAAAAAAPsKAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA+AoAAAAAAAD4CgAAAAAAAAAAAAAAAPC/"
@@ -10409,7 +10409,7 @@
 					1,
 					"insert",
 					{
-						"characters": "s::"
+						"characters": "s::",
 					},
 					"AwAAAPsKAAAAAAAA/AoAAAAAAAAAAAAA/AoAAAAAAAD9CgAAAAAAAAAAAAD9CgAAAAAAAP4KAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA+woAAAAAAAD7CgAAAAAAAAAAAAAAAPC/"
@@ -10419,7 +10419,7 @@
 					1,
 					"insert",
 					{
-						"characters": "addr"
+						"characters": "addr",
 					},
 					"BQAAABcLAAAAAAAAGAsAAAAAAAAAAAAAGAsAAAAAAAAYCwAAAAAAAAYAAABvZmZzZXQYCwAAAAAAABkLAAAAAAAAAAAAABkLAAAAAAAAGgsAAAAAAAAAAAAAGgsAAAAAAAAbCwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAFwsAAAAAAAAdCwAAAAAAAAAAAAAAAPC/"
@@ -10429,7 +10429,7 @@
 					1,
 					"insert",
 					{
-						"characters": "val"
+						"characters": "val",
 					},
 					"BAAAAB0LAAAAAAAAHgsAAAAAAAAAAAAAHgsAAAAAAAAeCwAAAAAAAAMAAAB0bXAeCwAAAAAAAB8LAAAAAAAAAAAAAB8LAAAAAAAAIAsAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAHQsAAAAAAAAgCwAAAAAAAAAAAAAAAPC/"
@@ -10455,7 +10455,7 @@
 					1,
 					"toggle_comment",
 					{
-						"block": false
+						"block": false,
 					},
 					"AQAAAPAKAAAAAAAA8woAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAEAsAAAAAAAAQCwAAAAAAAAAAAAAAAPC/"
@@ -10465,7 +10465,7 @@
 					1,
 					"toggle_comment",
 					{
-						"block": false
+						"block": false,
 					},
 					"AQAAALsUAAAAAAAAvhQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAzRQAAAAAAADNFAAAAAAAAAAAAAAAAPC/"
@@ -10475,7 +10475,7 @@
 					1,
 					"toggle_comment",
 					{
-						"block": false
+						"block": false,
 					},
 					"AQAAAFEDAAAAAAAAVAMAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAVgMAAAAAAABWAwAAAAAAAAAAAAAAAPC/"
@@ -10485,7 +10485,7 @@
 					1,
 					"insert",
 					{
-						"characters": "print"
+						"characters": "print",
 					},
 					"BQAAAAQjAAAAAAAABSMAAAAAAAAAAAAABSMAAAAAAAAGIwAAAAAAAAAAAAAGIwAAAAAAAAcjAAAAAAAAAAAAAAcjAAAAAAAACCMAAAAAAAAAAAAACCMAAAAAAAAJIwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAABCMAAAAAAAAEIwAAAAAAAAAAAAAAAPC/"
@@ -10495,7 +10495,7 @@
 					1,
 					"insert",
 					{
-						"characters": "f("
+						"characters": "f(",
 					},
 					"AgAAAAkjAAAAAAAACiMAAAAAAAAAAAAACiMAAAAAAAALIwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAACSMAAAAAAAAJIwAAAAAAAAAAAAAAAPC/"
@@ -10505,7 +10505,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\"ss\""
+						"characters": "\"ss\"",
 					},
 					"BAAAAAsjAAAAAAAADCMAAAAAAAAAAAAADCMAAAAAAAANIwAAAAAAAAAAAAANIwAAAAAAAA4jAAAAAAAAAAAAAA4jAAAAAAAADyMAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAACyMAAAAAAAALIwAAAAAAAAAAAAAAAPC/"
@@ -10515,7 +10515,7 @@
 					1,
 					"insert",
 					{
-						"characters": ");"
+						"characters": ");",
 					},
 					"AgAAAA8jAAAAAAAAECMAAAAAAAAAAAAAECMAAAAAAAARIwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAADyMAAAAAAAAPIwAAAAAAAAAAAAAAAPC/"
@@ -10525,7 +10525,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"AgAAABEjAAAAAAAAEiMAAAAAAAAAAAAAEiMAAAAAAAATIwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAESMAAAAAAAARIwAAAAAAAAAAAAAAAPC/"
@@ -10551,7 +10551,7 @@
 					1,
 					"insert",
 					{
-						"characters": "("
+						"characters": "(",
 					},
 					"AgAAACgjAAAAAAAAKSMAAAAAAAAAAAAAASMAAAAAAAACIwAAAAAAAAAAAAA",
 					"AQAAAAAAAAACAAAAASMAAAAAAAABIwAAAAAAAAAAAAAAAPC/KCMAAAAAAAAoIwAAAAAAAAAAAAAAAPC/"
@@ -10569,7 +10569,7 @@
 					1,
 					"insert_snippet",
 					{
-						"contents": "($0)"
+						"contents": "($0)",
 					},
 					"AQAAADojAAAAAAAAPCMAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAOiMAAAAAAAA6IwAAAAAAAAAAAAAAAPC/"
@@ -10579,7 +10579,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\\r\\n"
+						"characters": "\\r\\n",
 					},
 					"BAAAADwjAAAAAAAAPSMAAAAAAAAAAAAAPSMAAAAAAAA+IwAAAAAAAAAAAAA+IwAAAAAAAD8jAAAAAAAAAAAAAD8jAAAAAAAAQCMAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAPCMAAAAAAAA8IwAAAAAAAAAAAAAAAPC/"
@@ -10589,7 +10589,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\""
+						"characters": "\"",
 					},
 					"AQAAAEAjAAAAAAAAQSMAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAQCMAAAAAAABAIwAAAAAAAAAAAAAAAPC/"
@@ -10599,7 +10599,7 @@
 					1,
 					"insert",
 					{
-						"characters": ","
+						"characters": ",",
 					},
 					"AQAAAEEjAAAAAAAAQiMAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAQSMAAAAAAABBIwAAAAAAAAAAAAAAAPC/"
@@ -10609,7 +10609,7 @@
 					1,
 					"insert",
 					{
-						"characters": " offset"
+						"characters": " offset",
 					},
 					"BwAAAEIjAAAAAAAAQyMAAAAAAAAAAAAAQyMAAAAAAABEIwAAAAAAAAAAAABEIwAAAAAAAEUjAAAAAAAAAAAAAEUjAAAAAAAARiMAAAAAAAAAAAAARiMAAAAAAABHIwAAAAAAAAAAAABHIwAAAAAAAEgjAAAAAAAAAAAAAEgjAAAAAAAASSMAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAQiMAAAAAAABCIwAAAAAAAAAAAAAAAPC/"
@@ -10619,7 +10619,7 @@
 					1,
 					"insert",
 					{
-						"characters": "%0"
+						"characters": "%0",
 					},
 					"AgAAADsjAAAAAAAAPCMAAAAAAAAAAAAAPCMAAAAAAAA9IwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAOyMAAAAAAAA7IwAAAAAAAAAAAAAAAPC/"
@@ -10629,7 +10629,7 @@
 					1,
 					"insert",
 					{
-						"characters": "4x"
+						"characters": "4x",
 					},
 					"AgAAAD0jAAAAAAAAPiMAAAAAAAAAAAAAPiMAAAAAAAA/IwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAPSMAAAAAAAA9IwAAAAAAAAAAAAAAAPC/"
@@ -10647,7 +10647,7 @@
 					1,
 					"insert",
 					{
-						"characters": "X"
+						"characters": "X",
 					},
 					"AQAAAD4jAAAAAAAAPyMAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAPiMAAAAAAAA+IwAAAAAAAAAAAAAAAPC/"
@@ -10705,7 +10705,7 @@
 					1,
 					"insert",
 					{
-						"characters": "write"
+						"characters": "write",
 					},
 					"BQAAAOsjAAAAAAAA7CMAAAAAAAAAAAAA7CMAAAAAAADtIwAAAAAAAAAAAADtIwAAAAAAAO4jAAAAAAAAAAAAAO4jAAAAAAAA7yMAAAAAAAAAAAAA7yMAAAAAAADwIwAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA6yMAAAAAAADrIwAAAAAAAAAAAAAAAPC/"
@@ -10715,7 +10715,7 @@
 					1,
 					"insert",
 					{
-						"characters": ","
+						"characters": ",",
 					},
 					"AQAAAPUjAAAAAAAA9iMAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA9SMAAAAAAAD1IwAAAAAAAAAAAAAAAPC/"
@@ -10725,7 +10725,7 @@
 					1,
 					"insert",
 					{
-						"characters": " 0x"
+						"characters": " 0x",
 					},
 					"AwAAAPYjAAAAAAAA9yMAAAAAAAAAAAAA9yMAAAAAAAD4IwAAAAAAAAAAAAD4IwAAAAAAAPkjAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA9iMAAAAAAAD2IwAAAAAAAAAAAAAAAPC/"
@@ -10743,7 +10743,7 @@
 					1,
 					"insert",
 					{
-						"characters": "%02"
+						"characters": "%02",
 					},
 					"AwAAAPcjAAAAAAAA+CMAAAAAAAAAAAAA+CMAAAAAAAD5IwAAAAAAAAAAAAD5IwAAAAAAAPojAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA9yMAAAAAAAD3IwAAAAAAAAAAAAAAAPC/"
@@ -10753,7 +10753,7 @@
 					1,
 					"insert",
 					{
-						"characters": "X"
+						"characters": "X",
 					},
 					"AQAAAPojAAAAAAAA+yMAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA+iMAAAAAAAD6IwAAAAAAAAAAAAAAAPC/"
@@ -10763,7 +10763,7 @@
 					1,
 					"insert",
 					{
-						"characters": ","
+						"characters": ",",
 					},
 					"AQAAAAkkAAAAAAAACiQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAACSQAAAAAAAAJJAAAAAAAAAAAAAAAAPC/"
@@ -10773,7 +10773,7 @@
 					1,
 					"insert",
 					{
-						"characters": " val"
+						"characters": " val",
 					},
 					"BAAAAAokAAAAAAAACyQAAAAAAAAAAAAACyQAAAAAAAAMJAAAAAAAAAAAAAAMJAAAAAAAAA0kAAAAAAAAAAAAAA0kAAAAAAAADiQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAACiQAAAAAAAAKJAAAAAAAAAAAAAAAAPC/"
@@ -10783,7 +10783,7 @@
 					1,
 					"insert",
 					{
-						"characters": "ad"
+						"characters": "ad",
 					},
 					"AgAAAPEiAAAAAAAA8iIAAAAAAAAAAAAA8iIAAAAAAADzIgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA8SIAAAAAAADxIgAAAAAAAAAAAAAAAPC/"
@@ -10809,7 +10809,7 @@
 					1,
 					"toggle_comment",
 					{
-						"block": false
+						"block": false,
 					},
 					"AQAAAAQjAAAAAAAAByMAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAFCMAAAAAAAAUIwAAAAAAAAAAAAAAAPC/"
@@ -10819,7 +10819,7 @@
 					1,
 					"toggle_comment",
 					{
-						"block": false
+						"block": false,
 					},
 					"AQAAAM0jAAAAAAAA0CMAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA3CMAAAAAAADcIwAAAAAAAAAAAAAAAPC/"
@@ -10829,7 +10829,7 @@
 					1,
 					"toggle_comment",
 					{
-						"block": false
+						"block": false,
 					},
 					"AQAAAJ4lAAAAAAAAoSUAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAoiUAAAAAAACiJQAAAAAAAAAAAAAAAPC/"
@@ -10839,7 +10839,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n\n"
+						"characters": "\n\n",
 					},
 					"AgAAALEKAAAAAAAAsgoAAAAAAAAAAAAAsgoAAAAAAACzCgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAsQoAAAAAAACxCgAAAAAAAAAAAAAAAPC/"
@@ -10857,7 +10857,7 @@
 					1,
 					"insert",
 					{
-						"characters": "v"
+						"characters": "v",
 					},
 					"AQAAALMKAAAAAAAAtAoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAswoAAAAAAACzCgAAAAAAAAAAAAAAAPC/"
@@ -10899,7 +10899,7 @@
 					1,
 					"insert",
 					{
-						"characters": "v"
+						"characters": "v",
 					},
 					"AgAAAKgPAAAAAAAAqQ8AAAAAAAAAAAAAqQ8AAAAAAACpDwAAAAAAABMAAABCcmVha1RyYWNlU3ViU3lzdGVt",
 					"AQAAAAAAAAABAAAAqA8AAAAAAAC7DwAAAAAAAAAAAAAAAPC/"
@@ -10933,7 +10933,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n//"
+						"characters": "\n//",
 					},
 					"AwAAAKgQAAAAAAAAqRAAAAAAAAAAAAAAqRAAAAAAAACqEAAAAAAAAAAAAACqEAAAAAAAAKsQAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAqBAAAAAAAACoEAAAAAAAAAAAAAAAAPC/"
@@ -10943,7 +10943,7 @@
 					1,
 					"insert",
 					{
-						"characters": " Hooks"
+						"characters": " Hooks",
 					},
 					"BgAAAKsQAAAAAAAArBAAAAAAAAAAAAAArBAAAAAAAACtEAAAAAAAAAAAAACtEAAAAAAAAK4QAAAAAAAAAAAAAK4QAAAAAAAArxAAAAAAAAAAAAAArxAAAAAAAACwEAAAAAAAAAAAAACwEAAAAAAAALEQAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAqxAAAAAAAACrEAAAAAAAAAAAAAAAAPC/"
@@ -10953,7 +10953,7 @@
 					1,
 					"insert",
 					{
-						"characters": " for"
+						"characters": " for",
 					},
 					"BAAAALEQAAAAAAAAshAAAAAAAAAAAAAAshAAAAAAAACzEAAAAAAAAAAAAACzEAAAAAAAALQQAAAAAAAAAAAAALQQAAAAAAAAtRAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAsRAAAAAAAACxEAAAAAAAAAAAAAAAAPC/"
@@ -10963,7 +10963,7 @@
 					1,
 					"insert",
 					{
-						"characters": " read"
+						"characters": " read",
 					},
 					"BQAAALUQAAAAAAAAthAAAAAAAAAAAAAAthAAAAAAAAC3EAAAAAAAAAAAAAC3EAAAAAAAALgQAAAAAAAAAAAAALgQAAAAAAAAuRAAAAAAAAAAAAAAuRAAAAAAAAC6EAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAtRAAAAAAAAC1EAAAAAAAAAAAAAAAAPC/"
@@ -10973,7 +10973,7 @@
 					1,
 					"insert",
 					{
-						"characters": " read"
+						"characters": " read",
 					},
 					"BQAAALoQAAAAAAAAuxAAAAAAAAAAAAAAuxAAAAAAAAC8EAAAAAAAAAAAAAC8EAAAAAAAAL0QAAAAAAAAAAAAAL0QAAAAAAAAvhAAAAAAAAAAAAAAvhAAAAAAAAC/EAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAuhAAAAAAAAC6EAAAAAAAAAAAAAAAAPC/"
@@ -10983,7 +10983,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAAL8QAAAAAAAAwBAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAvxAAAAAAAAC/EAAAAAAAAAAAAAAAAPC/"
@@ -11001,7 +11001,7 @@
 					1,
 					"insert",
 					{
-						"characters": "/write"
+						"characters": "/write",
 					},
 					"BgAAAL8QAAAAAAAAwBAAAAAAAAAAAAAAwBAAAAAAAADBEAAAAAAAAAAAAADBEAAAAAAAAMIQAAAAAAAAAAAAAMIQAAAAAAAAwxAAAAAAAAAAAAAAwxAAAAAAAADEEAAAAAAAAAAAAADEEAAAAAAAAMUQAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAvxAAAAAAAAC/EAAAAAAAAAAAAAAAAPC/"
@@ -11011,7 +11011,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"AQAAAMUQAAAAAAAAxhAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAxRAAAAAAAADFEAAAAAAAAAAAAAAAAPC/"
@@ -11029,7 +11029,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n//"
+						"characters": "\n//",
 					},
 					"AwAAAC0IAAAAAAAALggAAAAAAAAAAAAALggAAAAAAAAvCAAAAAAAAAAAAAAvCAAAAAAAADAIAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAALQgAAAAAAAAtCAAAAAAAAAAAAAAAAPC/"
@@ -11039,7 +11039,7 @@
 					1,
 					"insert",
 					{
-						"characters": " execut"
+						"characters": " execut",
 					},
 					"BwAAADAIAAAAAAAAMQgAAAAAAAAAAAAAMQgAAAAAAAAyCAAAAAAAAAAAAAAyCAAAAAAAADMIAAAAAAAAAAAAADMIAAAAAAAANAgAAAAAAAAAAAAANAgAAAAAAAA1CAAAAAAAAAAAAAA1CAAAAAAAADYIAAAAAAAAAAAAADYIAAAAAAAANwgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAMAgAAAAAAAAwCAAAAAAAAAAAAAAAAPC/"
@@ -11049,7 +11049,7 @@
 					1,
 					"insert",
 					{
-						"characters": "ion"
+						"characters": "ion",
 					},
 					"AwAAADcIAAAAAAAAOAgAAAAAAAAAAAAAOAgAAAAAAAA5CAAAAAAAAAAAAAA5CAAAAAAAADoIAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAANwgAAAAAAAA3CAAAAAAAAAAAAAAAAPC/"
@@ -11059,7 +11059,7 @@
 					1,
 					"insert",
 					{
-						"characters": " brad"
+						"characters": " brad",
 					},
 					"BQAAADoIAAAAAAAAOwgAAAAAAAAAAAAAOwgAAAAAAAA8CAAAAAAAAAAAAAA8CAAAAAAAAD0IAAAAAAAAAAAAAD0IAAAAAAAAPggAAAAAAAAAAAAAPggAAAAAAAA/CAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAOggAAAAAAAA6CAAAAAAAAAAAAAAAAPC/"
@@ -11077,7 +11077,7 @@
 					1,
 					"insert",
 					{
-						"characters": "eak"
+						"characters": "eak",
 					},
 					"AwAAAD0IAAAAAAAAPggAAAAAAAAAAAAAPggAAAAAAAA/CAAAAAAAAAAAAAA/CAAAAAAAAEAIAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAPQgAAAAAAAA9CAAAAAAAAAAAAAAAAPC/"
@@ -11087,7 +11087,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"AQAAAEAIAAAAAAAAQQgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAQAgAAAAAAABACAAAAAAAAAAAAAAAAPC/"
@@ -11097,7 +11097,7 @@
 					1,
 					"insert",
 					{
-						"characters": "s"
+						"characters": "s",
 					},
 					"AQAAAEAIAAAAAAAAQQgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAQAgAAAAAAABACAAAAAAAAAAAAAAAAPC/"
@@ -11107,7 +11107,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"AQAAAMcKAAAAAAAAyAoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAxwoAAAAAAADHCgAAAAAAAAAAAAAAAPC/"
@@ -11117,7 +11117,7 @@
 					1,
 					"insert",
 					{
-						"characters": "//"
+						"characters": "//",
 					},
 					"AgAAAMgKAAAAAAAAyQoAAAAAAAAAAAAAyQoAAAAAAADKCgAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAyAoAAAAAAADICgAAAAAAAAAAAAAAAPC/"
@@ -11127,7 +11127,7 @@
 					1,
 					"insert",
 					{
-						"characters": " trigge"
+						"characters": " trigge",
 					},
 					"BwAAAMoKAAAAAAAAywoAAAAAAAAAAAAAywoAAAAAAADMCgAAAAAAAAAAAADMCgAAAAAAAM0KAAAAAAAAAAAAAM0KAAAAAAAAzgoAAAAAAAAAAAAAzgoAAAAAAADPCgAAAAAAAAAAAADPCgAAAAAAANAKAAAAAAAAAAAAANAKAAAAAAAA0QoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAygoAAAAAAADKCgAAAAAAAAAAAAAAAPC/"
@@ -11137,7 +11137,7 @@
 					1,
 					"insert",
 					{
-						"characters": "r"
+						"characters": "r",
 					},
 					"AQAAANEKAAAAAAAA0goAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA0QoAAAAAAADRCgAAAAAAAAAAAAAAAPC/"
@@ -11147,7 +11147,7 @@
 					1,
 					"insert",
 					{
-						"characters": " ac"
+						"characters": " ac",
 					},
 					"AwAAANIKAAAAAAAA0woAAAAAAAAAAAAA0woAAAAAAADUCgAAAAAAAAAAAADUCgAAAAAAANUKAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA0goAAAAAAADSCgAAAAAAAAAAAAAAAPC/"
@@ -11165,7 +11165,7 @@
 					1,
 					"insert",
 					{
-						"characters": "/action"
+						"characters": "/action",
 					},
 					"BwAAANIKAAAAAAAA0woAAAAAAAAAAAAA0woAAAAAAADUCgAAAAAAAAAAAADUCgAAAAAAANUKAAAAAAAAAAAAANUKAAAAAAAA1goAAAAAAAAAAAAA1goAAAAAAADXCgAAAAAAAAAAAADXCgAAAAAAANgKAAAAAAAAAAAAANgKAAAAAAAA2QoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA0goAAAAAAADSCgAAAAAAAAAAAAAAAPC/"
@@ -11175,7 +11175,7 @@
 					1,
 					"insert",
 					{
-						"characters": " breaks"
+						"characters": " breaks",
 					},
 					"BwAAANkKAAAAAAAA2goAAAAAAAAAAAAA2goAAAAAAADbCgAAAAAAAAAAAADbCgAAAAAAANwKAAAAAAAAAAAAANwKAAAAAAAA3QoAAAAAAAAAAAAA3QoAAAAAAADeCgAAAAAAAAAAAADeCgAAAAAAAN8KAAAAAAAAAAAAAN8KAAAAAAAA4AoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA2QoAAAAAAADZCgAAAAAAAAAAAAAAAPC/"
@@ -11185,7 +11185,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"AQAAAOAKAAAAAAAA4QoAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA4AoAAAAAAADgCgAAAAAAAAAAAAAAAPC/"
@@ -11195,7 +11195,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"AQAAAMIOAAAAAAAAww4AAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAwg4AAAAAAADCDgAAAAAAAAAAAAAAAPC/"
@@ -11205,7 +11205,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n//"
+						"characters": "\n//",
 					},
 					"AwAAANEPAAAAAAAA0g8AAAAAAAAAAAAA0g8AAAAAAADTDwAAAAAAAAAAAADTDwAAAAAAANQPAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA0Q8AAAAAAADRDwAAAAAAAAAAAAAAAPC/"
@@ -11215,7 +11215,7 @@
 					1,
 					"insert",
 					{
-						"characters": " trace"
+						"characters": " trace",
 					},
 					"BgAAANQPAAAAAAAA1Q8AAAAAAAAAAAAA1Q8AAAAAAADWDwAAAAAAAAAAAADWDwAAAAAAANcPAAAAAAAAAAAAANcPAAAAAAAA2A8AAAAAAAAAAAAA2A8AAAAAAADZDwAAAAAAAAAAAADZDwAAAAAAANoPAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA1A8AAAAAAADUDwAAAAAAAAAAAAAAAPC/"
@@ -11225,7 +11225,7 @@
 					1,
 					"insert",
 					{
-						"characters": " hooks"
+						"characters": " hooks",
 					},
 					"BgAAANoPAAAAAAAA2w8AAAAAAAAAAAAA2w8AAAAAAADcDwAAAAAAAAAAAADcDwAAAAAAAN0PAAAAAAAAAAAAAN0PAAAAAAAA3g8AAAAAAAAAAAAA3g8AAAAAAADfDwAAAAAAAAAAAADfDwAAAAAAAOAPAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAA2g8AAAAAAADaDwAAAAAAAAAAAAAAAPC/"
@@ -11259,7 +11259,7 @@
 					1,
 					"insert",
 					{
-						"characters": "Brk"
+						"characters": "Brk",
 					},
 					"BAAAAE4AAAAAAAAATwAAAAAAAAAAAAAATwAAAAAAAABPAAAAAAAAAAkAAABtYzY4MDlkYmdPAAAAAAAAAFAAAAAAAAAAAAAAAFAAAAAAAAAAUQAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAATgAAAAAAAABXAAAAAAAAAAAAAAAAAPC/"
@@ -11277,7 +11277,7 @@
 					1,
 					"insert",
 					{
-						"characters": "Break"
+						"characters": "Break",
 					},
 					"BQAAAE4AAAAAAAAATwAAAAAAAAAAAAAATwAAAAAAAABQAAAAAAAAAAAAAABQAAAAAAAAAFEAAAAAAAAAAAAAAFEAAAAAAAAAUgAAAAAAAAAAAAAAUgAAAAAAAABTAAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAATgAAAAAAAABOAAAAAAAAAAAAAAAAAPC/"
@@ -11287,7 +11287,7 @@
 					1,
 					"insert",
 					{
-						"characters": "Trace"
+						"characters": "Trace",
 					},
 					"BQAAAFMAAAAAAAAAVAAAAAAAAAAAAAAAVAAAAAAAAABVAAAAAAAAAAAAAABVAAAAAAAAAFYAAAAAAAAAAAAAAFYAAAAAAAAAVwAAAAAAAAAAAAAAVwAAAAAAAABYAAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAUwAAAAAAAABTAAAAAAAAAAAAAAAAAPC/"
@@ -11313,7 +11313,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"AQAAAAoBAAAAAAAACwEAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAACgEAAAAAAAAKAQAAAAAAAAAAAAAAAAAA"
@@ -11323,7 +11323,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"AQAAAJwAAAAAAAAAnQAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAnAAAAAAAAACcAAAAAAAAAAAAAAAAAAAA"
@@ -11395,7 +11395,7 @@
 					1,
 					"insert",
 					{
-						"characters": "d"
+						"characters": "d",
 					},
 					"AQAAAGcBAAAAAAAAaAEAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABnAQAAAAAAAGcBAAAAAAAAAAAAAAAA8L8"
@@ -11405,7 +11405,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAABsBAAAAAAAAHAEAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAGwEAAAAAAAAbAQAAAAAAAAAAAAAAAPC/"
@@ -11415,7 +11415,7 @@
 					1,
 					"insert",
 					{
-						"characters": "trigger"
+						"characters": "trigger",
 					},
 					"BwAAABwBAAAAAAAAHQEAAAAAAAAAAAAAHQEAAAAAAAAeAQAAAAAAAAAAAAAeAQAAAAAAAB8BAAAAAAAAAAAAAB8BAAAAAAAAIAEAAAAAAAAAAAAAIAEAAAAAAAAhAQAAAAAAAAAAAAAhAQAAAAAAACIBAAAAAAAAAAAAACIBAAAAAAAAIwEAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAHAEAAAAAAAAcAQAAAAAAAAAAAAAAAPC/"
@@ -11425,7 +11425,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAACMBAAAAAAAAJAEAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAIwEAAAAAAAAjAQAAAAAAAAAAAAAAAPC/"
@@ -11443,7 +11443,7 @@
 					1,
 					"insert",
 					{
-						"characters": ".cpp"
+						"characters": ".cpp",
 					},
 					"BAAAACMBAAAAAAAAJAEAAAAAAAAAAAAAJAEAAAAAAAAlAQAAAAAAAAAAAAAlAQAAAAAAACYBAAAAAAAAAAAAACYBAAAAAAAAJwEAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAIwEAAAAAAAAjAQAAAAAAAAAAAAAAAPC/"
@@ -11461,7 +11461,7 @@
 					1,
 					"insert",
 					{
-						"characters": "T"
+						"characters": "T",
 					},
 					"AQAAABwBAAAAAAAAHQEAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAHAEAAAAAAAAcAQAAAAAAAAAAAAAAAPC/"
@@ -11471,7 +11471,7 @@
 					1,
 					"insert",
 					{
-						"characters": " Actio"
+						"characters": " Actio",
 					},
 					"BgAAACcBAAAAAAAAKAEAAAAAAAAAAAAAKAEAAAAAAAApAQAAAAAAAAAAAAApAQAAAAAAACoBAAAAAAAAAAAAACoBAAAAAAAAKwEAAAAAAAAAAAAAKwEAAAAAAAAsAQAAAAAAAAAAAAAsAQAAAAAAAC0BAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAJwEAAAAAAAAnAQAAAAAAAAAAAAAAAPC/"
@@ -11481,7 +11481,7 @@
 					1,
 					"insert",
 					{
-						"characters": "n."
+						"characters": "n.",
 					},
 					"AgAAAC0BAAAAAAAALgEAAAAAAAAAAAAALgEAAAAAAAAvAQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAALQEAAAAAAAAtAQAAAAAAAAAAAAAAAPC/"
@@ -11491,7 +11491,7 @@
 					1,
 					"insert",
 					{
-						"characters": "cpp"
+						"characters": "cpp",
 					},
 					"AwAAAC8BAAAAAAAAMAEAAAAAAAAAAAAAMAEAAAAAAAAxAQAAAAAAAAAAAAAxAQAAAAAAADIBAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAALwEAAAAAAAAvAQAAAAAAAAAAAAAAAPC/"
@@ -11501,7 +11501,7 @@
 					1,
 					"insert",
 					{
-						"characters": "B"
+						"characters": "B",
 					},
 					"AQAAABwBAAAAAAAAHQEAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAHAEAAAAAAAAcAQAAAAAAAAAAAAAAAPC/"
@@ -11519,7 +11519,7 @@
 					1,
 					"insert",
 					{
-						"characters": "Break"
+						"characters": "Break",
 					},
 					"BQAAABwBAAAAAAAAHQEAAAAAAAAAAAAAHQEAAAAAAAAeAQAAAAAAAAAAAAAeAQAAAAAAAB8BAAAAAAAAAAAAAB8BAAAAAAAAIAEAAAAAAAAAAAAAIAEAAAAAAAAhAQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAHAEAAAAAAAAcAQAAAAAAAAAAAAAAAPC/"
@@ -11529,7 +11529,7 @@
 					1,
 					"insert",
 					{
-						"characters": "Trace"
+						"characters": "Trace",
 					},
 					"BQAAACEBAAAAAAAAIgEAAAAAAAAAAAAAIgEAAAAAAAAjAQAAAAAAAAAAAAAjAQAAAAAAACQBAAAAAAAAAAAAACQBAAAAAAAAJQEAAAAAAAAAAAAAJQEAAAAAAAAmAQAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAIQEAAAAAAAAhAQAAAAAAAAAAAAAAAPC/"
@@ -11539,7 +11539,7 @@
 					1,
 					"insert",
 					{
-						"characters": ".cpp"
+						"characters": ".cpp",
 					},
 					"BAAAACYBAAAAAAAAJwEAAAAAAAAAAAAAJwEAAAAAAAAoAQAAAAAAAAAAAAAoAQAAAAAAACkBAAAAAAAAAAAAACkBAAAAAAAAKgEAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAJgEAAAAAAAAmAQAAAAAAAAAAAAAAAPC/"
@@ -11549,7 +11549,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAACoBAAAAAAAAKwEAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAAKgEAAAAAAAAqAQAAAAAAAAAAAAAAAPC/"
@@ -11648,7 +11648,7 @@
 					1,
 					"insert",
 					{
-						"characters": "Trigers"
+						"characters": "Trigers",
 					},
 					"CAAAAAYAAAAAAAAABwAAAAAAAAAAAAAABwAAAAAAAAAHAAAAAAAAAA8AAABEZWJ1Z0NvbnRyb2xsZXIHAAAAAAAAAAgAAAAAAAAAAAAAAAgAAAAAAAAACQAAAAAAAAAAAAAACQAAAAAAAAAKAAAAAAAAAAAAAAAKAAAAAAAAAAsAAAAAAAAAAAAAAAsAAAAAAAAADAAAAAAAAAAAAAAADAAAAAAAAAANAAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAABgAAAAAAAAAVAAAAAAAAAAAAAAAAAPC/"
@@ -11666,7 +11666,7 @@
 					1,
 					"insert",
 					{
-						"characters": "gersA"
+						"characters": "gersA",
 					},
 					"BQAAAAoAAAAAAAAACwAAAAAAAAAAAAAACwAAAAAAAAAMAAAAAAAAAAAAAAAMAAAAAAAAAA0AAAAAAAAAAAAAAA0AAAAAAAAADgAAAAAAAAAAAAAADgAAAAAAAAAPAAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAACgAAAAAAAAAKAAAAAAAAAAAAAAAAAPC/"
@@ -11676,7 +11676,7 @@
 					1,
 					"insert",
 					{
-						"characters": "ctions"
+						"characters": "ctions",
 					},
 					"BgAAAA8AAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAARAAAAAAAAAAAAAAARAAAAAAAAABIAAAAAAAAAAAAAABIAAAAAAAAAEwAAAAAAAAAAAAAAEwAAAAAAAAAUAAAAAAAAAAAAAAAUAAAAAAAAABUAAAAAAAAAAAAAAA",
 					"AQAAAAAAAAABAAAADwAAAAAAAAAPAAAAAAAAAAAAAAAAAPC/"
@@ -12425,7 +12425,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\t"
+						"characters": "\t",
 					},
 					"AQAAABABAAAAAAAAEQEAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAQAQAAAAAAABABAAAAAAAAAAAAAAAA8L8"
@@ -12435,7 +12435,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\t\t"
+						"characters": "\t\t",
 					},
 					"AgAAANEAAAAAAAAA0gAAAAAAAAAAAAAA0gAAAAAAAADTAAAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAADRAAAAAAAAANEAAAAAAAAAAAAAAAAA8L8"
@@ -12461,7 +12461,7 @@
 					1,
 					"insert",
 					{
-						"characters": "  "
+						"characters": "  ",
 					},
 					"AgAAANIAAAAAAAAA0wAAAAAAAAAAAAAA0wAAAAAAAADUAAAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAADSAAAAAAAAANIAAAAAAAAAAAAAAAAA8L8"
@@ -12471,7 +12471,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\t"
+						"characters": "\t",
 					},
 					"AQAAABIAAAAAAAAAEwAAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAASAAAAAAAAABIAAAAAAAAAAAAAAAAA8L8"
@@ -12481,7 +12481,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\t"
+						"characters": "\t",
 					},
 					"AQAAAEUAAAAAAAAARgAAAAAAAAAAAAAA",
 					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAABFAAAAAAAAAEUAAAAAAAAAAAAAAAAA8L8"
@@ -13350,7 +13350,7 @@
 			{
 				"buffer_size": 12102,
 				"encoding": "UTF-8",
-				"line_ending": "Unix"
+				"line_ending": "Unix",
 			},
 			"undo_stack":
 			[
@@ -13423,7 +13423,7 @@
 					1,
 					"insert",
 					{
-						"characters": "___"
+						"characters": "___",
 					},
 					"AwAAAPUAAAAAAAAA9gAAAAAAAAAAAAAA9gAAAAAAAAD3AAAAAAAAAAAAAAD3AAAAAAAAAPgAAAAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAPUAAAAAAAAA9QAAAAAAAAAAAAAAAADwvw"
@@ -13433,7 +13433,7 @@
 					1,
 					"insert",
 					{
-						"characters": " //"
+						"characters": " //",
 					},
 					"AwAAANobAAAAAAAA2xsAAAAAAAAAAAAA2xsAAAAAAADcGwAAAAAAAAAAAADcGwAAAAAAAN0bAAAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAANobAAAAAAAA2hsAAAAAAAAAAAAAAADwvw"
@@ -13443,7 +13443,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAAN0bAAAAAAAA3hsAAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAN0bAAAAAAAA3RsAAAAAAAAAAAAAAADwvw"
@@ -13469,7 +13469,7 @@
 					1,
 					"insert",
 					{
-						"characters": "//"
+						"characters": "//",
 					},
 					"AgAAANklAAAAAAAA2iUAAAAAAAAAAAAA2iUAAAAAAADbJQAAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAANklAAAAAAAA2SUAAAAAAAAAAAAAAADwvw"
@@ -13479,7 +13479,7 @@
 					1,
 					"insert",
 					{
-						"characters": "//"
+						"characters": "//",
 					},
 					"AgAAAN0nAAAAAAAA3icAAAAAAAAAAAAA3icAAAAAAADfJwAAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAN0nAAAAAAAA3ScAAAAAAAAAAAAAAADwvw"
@@ -13513,7 +13513,7 @@
 					1,
 					"insert",
 					{
-						"characters": "debug"
+						"characters": "debug",
 					},
 					"BgAAAJYnAAAAAAAAlycAAAAAAAAAAAAAlycAAAAAAACXJwAAAAAAABYAAAAvL2VudGVyRGJnTW9kZSA9IHRydWU7lycAAAAAAACYJwAAAAAAAAAAAACYJwAAAAAAAJknAAAAAAAAAAAAAJknAAAAAAAAmicAAAAAAAAAAAAAmicAAAAAAACbJwAAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAJYnAAAAAAAArCcAAAAAAAAAAAAAAADwvw"
@@ -13527,7 +13527,7 @@
 						"format": "text",
 						"keep_prefix": false,
 						"must_insert": false,
-						"trigger": "DebugMode"
+						"trigger": "DebugMode",
 					},
 					"AgAAAJYnAAAAAAAAlicAAAAAAAAFAAAAZGVidWeWJwAAAAAAAJ8nAAAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAJsnAAAAAAAAmycAAAAAAAAAAAAAAADwvw"
@@ -13537,7 +13537,7 @@
 					1,
 					"insert",
 					{
-						"characters": " ="
+						"characters": " =",
 					},
 					"AgAAAJ8nAAAAAAAAoCcAAAAAAAAAAAAAoCcAAAAAAAChJwAAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAJ8nAAAAAAAAnycAAAAAAAAAAAAAAADwvw"
@@ -13547,7 +13547,7 @@
 					1,
 					"insert",
 					{
-						"characters": " "
+						"characters": " ",
 					},
 					"AQAAAKEnAAAAAAAAoicAAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAKEnAAAAAAAAoScAAAAAAAAAAAAAAADwvw"
@@ -13557,7 +13557,7 @@
 					1,
 					"insert",
 					{
-						"characters": "_debug"
+						"characters": "_debug",
 					},
 					"BgAAAKInAAAAAAAAoycAAAAAAAAAAAAAoycAAAAAAACkJwAAAAAAAAAAAACkJwAAAAAAAKUnAAAAAAAAAAAAAKUnAAAAAAAApicAAAAAAAAAAAAApicAAAAAAACnJwAAAAAAAAAAAACnJwAAAAAAAKgnAAAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAKInAAAAAAAAoicAAAAAAAAAAAAAAADwvw"
@@ -13567,7 +13567,7 @@
 					1,
 					"insert",
 					{
-						"characters": ";"
+						"characters": ";",
 					},
 					"AQAAAKgnAAAAAAAAqScAAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAKgnAAAAAAAAqCcAAAAAAAAAAAAAAADwvw"
@@ -13585,7 +13585,7 @@
 					1,
 					"insert",
 					{
-						"characters": "::"
+						"characters": "::",
 					},
 					"AgAAAJ8nAAAAAAAAoCcAAAAAAAAAAAAAoCcAAAAAAAChJwAAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAJ8nAAAAAAAAnycAAAAAAAAAAAAAAADwvw"
@@ -13603,7 +13603,7 @@
 					1,
 					"insert",
 					{
-						"characters": "::"
+						"characters": "::",
 					},
 					"AgAAALYnAAAAAAAAtycAAAAAAAAAAAAAtycAAAAAAAC4JwAAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAALYnAAAAAAAAticAAAAAAAAAAAAAAADwvw"
@@ -13613,7 +13613,7 @@
 					1,
 					"insert",
 					{
-						"characters": "\n"
+						"characters": "\n",
 					},
 					"AgAAAGIeAAAAAAAAYx4AAAAAAAAAAAAAYx4AAAAAAABkHgAAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAGIeAAAAAAAAYh4AAAAAAAAAAAAAAADwvw"
@@ -13639,7 +13639,7 @@
 					1,
 					"insert",
 					{
-						"characters": "."
+						"characters": ".",
 					},
 					"AQAAAGceAAAAAAAAaB4AAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAGceAAAAAAAAZx4AAAAAAAAAAAAAAADwvw"
@@ -13657,7 +13657,7 @@
 					1,
 					"insert",
 					{
-						"characters": "_go"
+						"characters": "_go",
 					},
 					"BAAAAH8eAAAAAAAAgB4AAAAAAAAAAAAAgB4AAAAAAACAHgAAAAAAAAYAAABfZGVidWeAHgAAAAAAAIEeAAAAAAAAAAAAAIEeAAAAAAAAgh4AAAAAAAAAAAAA",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAH8eAAAAAAAAhR4AAAAAAAAAAAAAAADwvw"
@@ -13678,7 +13678,7 @@
 					"AgAAALsnAAAAAAAAuycAAAAAAAABAAAAOrsnAAAAAAAAuycAAAAAAAABAAAAOg",
 					"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAALsnAAAAAAAAuycAAAAAAAAAAAAAAADwvw"
 				]
-			]
+			],
 		},
 	],
 	"build_system": "Packages/Makefile/Make.sublime-build",
@@ -14630,15 +14630,15 @@
 						{
 							"syntax": "Packages/C++/C++.sublime-syntax",
 							"tab_size": 4,
-							"translate_tabs_to_spaces": false
+							"translate_tabs_to_spaces": false,
 						},
 						"translation.x": 0.0,
 						"translation.y": 3474.0,
-						"zoom_level": 1.0
+						"zoom_level": 1.0,
 					},
 					"stack_index": 12,
 					"stack_multiselect": false,
-					"type": "text"
+					"type": "text",
 				},
 			],
 		}
@@ -14733,4 +14733,10 @@
 	"template_settings":
 	{
 	},
+	"folders":
+	[
+		{
+			"path": ".",
+		}
+	],
 }

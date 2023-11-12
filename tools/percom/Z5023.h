@@ -68,6 +68,7 @@ public:
 
 	const char *filename;
 
+	void	Info(int drive);
 	void	Mount(const char* filename);
 	void UnMount(void);
 	int	TrackSector2Block(int track, int sector);
@@ -111,6 +112,9 @@ public:
 // Other exposed interfaces
 public:
 //	OutputPinReg		IRQ;
+	void Info();
+	void Mount(int drive, const char* filename);
+	void UnMount(int drive);
 
 // Public constructor and destructor
 
@@ -125,12 +129,13 @@ protected:
 	bool	SectorBit;
 	bool	IndexBit;
 	int	Sector;
-	int 	Track;
+	int 	Track[DRIVES_PER_SYSTEM];
 	int	ReadIndex;
 	bool	freeze_sector;
 	int 	sector_sample_count;
 	Byte WriteGate;
 	int  WriteGateCount;
+	int current_phy_drive = 0;
 
 };
 
