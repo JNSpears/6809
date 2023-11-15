@@ -4,7 +4,7 @@ EPROMS=../psymon/psymon.ihex ../psymon/psymon-ext.ihex boot-rom/BootRom.ihex
 TGTDSK=system.dsk
 BLKDSK=blank.dsk
 
-UTILS=create DskEdt exec list memtst OutVectr 
+UTILS=create DskEdt exec list memtst OutVectr copy
 UTIL_SRCS=$(foreach file,$(UTILS),utils/$(file).asm)
 UTIL_OBJS=$(UTIL_SRCS:.asm=.cm)
 # $(info UTIL_SRCS $(UTIL_SRCS))
@@ -19,7 +19,7 @@ XUTIL_FILES=$(foreach file,$(XUTIL_SRCS),utils/$(file))
 # 	$(RM) list.s
 
 
-MYUTILS=do echo HelloWorld HexDump listdcb mycopy name \
+MYUTILS=do echo HelloWorld HexDump listdcb name \
 	set RamDiskL loadhi MemEdit
 MYUTIL_SRCS=$(foreach file,$(MYUTILS),my-utils/$(file).asm)
 MYUTIL_OBJS=$(MYUTIL_SRCS:.asm=.cm)

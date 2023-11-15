@@ -1,6 +1,6 @@
 include ../Makefile.inc
 
-SRCS=do.asm echo.asm HelloWorld.asm HexDump.asm listdcb.asm mycopy.asm name.asm \
+SRCS=do.asm echo.asm HelloWorld.asm HexDump.asm listdcb.asm name.asm \
 	set.asm RamDiskL.asm nCmdLine.asm loadhi.asm
 OBJS=$(SRCS:asm=cm)
 TGTDSK=../system.dsk

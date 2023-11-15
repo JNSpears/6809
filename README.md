@@ -62,15 +62,15 @@ Some time in the 20-teens I pulled it all out and with the help of a new memory 
 | Status | Utility | Note                                                                                                   |
 |--------|---------|--------------------------------------------------------------------------------------------------------|
 | Done   | Create  | Create an ASCII text file an MPX-9 utility.                                                            |
+| Done   | Copy    | This Mpx/9(tm) utility may be used to copy files from one disk to another disk.                       ( does not implement disk to multiple disk copy.                                                            |
 | Done   | Exec    | File executor an MPX-9 utility program. (brain dead Batch or sh)                                       |
 | Done   | List    | List the contents of a file an MPX-9 utility.                                                          |
 | Done   | Outvectr| Alternate output vector an MPX-9 utility program.                                                      |
 | Done   | Dskedt  | Disk Sector Editor an MPX-9 utility program.                                                           |
-|        | Copy    | This Mpx/9(tm) utility may be used to copy files from one disk to another disk.                        |
 |        | Remap   | This utility will remap a 6800 minidos/mpx diskette for compatibility with an mpx/9 operating system.  |
 |        | Certify | Certify the usability of a diskette an MPX-9 utility program.                                          |
-|        | Hexload | Load a hexadecimal s1-s9) formatted file an MPX-9 utility program.                                     |
-|        | Lpseria | Driver for serial line printer an MPX-9 device driver.                                                 |
+|        | Hexload | Load a hexadecimal (s1-s9) formatted file an MPX-9 utility program.                                     |
+|        | Lpserial | Driver for serial line printer an MPX-9 device driver.                                                 |
 | Done   | Memtest | A 6809 memory test an MPX-9 utility program.                                                           |
 |        | Verify  | Verify the readability of a diskette an MPX-9 utility.                                                 | 
 |        | Pdir    | Print disk directory an MPX-9 utility program.                                                         |
@@ -88,7 +88,6 @@ Some time in the 20-teens I pulled it all out and with the help of a new memory 
 | Done   | MemEdit    | Very basic memory editor.                                  |
 | Done   | echo       | Simple echo utility.                                       |
 | Done   | listdcb    | List DCB's.                                                |
-| Done   | mycopy     | A start at re-implementing copy.                           |
 | Done   | RamDiskL   | Not working ramdisk.                                       |
 
 ## MPX9+

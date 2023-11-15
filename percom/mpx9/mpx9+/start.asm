@@ -343,8 +343,6 @@ SYSOFF:
 
  	section	.data
 
-SYSVEC EQU 64 SYSTEM CALL VECTOR
-
 	endsection	; section .data
 
 **************************************************
