@@ -194,9 +194,9 @@ Byte Z5023::read(Word offset)
 
 		if (debug >= 1)
 		{
-			fprintf(stderr, "Z5023::read(4) read sector current_drive: %d\r\n", current_drive);
-			// fprintf(stderr, "Z5023::read(4) read sector current_phy_drive: %d\r\n", current_phy_drive);
-			fprintf(stderr, "Z5023::read(4) read sector FILENAME: %s\r\n", mountedDisks[current_phy_drive].filename);			
+			fprintf(stderr, "Z5023::read(4) START READ SECTOR current_drive: %d\r\n", current_drive);
+			// fprintf(stderr, "Z5023::read(4) START READ SECTOR current_phy_drive: %d\r\n", current_phy_drive);
+			fprintf(stderr, "Z5023::read(4) START READ SECTOR FILENAME: %s\r\n", mountedDisks[current_phy_drive].filename);			
 		}
 
 		mountedDisks[current_phy_drive].ReadSector(Track[current_phy_drive], Sector, (Byte*)&currSectorImage);
@@ -288,7 +288,7 @@ void Z5023::write(Word offset, Byte val)
 		freeze_sector = true;
 
 		if (debug >= 2)
-			fprintf(stderr, "Z5023::write(@=%02x,v=%02x) Start WriteSector\n",
+			fprintf(stderr, "Z5023::write(@=%02x,v=%02x) START WRITE SECTOR\r\n",
 				offset, val);
 
 		break;
@@ -450,8 +450,8 @@ void	MPX9_DskImg::ReadSector(int track, int sector, Byte* pData)
 	// 	hexdump((char*)pSector, sizeof(MPX9_SECTOR), 0, "MPX9_SECTOR - Read");
 
 	// if dirty and read sector 1 then write image back to disk
-	if (dirty)
-		UnMount();
+	// if (dirty)
+	// 	UnMount();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
