@@ -133,15 +133,6 @@ LoadFile:
 	leax 	>MoreMsg,pcr
 	MPX9  PSTRNG
 
-* SYSTEM CALL 9 (>ChkSum,pcr) - GET INPUT LINE        *
-*                                                *
-* ENTRY REQUIREMENTS:  X POINTS AT LINE BUFFER   *
-*                      B CONTAINS BUFFER LENGTH  *
-*                                                *
-* EXIT CONDITIONS:  A CONTAINS FIRST CHARACTER,  *
-*                     NUL => LINE CANCELED       *
-*                     Z FLAG IN CC SET PER A     *
-*                   OTHERS UNCHANGED             *
 	ldb 	#80
 	leax 	>buffer,pcr
 	MPX9 	GETLIN
@@ -149,7 +140,6 @@ LoadFile:
 
 	cmpa 	#CR
 	bne 	load_more
-
 
 ;
 ; exiting
