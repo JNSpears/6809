@@ -326,6 +326,7 @@ FCB1: 	FCS "       Nxt+B D-ext DataP xx xx  xx xx xx xx xx xx xx St"
 msg   	fcs	"\r\nChkSum: "
 
 MoreMsg   	fcs	"\r\nMore? (or CR) enter: filename [offset]\r\n? "
+
 *
 ** Working Variables
 *
