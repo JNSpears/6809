@@ -4,7 +4,7 @@ EPROMS=../psymon/psymon.ihex ../psymon/psymon-ext.ihex boot-rom/BootRom.ihex
 TGTDSK=system.dsk
 BLKDSK=blank.dsk
 
-UTILS=create DskEdt exec list memtst OutVectr copy
+UTILS=create DskEdt exec list memtst OutVectr copy hexload
 UTIL_SRCS=$(foreach file,$(UTILS),utils/$(file).asm)
 UTIL_OBJS=$(UTIL_SRCS:.asm=.cm)
 # $(info UTIL_SRCS $(UTIL_SRCS))
@@ -26,8 +26,7 @@ MYUTIL_OBJS=$(MYUTIL_SRCS:.asm=.cm)
 # $(info MYUTIL_SRCS $(MYUTIL_SRCS))
 # $(info MYUTIL_OBJS $(MYUTIL_OBJS))
 
-XMYUTIL_SRCS=
-XMYUTIL_FILES=$(foreach file,$(XMYUTIL_SRCS),my-utils/$(file))
+XMYUTIL_FILES=$(TOOLS)/usimdbg/tests/test_main.s19
 
 LDFLAGS=-m$*.map -s$*.ld
 
