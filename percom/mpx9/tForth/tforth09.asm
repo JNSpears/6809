@@ -1,5 +1,8 @@
- TTL  (C) 1984 Bjarne B{ckstr|m
- TTL 6809 FORTH : fig model
+ pragma 6809
+ pragma cescapes
+
+ TTL (C) 1984 Bjarne B{ckstr|m
+ NAM 6809 FORTH : fig model
  OPT NOC,MAC,NOE
 
 #pragma cescapes, condundefzero
@@ -2842,5 +2845,11 @@ TASKAA FCB $84
 TASK FDB DOCOL,SEMIS
 REND EQU *
 *
+
+
+
+
+* jns INCLUDE BOOT FILES HERE LOAD ON STARTUP.
+* INCLUDEBIN filename
 
  END PRGBGN
