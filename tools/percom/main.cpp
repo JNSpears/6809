@@ -184,11 +184,16 @@ int main(int argc, char *argv[])
 	fprintf(stderr, "\r\nDone loading/mounting files.\r\n");
 
 	cpu.reset();
+	try {
 #ifdef USIMDBG
-	cpu.debug(term);
+		cpu.debug(term);
 #else 
-	cpu.run();
+		cpu.run();
 #endif
+	}
+	catch (int z) {
+		/* do nothing */
+	}
 
 	return EXIT_SUCCESS;
 }

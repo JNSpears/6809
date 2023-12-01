@@ -150,7 +150,7 @@ VIREND EQU USREND                       ; end of virtual memory buffers -- JNS w
 ;* each block is BUFSIZ+4 bytes in size , holding BUFSIZ characters
 ;*       plus 4 bytes of control info
 USRBGN EQU PRGBGN+$2000 ; beginning of user space                       -- JNS was $2000
-USREND EQU USRBGN+$1800 ; end of user space, above is for disc sim.     -- jns was $3000 -- WAS +$2000
+USREND EQU USRBGN+$3000 ; end of user space, above is for disc sim.     -- jns was $3000 -- WAS +$2000
 DSMBGN EQU $D000        ; begin of space availabel for disc sim.        -- jns was $3000 -- was USREND
 DSMEND EQU DSMBGN+$1000 ; end of memory available for disc sim.         -- jns was $4000
 MEMEND EQU DSMBGN
@@ -413,8 +413,9 @@ CRE FDB SEMIS
 IFCOLD FCB $FF
 *
 ;JNS+
-PCENT: stx XCMDARG
-    bra CENT
+PCENT:
+        stx XCMDARG ; SAVE COMMAND LINE ARGUMNETS FOR LATER.
+        bra CENT
 ;JNS-
 *
  WORDM 4,'COLD'
@@ -431,7 +432,7 @@ COLD2 LDA ,-X
 ; LDS XVIRED     ; put stack somewhere safe              ; JNS change for mpx9 (SHOULD SAVE THIS AND RELOAD IT ???)
 ;; STS XRZERO
  lds    #$7ff0  ; JNS stack base must be below $8000 prob. due to doing singed compars on something.
- LDS    #$4000  ; JNS
+ ; LDS    #$4000  ; JNS
  STS RINIT
 ;JNS-
  LDX XVIRED
@@ -651,10 +652,10 @@ ENCLOS FDB *+2
 ;       wait for a non-delimiter or NUL
 ENCL2 LDA 0,X
  BEQ ENCL6
-;JNS+
- cmpa   #$0d
- beq    ENCL6
-;JNS-
+; ;JNS+
+;  cmpa   #$0d
+;  beq    ENCL6
+; ;JNS-
  CMPA N+1       ; check for delim
  BNE ENCL3
  LEAX 1,X
@@ -667,10 +668,10 @@ ENCL3 LDB N
 ;* wait for a delimiter or NUL
 ENCL4 LDA ,X+
  BEQ ENCL7
-;JNS+
-; cmpa   #0d
-; beq    ENCL7
-;JNS-
+; ;JNS+
+;  cmpa   #$0d
+;  beq    ENCL7
+; ;JNS-
  CMPA N+1       ; check for delim
  BEQ ENCL5
  INC N
@@ -1882,7 +1883,6 @@ VLIST2 FDB DUP,IDDOT,SPACE,SPACE,PFA,LFA,AT,DUP,ZEQU,QTERM
 ** DISK I/O WORDS **
 *
 *******************************************************************************
-
  WORDM 3,'#DR'
 NUMDR FDB DOCON
  FDB 2                  ; the number of disk drives
@@ -1962,7 +1962,7 @@ RWD2 FDB TOR,SECTRK,SLMOD,SWAP,ONEP,SWAP,FROMR
 
 *
  WORDM 6,'DISKRW'
-; DISKRW FDB DOCOL,NOOP,SEMIS ; jns
+; DISKRW FDB DOCOL,NOOP,SEMIS ; jns NOOP so I can patch in a different function.
 
 ; : DISKRW       ( BUF@ R/W SEC TRK DR# ... )
     ; DROP SEC/TRK * 1- SWAP ( BACK TO: BUF@ BLK# R/W )
@@ -2126,6 +2126,7 @@ DISKRW2:
 *******************************************************************************
 *******************************************************************************
 *******************************************************************************
+
  WORDM 6,'(INIT)'
 PINIT:              ; ( FCB@ FILENAME@ ... ERR# )
     FDB *+2
@@ -2165,10 +2166,7 @@ PRPTER:              ; ( ERR# ...  )
  WORDM 5,'RPTER'
 RPTER FDB DOCOL,DDUP,ZBRAN
     FDB RPTER1-*
-    FDB PRPTER
-;    FDB PDOTQ
-;    FCB 3
-;    FCC "***"
+    FDB CR,PRPTER
     FDB CR,QUIT
 RPTER1
     FDB SEMIS
@@ -2350,8 +2348,6 @@ DOBUFFER FDB DOES,SEMIS
  WORDM 4,':FCB'
 CFCB FDB DOCOL,LIT,$20,CBUFFER,SEMIS
 
-
-
  WORDM 6,'SYSFCB' ; screen file fcb
 SYSFCB FDB DODOES,DOBUFFER+2
     ZMB  $20
@@ -2416,14 +2412,19 @@ RD_LINE:
     LDY     ,U++    ; Y --> FCB
     LDX     ,U      ; X --> LINEBUFFER
 
+        ; FCB 2 BREAK TO DEBUGGER.
+
 RD_LINE1:
     SWI3            ; GO TO MPX/9
-    FCB     21      ; READ CHAR
+    FCB     21      ; READ CHAR A:CHARACTER READ, B:ERROR CODE CC: PER B
 
     BNE     RD_LINE2 ; GO IF ERROR
     STA     ,X+
     CMPA    #$0D    ; CR?
+    BEQ     RD_LINE3
+    CMPA    #$0A    ; LF?
     BNE     RD_LINE1
+RD_LINE3
     leax    ,-x     ; back up on char
 
 RD_LINE2
@@ -2436,23 +2437,20 @@ RD_LINE2
     PULS    Y       ; RESTORE IP
     LBRA    NEXT
 
-; Screen # 8
-; 00 ( LOADFILE SUPPORT - LOADFILE                     JNS 03/15/84 )
-; 01                                                                 
-; 02 :FCB  LOAD-FCB      0 VARIABLE BUFF 254 ALLOT                   
-; 03                                                                 
-; 04 : LOADFILE    (   LOADFILE <FILENAME>   )                       
-; 05     LOAD-FCB  BL WORD HERE  (INIT)  RPTER                         
-; 06     1 ( read )  BUFF  LOAD-FCB   OPEN  RPTER                     
-; 07     BLK @ >R  IN @ >R  0 BLK !                                  
-; 08     BEGIN                                                       
-; 09         TIB @ LOAD-FCB RD-LINE                                  
-; 10         TIB @ C@ 4 - ( eof ) WHILE                              
-; 11                                RPTER  0 IN !  INTERPRET  REPEAT 
-; 12     DROP  R> IN !  R> BLK !                                     
-; 13     BLK @ 0= IF 0 TIB @ ! 0 IN ! THEN ;                         
-; 14                                                                 
-; 15     ;S                     
+; ( Screen 6 )                                        
+; $10 CONSTANT ERR_EF
+; : LOADFILE    (   LOADFILE <FILENAME>   )        
+;     FLOADFCB BL WORD HERE (INIT) RPTER                      
+;     1 ( read ) SYSBUFF FLOADFCB OPEN RPTER  
+;     BLK @ >R  IN @ >R  0 BLK !                                 
+;     BEGIN                                                      
+;         TIB @ FLOADFCB RD-LINE   
+;         ERR_EF = 
+;         TIB @ C@ 0=  AND 0= 
+;         WHILE 0 IN ! INTERPRET REPEAT                   
+;     R> IN ! R> BLK !                                    
+;     BLK @ 0= IF 0 TIB @ ! 0 IN ! THEN ;       ;S                
+;  ( MNTSCR 6 LOAD LOADFILE JNS.4T )     
 
  WORDM 8,'FLOADFCB'
 FLOADFCB FDB DODOES,DOBUFFER+2
@@ -2465,17 +2463,19 @@ FLOAD FDB DOCOL
     FDB BLK,AT,TOR,IN,AT,TOR,ZERO,BLK,STORE
 FLOAD1:
     FDB TIB,AT,FLOADFCB,RD_LINE
-    FDB TIB,AT,CAT,LIT,4,SUB,ZBRAN
+    FDB LIT,$10,EQUAL
+    FDB TIB,AT,CAT,ZEQU,AND,ZEQU,ZBRAN
     FDB FLOAD2-*
-    FDB RPTER,ZERO,IN,STORE,INTERP,BRAN ; DROP WAS RPTER ; JNS 
+    FDB ZERO,IN,STORE,INTERP,BRAN 
     FDB FLOAD1-*
 FLOAD2:
-    FDB DROP,FROMR,IN,STORE,FROMR,BLK,STORE
+    FDB FROMR,IN,STORE,FROMR,BLK,STORE
     FDB BLK,AT,ZEQU,ZBRAN
     FDB FLOADX-*
     FDB ZERO,TIB,AT,STORE,ZERO,IN,STORE
 FLOADX:
- FDB SEMIS
+    FDB SEMIS
+ ENDC
 
 ; : MLOAD  IN @ >R  TIB @ >R  0 IN !  TIB !  INTERPRET  R> TIB !  R> IN !  QUIT ; 
  WORDM 5,'MLOAD' ; ( cmd-addr MLOAD;  cmd@ ... )
@@ -2508,13 +2508,14 @@ MLOAD FDB DOCOL
     FDB SEMIS
 
 ; : MLOAD  IN @ >R  TIB @ >R  0 IN !  TIB !  INTERPRET  R> TIB !  R> IN !  QUIT ; 
-; ( SUPPOR FOR M/FLOAD )
-;NEXTNM SET *
-; FCB $C1
-; FCB $8D
-; FDB LASTNM
-;LASTNM SET NEXTNM
-;RETRN FDB DOCOL,SEMIS
+
+; ( SUPPOR FOR M/FLOAD TO HANDEL NEWLINE CHARACTERS. )
+; NEXTNM SET *
+;  FCB $C1
+;  FCB $8A
+;  FDB LASTNM
+; LASTNM SET NEXTNM
+; RETRN FDB DOCOL,SEMIS
 
 ; : VOCS VOC-LINK @ BEGIN DUP WHILE DUP 6 - NFA ID. @ REPEAT DROP ;
  WORDM 4,'VOCS' ; ( VOCS; ... )
@@ -2526,6 +2527,11 @@ VOCS1
     FDB VOCS1-*
 VOCS2
     FDB DROP,SEMIS
+
+
+ WORDM 3,'JNS'
+ FDB DOCON
+ FDB JNS
 
  WORDM 4,'NOOP'
 NOOP FDB NEXT
@@ -2775,9 +2781,11 @@ RESMON JMP [MonEntv]
 ; FDOSIN EQU *-1
 ;*
 
- ORG USRBGN     ; variables
-N RMB 10        ; used as scratch
-UP RMB 2        ; the pointyer to the base of current user's USER table (for multi-tasking)
+ FILL 0,USRBGN-*
+
+ ; ORG USRBGN     ; variables
+N zmb 10        ; used as scratch
+UP zmb 2        ; the pointyer to the base of current user's USER table (for multi-tasking)
 *
 * This system is shown for one user , but additional ones
 * may be added by allocating additional user tables and
@@ -2789,27 +2797,27 @@ UP RMB 2        ; the pointyer to the base of current user's USER table (for mul
 * Some of the next stuff is initialized during COLD and WARM starts.
 * Names correspond to FORTH words of similar (no X) name.
 *
-UORIG RMB 6
+UORIG zmb 6
 ;* INIT ON COLD START
-XFENCE RMB 2    ; fence for FORGET
-XDP RMB 2       ; dictionary pointer
-XVOCL RMB 2     ; vocabulary linking
-XACIA RMB 2     ; address of acia
-XDELAY RMB 2    ; carriagereturn delay couut (# of nulls)
-XCOLUM RMB 2    ; carriage width
-XBKSP RMB 1     ; backspace character
-XBKSPE RMB 1    ; backspace echo
-XLINDL RMB 1    ; linedelete chcracter
-XLINDE RMB 1    ; linedelete echo
+XFENCE zmb 2    ; fence for FORGET
+XDP zmb 2       ; dictionary pointer
+XVOCL zmb 2     ; vocabulary linking
+XACIA zmb 2     ; address of acia
+XDELAY zmb 2    ; carriage return delay couut (# of nulls)
+XCOLUM zmb 2    ; carriage width
+XBKSP zmb 1     ; backspace character
+XBKSPE zmb 1    ; backspace echo
+XLINDL zmb 1    ; linedelete chcracter
+XLINDE zmb 1    ; linedelete echo
 ;* INIT BELOW ON COLD OR WARM START
-XSPZER RMB 2    ; initial top of data stack for this user
-XTIB RMB 2      ; start of terminal input buffer
-XRZERO RMB 2    ; initial top of return stack
-XFINA RMB 2     ; address of input file FCB
-XFOUTA RMB 2    ; address of output file PCB
-XWIDTH RMB 2    ; name field width
-XMSGBS RMB 2    ; Base Screen number for messages and GO
-XWARN RMB 2     ; warning message node ( 0 = no disk )
+XSPZER zmb 2    ; initial top of data stack for this user
+XTIB zmb 2      ; start of terminal input buffer
+XRZERO zmb 2    ; initial top of return stack
+XFINA zmb 2     ; address of input file FCB
+XFOUTA zmb 2    ; address of output file PCB
+XWIDTH zmb 2    ; name field width
+XMSGBS zmb 2    ; Base Screen number for messages and GO
+XWARN zmb 2     ; warning message node ( 0 = no disk )
 ;* END OF INITIALIZED PARAMETERS
 XBLK FDB 0
 XIN FDB 0
@@ -2847,9 +2855,11 @@ REND EQU *
 *
 
 
-
-
+ ZMB $200 ; PADD OUT SO DP & HERE USAGE DOES NOT OVERRITE THE BOOT FILES BELOW.
+          ; at least until it is safe for do so.
+JNS EQU *
 * jns INCLUDE BOOT FILES HERE LOAD ON STARTUP.
-* INCLUDEBIN filename
+ INCLUDEBIN jns.ib
+ fcb 0,0,0,0
 
  END PRGBGN

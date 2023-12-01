@@ -1,9 +1,6 @@
 ( MPX/9 INTERFACE   JNS 8/17/83 )                               
 HEX                                                             
-: :FCB             ( CREATE FILE CONTROL BLOCK; :FCB <NAME> )   
-    <BUILDS 20 HERE OVER ERASE ALLOT                            
-    DOES> ;                                                     
-                                                                
+         
 CODE (INIT)         ( FCB@ FILENAME@ ... ERR# )                 
     SAVEIP,  ,U++ LDX,  INX,  0,U LDY,  012 MPX,  CLRA,         
     0,U STD,  RESTOREIP,  RTS,                                  
@@ -15,7 +12,7 @@ CODE (RPTER)
     ,U++ LDD,  0D MPX,  RTS,                                    
 
 : RPTER       ( PRINT MPX/9 ERROR MESSAGE; N ... )              
-    -DUP  IF  (RPTER)  QUIT  THEN  ;    ;S                      
+    -DUP  IF  (RPTER)  QUIT  THEN  ;                   
 
 ( MPX/9 FILE INTERFACE  OPEN,CLOSE,DELETE )       HEX           
 CODE OPEN    ( 1=R,2=W,3=RW BUFFER@ FCB@ ... ERR# )             
@@ -30,5 +27,10 @@ CODE DELETE  ( FCB ... ERROR# )
                                                                 
 :FCB FILE                                                       
                                                                 
-: SETSCREEN         ( SETSCREEN <FILENAME> )                    
-    FILE  INIT  RPTER  3  8000  FILE  OPEN  RPTER  ;            
+: :BUFFER                  ( CREATE A BUFFER; n :BUFFER <NAME> )
+    <BUILDS HERE OVER ERASE ALLOT
+    DOES> ;
+
+: :FCB                ( CREATE FILE CONTROL BLOCK; :FCB <NAME> )
+    $20 :BUFFER ;
+

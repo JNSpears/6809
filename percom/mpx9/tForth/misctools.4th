@@ -14,13 +14,13 @@
 ( VLIST SHORT VERSION, STOPS AT VOCABULARY HEADER )
 
 CODE BSWAP ( BYTE SWAP TOS; AABB ... BBAA )
-    0,U  LDD,  A. B. EXG,  0,U STD,  NEXT,
+    0,U  LDD,  .A .B EXG,  0,U STD,  NEXT,
 
 CODE 1+!  ( INCR WORD AT ADDR; ADDR ... )
-    ,U++ LDX,  0,X LDD,  1 # ADDD,  0,X STD,  NEXT,
+    ,U++ LDX,  0,X LDD,  1 ## ADDD,  0,X STD,  NEXT,
 
 CODE 1-!  ( DECR WORD AT ADDR; ADDR ... )
-    ,U++ LDX,  0,X LDD,  1 # SUBD,  0,X STD,  NEXT,
+    ,U++ LDX,  0,X LDD,  1 ## SUBD,  0,X STD,  NEXT,
 
 6400 CONSTANT %DELAY
 
@@ -54,11 +54,11 @@ CODE 1-!  ( DECR WORD AT ADDR; ADDR ... )
 
 : CUPSHIFT ( C ... C' )
     DUP ASCII ` > OVER ASCII { < AND
-    IF $20 - THEN  ;
+    IF $20 - THEN ;
 
 : UPSHIFT    ( ADDR COUNT ... )
     OVER + SWAP DO
-        I C@ $60 > IF I C@ 32 - I C! THEN  LOOP  ;
+        I C@ $60 > IF I C@ 32 - I C! THEN  LOOP ;
 
 : C+! ( ADD VALUE TO CHAR; N ADDR ... )
     DUP C@ ROT + SWAP C! ;
@@ -80,14 +80,14 @@ CODE 1-!  ( DECR WORD AT ADDR; ADDR ... )
 ( ' W CFA  ' -FIND 2+ !  SMUDGE )
 
 CODE (-TEXT)    ( ADDR1 ADDR2 COUNT ... T/F )
-    Y. PSHS,  D. X. Y. PULU,  ,-U CLR,  ,-U CLR,
-    27 MPX,  EQ IF,  0,U INC,  THEN,  Y. PULS,  NEXT,
+    .Y PSHS,  .D .X .Y PULU,  ,-U CLR,  ,-U CLR,
+    27 MPX,  EQ IF,  0,U INC,  THEN,  .Y PULS,  NEXT,
 
 ( DEBUGGING TOOLS: BREAK & GO                  FORTH DIM. V5#1 )
   0 VARIABLE CHECK      ( CHECKS IF RSTACK CHANGED SINCE BREAK )
                                ( CONTAINS RP@ AT TIME OF BREAK )
 CODE RP@   ( ... N )  ( LEAVE RETURN STACK ADDRESS ON STACK )
-    S. PSHU,  NEXT,
+    .S PSHU,  NEXT,
 
 : CAN     ( CANCEL )                                            
     ." ***"  CR  ; 
@@ -108,7 +108,7 @@ CODE RP@   ( ... N )  ( LEAVE RETURN STACK ADDRESS ON STACK )
 
 CODE U<    ( UNSIGNED LESS THAN )
     ,U++ LDD,  0,U CMPD,
-    LS IF,  0 # LDD,  ELSE,  1 # LDD,  THEN,
+    LS IF,  0 ## LDD,  ELSE,  1 ## LDD,  THEN,
     0,U STD,  NEXT,
 
 123 123 < . 123 123 U< . 

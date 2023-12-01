@@ -69,7 +69,7 @@ CA FA EA  0  OPCODE  ORB,     00 79 69  0  OPCODE  ROL,
 
 : MPX, 113F , C, ;
 
-: # 1 OPTYPE ! ;
+: ## 1 OPTYPE ! ;
 
 ( 6809 FORTH ASSEMBLER                            JNS 08/28/83 )
 
@@ -112,9 +112,9 @@ CA FA EA  0  OPCODE  ORB,     00 79 69  0  OPCODE  ROL,
     DOES>   @  100 /MOD  SWAP
             PPB @ OR PPB !    TEB @ 10 * OR TEB !  ;
 
-01 A REGID CCR.  02 8 REGID A.   04 9 REGID B.   08 B REGID DP.
-10 1 REGID X.    20 2 REGID Y.   40 4 REGID S.   40 3 REGID U.
-80 5 REGID PC.   06 0 REGID D.                   10 1 REGID W.
+01 A REGID .CC   02 8 REGID .A   04 9 REGID .B   08 B REGID .DP
+10 1 REGID .X    20 2 REGID .Y   40 4 REGID .S   40 3 REGID .U
+80 5 REGID .PC   06 0 REGID .D                   10 1 REGID .W
 
 : RBUILD
     SWAP  C,  @  C,  0 PPB !  0 TEB !  ;
@@ -137,8 +137,8 @@ CA FA EA  0  OPCODE  ORB,     00 79 69  0  OPCODE  ROL,
 
 ( 6809 FORTH ASSEMBLER                            JNS 08/28/83 )
 
-: SAVEIP, Y. PSHS, ;
-: RESTOREIP, Y. PULS, ;
+: SAVEIP, .Y PSHS, ;
+: RESTOREIP, .Y PULS, ;
 
 FORTH  DEFINITIONS  DECIMAL
 

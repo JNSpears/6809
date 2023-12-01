@@ -1,7 +1,7 @@
-( --------------------------------------------------------------- )
+( ---------------------------------------------------------- )
 
 ( SCR # 77 )
-( PROGRAM DOCUMENTATION                         WFR-79APR20 )
+( PROGRAM DOCUMENTATION                           WFR-79APR20 )
 HEX
 
 ( : LIST ( LIST SCREEN BY NUMBER ON STACK *)
@@ -20,14 +20,19 @@ HEX
         DO CR I LIST LOOP CR
         0F MESSAGE CR ; DECIMAL
 
+: BLOCKS  ( DISPLAY BLOCK#'S IN BUFFERS )                       
+    LIMIT FIRST                                                 
+    DO I @ DUP 0< IF $75 EMIT $7FFF AND THEN .            
+        B/BUF 4 + +LOOP CR ;                             
+                                                  
 
 
-( --------------------------------------------------------------- )
+( ---------------------------------------------------------- )
 
-40 CONSTANT C/L                       ( TEXT CHARACTERS PER LINE *)
+$40 CONSTANT C/L                  ( TEXT CHARACTERS PER LINE *)
 
 ( SCR # 87 )
-(  TEXT, LINE                               WFR-79MAYO1 )
+(  TEXT, LINE                              WFR-79MAYO1 )
 FORTH DEFINITIONS HEX
 
 : TEXT                  ( ACCEPT FOLLOWING TEXT TO PAD *)
@@ -38,7 +43,7 @@ FORTH DEFINITIONS HEX
       SCR @       (LINE)       DROP ;
 
 
-( --------------------------------------------------------------- )
+( ---------------------------------------------------------- )
 
 ( SCR # 88 )
 ( LINE EDITOR                               WFR-79MAYO3 )
@@ -111,7 +116,7 @@ EDITOR DEFINITIONS
 : I                      ( INSERT TEXT FROM PAD ONTO LINE # *)
       DUP S R ;
 
- : TOP                  ( HOME CURSOR TO TOP LEFT OF SCREEN *)
+: TOP                   ( HOME CURSOR TO TOP LEFT OF SCREEN *)
       0 R# ! DISP? ;
 
 ( SCR # 92 )
@@ -119,9 +124,9 @@ EDITOR DEFINITIONS
 : CLEAR                          ( CLEAR SCREEN BY NUMBER-1 *)
       SCR ! 10 0 DO FORTH I EDITOR E LOOP ;
 
-: FLUSH                  ( WRITE ALL UPDATED BLOCKS TO DISC *)
-    [ LIMIT FIRST - B/BUF 4 + / ]         ( NUMBER OF BUFFERS)
-    LITERAL 0 DO 7FFF BUFFER DROP LOOP ;
+( : FLUSH                ( WRITE ALL UPDATED BLOCKS TO DISC *)
+(   [ LIMIT FIRST - B/BUF 4 + / ]         ( NUMBER OF BUFFERS)
+(    LITERAL 0 DO 7FFF BUFFER DROP LOOP ;                    )
 
 : COPY                  ( DUPLICATE SCREEN-2, ONTO SCREEN-1 *)
    B/SCR * OFFSET @ + SWAP B/SCR * B/SCR OVER + SWAP
@@ -144,42 +149,42 @@ EDITOR DEFINITIONS
 
 
 ( SCR # 94 )
-( STRING MATCH FOR EDITOR                        PM-WFR-80APR25)
-: -TEXT                    ( ADDRESS-3, COUNT-2, ADDRESS-1 --- )
- SWAP -DUP IF      ( LEAVE BOOLEAN MATCHED=NON-zERO, NOPE=ZERO )
-           OVER + SWAP           ( NEITHER ADDRESS MAY BE ZERO!)
+( STRING MATCH FOR EDITOR                      PM-WFR-80APR25)
+: -TEXT                  ( ADDRESS-3, COUNT-2, ADDRESS-1 --- )
+ SWAP -DUP IF    ( LEAVE BOOLEAN MATCHED=NON-zERO, NOPE=ZERO )
+           OVER + SWAP         ( NEITHER ADDRESS MAY BE ZERO!)
       DO DUP C@ FORTH I C@ -
          IF 0= LEAVE ELSE 1+ THEN LOOP
       ELSE DROP 0= THEN ;
-: MATCH     ( CURSOR ADDRESS-4, BYTES LEFT-3, STRING ADDRESS-2,)
-            ( STRING COUNT-1, --- BOOLEAN-2, CURSOR MOVEMENT-1 )
+: MATCH   ( CURSOR ADDRESS-4, BYTES LEFT-3, STRING ADDRESS-2,)
+          ( STRING COUNT-1, --- BOOLEAN-2, CURSOR MOVEMENT-1 )
   >R >R 2DUP R> R> 2SWAP OVER + SWAP
-  ( CADDR-6,  BLEFT-5, $ADDR-4, SLEN-3, CADDR+BLEFT-2, CADDR-1 )
+ ( CADDR-6, BLEFT-5, $ADDR-4, SLEN-3, CADDR+BLEFT-2, CADDR-1 )
   DO 2DUP FORTH I -TEXT
     IF >R 2DROP R> - I SWAP - 0 SWAP 0 0 LEAVE
     ( CADDR BLEFT SADDR SLEN OR ELSE O OFFSET O O )
-      THEN LOOP 2DROP      ( CADDR-2, BLEFT-1, OR O-2, OFFSET-1)
+      THEN LOOP 2DROP    ( CADDR-2, BLEFT-1, OR O-2, OFFSET-1)
     SWAP 0= SWAP ;
 
 ( SCR # 95 )
-( STRING EDITING COMMANDS                           WFR-79MAR24)
-: 1LINE        ( SCAN LINE WITH CURSOR FOR MATCH TO PAD TEXT, *)
-                              ( UPDATE CURSOR, RETURN BOOLEAN *)
+( STRING EDITING COMMANDS                         WFR-79MAR24)
+: 1LINE      ( SCAN LINE WITH CURSOR FOR MATCH TO PAD TEXT, *)
+                            ( UPDATE CURSOR, RETURN BOOLEAN *)
        #LAG PAD COUNT MATCH R# +! ;
 
-: FIND     ( STRING AT PAD OVER FULL SCREEN RANGE, ELSE ERROR *)
+: FIND   ( STRING AT PAD OVER FULL SCREEN RANGE, ELSE ERROR *)
      BEGIN 3FF R# @ <
         IF TOP PAD HERE C/L 1+ CMOVE 0 ERROR ENDIF
         1LINE UNTIL ;
 
-: DELETE                     ( BACKWARDS AT CURSOR BY COUNT-1 *)
+: DELETE                   ( BACKWARDS AT CURSOR BY COUNT-1 *)
      >R #LAG + FORTH R -        ( SAVE BLANK FILL LOCATION )
      #LAG R MINUS R# +!         ( BACKUP CURSOR )
      #LEAD + SWAP CMOVE
-     R> BLANKS UPDATE ;       ( FILL FROM END OF TEXT )
+     R> BLANKS UPDATE ;         ( FILL FROM END OF TEXT )
 
 ( SCR # 96 )
-( STRING EDITOR COMMANDS                           WFR-79MAR24 )
+( STRING EDITOR COMMANDS                         WFR-79MAR24 )
 : N     ( FIND NEXT OCCURANCE OF PREVIOUS TEXT *)
       FIND DISP? ;
 : F     ( FIND OCCURANCE OF FOLLOWING TEXT *)
@@ -196,8 +201,8 @@ EDITOR DEFINITIONS
        #LEAD + SWAP - DELETE DISP? ;
 
 ( SCR # 97 )
-( STRING EDITOR COMMANDS                            WFR-79MAR23)
-: C         ( SPREAD AT CURSOR AND COPY IN THE FOLLOWING TEXT *)
+( STRING EDITOR COMMANDS                          WFR-79MAR23)
+: C       ( SPREAD AT CURSOR AND COPY IN THE FOLLOWING TEXT *)
    DEL TEXT PAD COUNT
    #LAG ROT OVER MIN >R
    FORTH R R# +!   ( BUMP CURSOR )
@@ -207,7 +212,7 @@ EDITOR DEFINITIONS
    R> CMOVE UPDATE ( PAD T0 OLD CURSOR )
    DISP?   ( LOOK AT NEW LINE ) ;
 
-( FORTH EDITOR    SCREENS 6-17                     JNS 8/28/83 )
+( FORTH EDITOR    SCREENS 6-17                   JNS 8/28/83 )
 
 : +S  ( NEXT SCREEN; ... )
     SCR @ 1+ LIST TOP ;                                       
@@ -216,7 +221,7 @@ EDITOR DEFINITIONS
 : SUB ( SUB <OLD>[BSLASH]<NEW> )                            
     DEL  TEXT  FIND  PAD  C@  DELETE  C  ;                      
 
-( FORTH EDITOR    SCREENS 6-17                     JNS 8/28/83 )
+( FORTH EDITOR    SCREENS 6-17                   JNS 8/28/83 )
                                                                 
 : H-     ( HOLD LINE AFTER CURSOR )                             
     PAD 1+ C/L BLANKS  C/L PAD C!                               
@@ -231,7 +236,7 @@ EDITOR DEFINITIONS
 : R-     ( REPLACE REMAINDER OF LINE AFTER CURSOR )             
     PAD  1+  #LAG  CMOVE  UPDATE  DISP?  ;                      
                                                                 
-( FORTH EDITOR    SCREENS 6-17                     JNS 8/28/83 )
+( FORTH EDITOR    SCREENS 6-17                   JNS 8/28/83 )
                                                                 
 : +L    C/L R# +!  DISP?  ;                                     
 : -L    C/L MINUS R# +!  DISP?  ;                               
@@ -244,11 +249,6 @@ EDITOR DEFINITIONS
     H- E- AA PAD COUNT -TRAILING                                
     C/L SWAP - R# +! R- DROP DISP? ;                            
                                                                 
-: BLOCKS  ( DISPLAY BLOCK#'S IN BUFFERS )                       
-    LIMIT FIRST                                                 
-    DO  I  @  DUP  0<  IF  $75 EMIT $7FFF AND THEN .            
-        B/BUF 4 + +LOOP  CR  ;                             
-                                                  
 FORTH DEFINITIONS DECIMAL
 ( LATEST  12 +ORIGIN ! ( TOP NFA )
 ( HERE    28 +ORIGIN ! ( FENCE )
