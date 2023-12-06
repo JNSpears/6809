@@ -112,17 +112,15 @@ DECLARE VOCABULARY.
 
 ( Screen 7 )                                        
 
+CR ." Screen #7" CR
+
+8  LOAD ( HANDY FORTH STUFF)
+10 LOAD ( VT100 )
 
 
 
 
 
 
-
-
-
-
-
-
-
+;S
 

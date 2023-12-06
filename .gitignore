@@ -28,3 +28,4 @@ tools/usim-save*/
 tools/usim/
 tools/usimdbg/
 **.s19
+*.tmp

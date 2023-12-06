@@ -6,6 +6,9 @@ BLKDSK=blank.dsk
 FTHDSK=forth.dsk
 BLKDSK2=blank2.dsk
 
+SCRNFILE=scrnfile.sc
+SCRNPADD=12
+
 UTILS=create DskEdt exec list memtst OutVectr copy hexload
 UTIL_SRCS=$(foreach file,$(UTILS),utils/$(file).asm)
 UTIL_OBJS=$(UTIL_SRCS:.asm=.cm)
@@ -45,9 +48,6 @@ MODULE_OBJS=$(MODULE_SRCS:.asm=.md)
 # $(info MODULE_OBJS $(MODULE_OBJS))
 
 
-SCRNFILE=scrnfile.sc
-SCRNPADD=64
-
 all: $(EPROMS) $(TGTDSK) $(BLKDSK) $(FTHDSK) $(BLKDSK2)
 
 .PHONY:
@@ -78,15 +78,16 @@ sub-makes:
 # $(TGTDSK) : boot-sector/BootSector.bin os/MPX9.SY
 # 	$(MPX9DSK) $(TGTDSK) --init boot-sector/BootSector.bin os/MPX9.SY -f 
 
-tForth/tforth09.cm : tForth/jns.ib tForth/tforth09.asm
+tForth/tforth09.cm : tForth/memboot.tmp tForth/tforth09.asm
 
-tForth/jns.ib : tForth/VT100.4th tForth/asm09.4th 
-	cat tForth/VT100.4th tForth/asm09.4th | tr '\n' ' ' >tForth/jns.ib
+tForth/memboot.tmp : /dev/null 
+	cat /dev/null | tr '\n' ' ' >tForth/memboot.tmp
 
 #.PHONY:
-$(SCRNFILE) : tForth/Screens0-5.txt tForth/Screen-blank.txt
-	python2 tForth/File2Scrn.py tForth/Screens0-5.txt tForth/Screen-blank.txt -p $(SCRNPADD) >$(SCRNFILE)
+$(SCRNFILE) : tForth/Screens0-5.txt tForth/handy.4th tForth/VT100.4th
+	python2 tForth/File2Scrn.py tForth/Screens0-5.txt tForth/handy.4th tForth/VT100.4th -p $(SCRNPADD) >$(SCRNFILE)
 
+# tForth/Screen-blank.txt 
 $(TGTDSK): boot-sector/BootSector.bin os/mpx9.sy              $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 $(MODULE_OBJS) # sub-makes
 	$(MPX9DSK) $(TGTDSK) -n --init boot-sector/BootSector.bin os/mpx9.sy
 	$(MPX9DSK) $(TGTDSK) -n -w --entry 0x1000 --buffer 0x1000 $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 $(MODULE_OBJS) -f 
@@ -97,7 +98,7 @@ $(BLKDSK): boot-sector/BootSector.bin os/mpx9.sy
 $(FTHDSK): boot-sector/BootSector.bin os/mpx9.sy tForth/tforth09.cm tForth/*.4th $(SCRNFILE)
 	$(MPX9DSK) $(FTHDSK) -n --init boot-sector/BootSector.bin os/mpx9.sy 
 	$(MPX9DSK) $(FTHDSK) -n -w tForth/tforth09.cm --entry 0 --buffer 0
-	$(MPX9DSK) $(FTHDSK) -n -w tForth/*.4th
+	$(MPX9DSK) $(FTHDSK) -n -w tForth/*.4th 
 	$(MPX9DSK) $(FTHDSK) -n -w $(SCRNFILE) -f
 
 $(BLKDSK2): boot-sector/BootSector.bin os/mpx9.sy
