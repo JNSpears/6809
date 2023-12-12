@@ -7,7 +7,7 @@ FTHDSK=forth.dsk
 BLKDSK2=blank2.dsk
 
 SCRNFILE=scrnfile.sc
-SCRNPADD=12
+SCRNPADD=8
 
 UTILS=create DskEdt exec list memtst OutVectr copy hexload
 UTIL_SRCS=$(foreach file,$(UTILS),utils/$(file).asm)

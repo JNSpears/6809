@@ -39,5 +39,8 @@ DECIMAL
 : FG ( color -- ) ESC[ 30 + N ASCII m EMIT  ;
 : BG ( color -- ) ESC[ 40 + N ASCII m EMIT  ;
 
+: HORZ-X ( X-POS -- ; MOVE CURSOR TO COLUMN X )
+  ESC[ N ASCII G EMIT ;
+
 FORTH DEFINITIONS
 ;S

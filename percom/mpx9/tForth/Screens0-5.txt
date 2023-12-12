@@ -14,7 +14,7 @@
 (                                                              )
 (                                                              )
 ( ************************************************************ )
-( Screen #01 )                                                    
+( Screen #01 )                                                  
                                                                 
                                                                 
                                                                 
@@ -30,7 +30,7 @@
                                                                 
                                                                 
                                                                 
-( Screen #02 )                                                    
+( Screen #02 )                                                  
                                                                 
                                                                 
                                                                 
@@ -46,7 +46,7 @@
                                                                 
                                                                 
                                                                 
-( Screen #03 )                                   
+( Screen #03 )                                                  
                                                                 
                                                                 
                                                                 
@@ -62,7 +62,7 @@
                                                                 
                                                                 
 FORTH INTEREST GROUP.                        (JNS) AUG 16, 1983 
-( Screen #04 - ERROR MESSAGES )                                   
+( Screen #04 - ERROR MESSAGES )                                 
 EMPTY STACK !                                                   
 DICTIONARY FULL !                                               
 HAS INCORRECT ADDRESS MODE.                                     
@@ -78,7 +78,7 @@ DISK ERROR !
                                                                 
                                                                 
 FORTH INTEREST GROUP.                        (JNS) AUG 16, 1983 
-( Screen #05 - ERROR MESSAGES )                                   
+( Screen #05 - ERROR MESSAGES )                                 
 COMPILATION ONLY, USE IN DEFINITION.                            
 EXECUTION ONLY.                                                 
 CONDITIONALS NOT PAIRED.                                        
@@ -94,7 +94,28 @@ DECLARE VOCABULARY.
                                                                 
                                                                 
                                                                 
-( Screen 6 )                                                                
+( Screen 6 )                                                    
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                
+( Screen 7 )
+." Screen #7" CR
+
+8  LOAD  ( HANDY FORTH STUFF )
+10 LOAD  ( VT100 )
+."  -- done" CR ;S
 
 
 
@@ -103,24 +124,4 @@ DECLARE VOCABULARY.
 
 
 
-
-
-
-
-
-
-
-( Screen 7 )                                        
-
-CR ." Screen #7" CR
-
-8  LOAD ( HANDY FORTH STUFF)
-10 LOAD ( VT100 )
-
-
-
-
-
-
-;S
 
