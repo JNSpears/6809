@@ -172,17 +172,17 @@ class DirEntry(object):
 	@classmethod
 	def printDirHeader(cls, verbose):
 		if verbose: print("idx    ", end=' ')
-		print("filename        first   last  entry", end=' ')
+		print("filename         first    last  entry", end=' ')
 		if verbose: print("         #sec      K", end=' ')
 		print()
 		if verbose: print("----   ", end=' ')
-		print("-----------     -----  -----  ----", end=' ')
+		print("-----------      -----   -----  ----", end=' ')
 		if verbose: print("          ----  -----", end=' ')
 		print()
 
 	def getFomattedDirEntry(self):
 		# return "% -12s\t% 5d  % 5d  %04x  % 6.2fK" % (self.getFilename(), self.first, self.last, self.entry, ((self.last-self.first+1)*256)/1024.0)
-		return "% -12s\t  % 3x    % 3x  %04x  % 6.2fK" % (self.getFilename(), self.first, self.last, self.entry, ((self.last-self.first+1)*256)/1024.0)
+		return "% -12s\t  % 4x    % 4x  %04x  % 6.2fK" % (self.getFilename(), self.first, self.last, self.entry, ((self.last-self.first+1)*256)/1024.0)
 	
 	def printDirEntry(self):
 		print(self.getFomattedDirEntry)
