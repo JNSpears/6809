@@ -1,12 +1,7 @@
 ( 6809 FORTH ASSEMBLER                            JNS 08/28/83 )
-
+." LOADING 6809 ASSEMBLER" CR
 VOCABULARY ASSEMBLER IMMEDIATE
 ASSEMBLER DEFINITIONS HEX
-
-( 57 CONSTANT PUSHD                                                )
-( 77 CONSTANT NEXT                                                 )
-
-0  VARIABLE OPTYPE
 
 : :CASE
     <BUILDS ] DOES> SWAP DUP + + @ EXECUTE ;
@@ -18,8 +13,9 @@ ASSEMBLER DEFINITIONS HEX
     ELSE ( 8 bit pcr ) C, HERE 1+ - C, THEN
         ELSE ( 8 bit disp ) C, C, THEN ;
 :CASE  OPRANDS  ,  IMM8  IX1  C, [
-
+                                                             -->
 ( 6809 FORTH ASSEMBLER                            JNS 08/28/83 )
+0  VARIABLE OPTYPE
 : OPCODE    ( IMM EXT INX PREFIX OPCODE <NMONIC> )
     <BUILDS  C,  >R  C,  C,  R>  DUP  C,  C,
     DOES>  DUP  C@  -DUP  IF  C,  THEN       ( PREFIX )
@@ -33,8 +29,7 @@ CC FC EC  0  OPCODE  LDD,    00 FD ED  0  OPCODE  STD,
 8E BE AE  0  OPCODE  LDX,    00 BF AF  0  OPCODE  STX,
 8E BE AE 10  OPCODE  LDY,    00 BF AF  0  OPCODE  STY,
 CE FE EE 10  OPCODE  LDS,    00 FF EF 10  OPCODE  STS,
-CE FE EE  0  OPCODE  LDU,    00 FF EF  0  OPCODE  STU,
-
+CE FE EE  0  OPCODE  LDU,    00 FF EF  0  OPCODE  STU,       -->
 ( 6809 FORTH ASSEMBLER                            JNS 08/28/83 )
 89 B9 A9  0  OPCODE  ADCA,   82 B2 A2  0  OPCODE  SBCA,
 C9 F9 E9  0  OPCODE  ADCB,   C2 F2 E2  0  OPCODE  SBCB,
@@ -50,8 +45,7 @@ C3 F3 E3  0  OPCODE  ADDD,   83 B3 A3  0  OPCODE  SUBD,
 00 7A 6A  0  OPCODE  DEC,    00 7C 6C  0  OPCODE  INC,
 88 B8 A8  0  OPCODE  EORA,   C8 F8 E8  0  OPCODE  EORB,
 00 78 68  0  OPCODE  LSL,    00 74 64  0  OPCODE  LSR,
-00 00 30  0  OPCODE  LEAX,   00 00 31  0  OPCODE  LEAY,
-
+00 00 30  0  OPCODE  LEAX,   00 00 31  0  OPCODE  LEAY,      -->
 ( 6809 FORTH ASSEMBLER                            JNS 08/28/83 )
 00 00 32  0  OPCODE  LEAS,    00 00 33  0  OPCODE  LEAU,
 00 70 60  0  OPCODE  NEG,     8A BA AA  0  OPCODE  ORA,
@@ -66,17 +60,12 @@ CA FA EA  0  OPCODE  ORB,     00 79 69  0  OPCODE  ROL,
 50 INH NEGB,   12 INH NOP,     49 INH ROLA,    59 INH ROLB,
 46 INH RORA,   56 INH RORB,    39 INH RTS,     1D INH SEX,
 3F INH SWI,    4D INH TSTA,    5D INH TSTB,    3B INH RTI,
-
-: MPX, 113F , C, ;
-
-: ## 1 OPTYPE ! ;
+                                                            -->
 
 ( 6809 FORTH ASSEMBLER                            JNS 08/28/83 )
-
-: INX    ( <POSTBYTE> <MODE> INX <NAME> )
+: INX                           ( <POSTBYTE> <MODE> INX <NAME> )
     <BUILDS C, C,
     DOES> DUP C@ OPTYPE ! 1+ C@ ;
-: [] ( indirect index ) 10 OR ;   ( <indexmode> [] <opcode> )
 88 2 INX ,X     A8 2 INX ,Y     C8 2 INX ,U     E8 2 INX ,S
 84 3 INX 0,X    A4 3 INX 0,Y    C4 3 INX 0,U    E4 3 INX 0,S
 83 3 INX ,--X   A3 3 INX ,--Y   C3 3 INX ,--U   E3 3 INX ,--S
@@ -87,8 +76,9 @@ CA FA EA  0  OPCODE  ORB,     00 79 69  0  OPCODE  ROL,
 85 3 INX B,X    A5 3 INX B,Y    C5 3 INX B,U    E5 3 INX B,S
 8B 3 INX D,X    AB 3 INX D,Y    CB 3 INX D,U    EB 3 INX D,S
 
+: [] ( indirect index ) 10 OR ; ( <indexmode> [] <opcode> )
+: ## 1 OPTYPE ! ;               ( operand ## opcode )        -->
 ( 6809 FORTH ASSEMBLER                            JNS 08/28/83 )
-
 : IF,      C,  HERE  0  C,  ;
 : THEN,    HERE  OVER  -  1-  SWAP  C!  ;
 : ELSE,    20  IF,  SWAP  THEN,  ;
@@ -99,10 +89,11 @@ CA FA EA  0  OPCODE  ORB,     00 79 69  0  OPCODE  ROL,
 : WHILE,     IF,  ;
 : REPEAT,    SWAP  20  UNTIL,  THEN,  ;
 
-26 CONSTANT EQ  2A CONSTANT MI  2F CONSTANT GT  2D CONSTANT GE
-23 CONSTANT HIx  25 CONSTANT HS  27 CONSTANT NE  2B CONSTANT PL
-2E CONSTANT LE  2C CONSTANT LT  22 CONSTANT LS  24 CONSTANT LOx
+26 CONSTANT EQ   2A CONSTANT MI 2F CONSTANT GT 2D CONSTANT GE
+23 CONSTANT .HI. 25 CONSTANT HS 27 CONSTANT NE 2B CONSTANT PL
+2E CONSTANT LE   2C CONSTANT LT 22 CONSTANT LS 24 CONSTANT .LO.
 
+                                                             -->
 ( 6809 FORTH ASSEMBLER                            JNS 08/28/83 )
 
 0 VARIABLE PPB    0 VARIABLE TEB
@@ -118,9 +109,8 @@ CA FA EA  0  OPCODE  ORB,     00 79 69  0  OPCODE  ROL,
 
 : RBUILD
     SWAP  C,  @  C,  0 PPB !  0 TEB !  ;
-
+                                                             -->
 ( 6809 FORTH ASSEMBLER                            JNS 08/28/83 )
-
 : TFR,   1F  TEB  RBUILD  ;
 : EXG,   1E  TEB  RBUILD  ;
 
@@ -129,12 +119,13 @@ CA FA EA  0  OPCODE  ORB,     00 79 69  0  OPCODE  ROL,
 : PSHU,  36  PPB  RBUILD  ;
 : PULU,  37  PPB  RBUILD  ;
 
+: MPX, 113F , C, ;                   ( embed MPX/9 system call )
 : NEXT, ,Y++ LDX, 0,X [] JMP, ;
 
 : CODE  CREATE SMUDGE ;
 
 8C 2 INX <,PCR    8D 2 INX ,PCR
-
+                                                             -->
 ( 6809 FORTH ASSEMBLER                            JNS 08/28/83 )
 
 : SAVEIP, .Y PSHS, ;
@@ -144,4 +135,4 @@ FORTH  DEFINITIONS  DECIMAL
 
 ( : ASSEMBLER   [COMPILE] ASSEMBLER  ;  IMMEDIATE              )
 
-: CODE        [COMPILE] ASSEMBLER ASSEMBLER CODE ;
+: CODE        [COMPILE] ASSEMBLER ASSEMBLER CODE ;     ;S

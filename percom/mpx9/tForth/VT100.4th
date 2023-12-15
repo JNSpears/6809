@@ -1,5 +1,5 @@
 ( vt100 terminal dependent cursor addressing - jns 03/23/84 )
-CR ." LOADING VT100" CR
+." LOADING VT100" CR
 VOCABULARY VT100 IMMEDIATE
 VT100 DEFINITIONS HEX
 

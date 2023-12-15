@@ -1,12 +1,12 @@
 ( Screen #00 )                                         
 ( ************************************************************ )
 (                                                              )
-(     FIG FORTH - TEXT EDITOR                 JNS 08/15/84     )
-(                                                              )
-(                                                              )
-(                                                              )
-(                                                              )
-(                                                              )
+( Screen#   0 file: tForth/Screens0-5.txt                      )
+( Screen#   8 file: tForth/asm09.4th                           )
+( Screen#  17 file: tForth/handy.4th                           )
+( Screen#  19 file: tForth/VT100.4th                           )
+( Screen#  22 file: Padding...                                 )
+( Screen#  53 last screen.                                     )
 (                                                              )
 (                                                              )
 (                                                              )
@@ -113,10 +113,10 @@ DECLARE VOCABULARY.
 ( Screen 7 )
 ." Screen #7" CR
 
-8  LOAD  ( HANDY FORTH STUFF )
-10 LOAD  ( VT100 )
+DECIMAL 8  LOAD  ( 6809 ASSEMBLER )
+DECIMAL 17 LOAD  ( HANDY FORTH STUFF )
+DECIMAL 22 LOAD  ( VT100 )
 ."  -- done" CR ;S
-
 
 
 

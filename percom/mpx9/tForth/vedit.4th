@@ -1,33 +1,7 @@
 ( VEDIT )   
-
-: NOT 0= ;
-
-: DEPTH  ( ... N )
-    S0 @ SP@ - 2 / 1- ;
-
-: .STACK ( PRINT STACK )
-    DEPTH 0 < IF ." Stack underflow" CR QUIT THEN
-    DEPTH 0= IF ." Stack empty" ELSE 
-    DEPTH 0 DO I 1+ 2 * SP@ + @ . LOOP THEN CR  ;
+." LOADING VEDIT" CR
 
 $40 CONSTANT C/L                  ( TEXT CHARACTERS PER LINE *)
-
-CODE U<    ( UNSIGNED LESS THAN )
-    ,U++ LDD,  0,U CMPD,
-    LS IF,  0 ## LDD,  ELSE,  1 ## LDD,  THEN,
-    0,U STD,  NEXT,
-
-CODE U>    ( UNSIGNED GREATER THAN )
-    ,U++ LDD,  0,U CMPD,
-    GT IF,  0 ## LDD,  ELSE,  1 ## LDD,  THEN,
-    0,U STD,  NEXT,
-
-: 2DROP DROP DROP ; ( DROP DOUBLE NUMBER )
-
-: 2DUP OVER OVER ; ( DUPLICATE A DOUBLE NUMBER )
-
-: 2SWAP ROT >R ROT R> ;
-       ( BRING SECOND DOUBLE TO TOP OF STACK )
 
 : LINE        ( RELATIVE TO SCR, LEAVE ADDRESS OF LINE *)
       DUP $FFF0 AND $17 ?ERROR  ( KEEP ON THIS SCREEN )
@@ -67,17 +41,9 @@ VT100
 : .STATUS.LINE ( N.SECONDS TEXT.ADDR ... )
     19 0 VT100 XY CLRL           
     COUNT TYPE                           
-    4096 * BEGIN 1- ?TERMINAL OVER 0= OR UNTIL DROP             
+    1000 * BEGIN 1- ?TERMINAL OVER 0= OR UNTIL DROP             
     19 0 VT100 XY CLRL           
  ;                        
-
-
-: PROCESS.FORTH.COMMAND  ( VIDEO   )                               
-(    BOTTOMLINE@ PAD VC/L + SAVE.LINE )                           
-(    XY@  15 BLANKLINE  HOMEDOWN       )                          
-(    ." >>" TIB @ VC/L EXPECT           )                         
-(    BOTTOMLINE@ PAD VC/L + RESTORE.LINE  XY! )                   
-(    0 IN ! INTERPRET ) ;                                         
 
 : VXY 5 3 D+ VT100 XY ; ( Y X -- )
 
@@ -85,6 +51,11 @@ VT100
 : VBOTTOM 0 15 VXY ;
 
 : VEND VT100 1 20 XY ;
+
+: PROCESS.FORTH.COMMAND  ( VIDEO   )                               
+    VEND ." >>" TIB @ C/L EXPECT                      
+    0 IN ! INTERPRET 
+    #LOCATE VXY ;       
 
 : UPDATE.FULL ( SCR# -- )
     VT100  HOME  CLRS  LIST  5 " WELCOME" .STATUS.LINE VTOP ;
@@ -99,16 +70,16 @@ VT100
 
 : ABC-DELETE.CH ( ... )                                          
     #LOCATE DROP C/L 1- = NOT         HEX        
-    IF VEND #LAG          .STACK ( -- CUR@ TRAILING# ) 
-        OVER 1+           .STACK ( CUR@ TRAILING# FROM@ )
-        ROT  ROT 1-       .STACK ( FROM@ TO@ CNT# )
-                        CR ." BEFORE CMOVE:" .STACK  
+    IF VEND #LAG          .STK ( -- CUR@ TRAILING# ) 
+        OVER 1+           .STK ( CUR@ TRAILING# FROM@ )
+        ROT  ROT 1-       .STK ( FROM@ TO@ CNT# )
+                        CR ." BEFORE CMOVE:" .STK  
                         #LAG DUMP
         CMOVE  ( CMOVE: FROM-3, TO-2, QUAN-1 ... )
-                        CR ." AFTER CMOVE:" .STACK    
+                        CR ." AFTER CMOVE:" .STK    
         ( 1 R# +! )        
-                        CR ." #LOCATE:" #LOCATE .STACK 
-                        CR ." #LAG:" #LAG .STACK  
+                        CR ." #LOCATE:" #LOCATE .STK 
+                        CR ." #LAG:" #LAG .STK  
                         #LAG DUMP
         #LOCATE VXY   ( ." [[[[" )
         #LAG TYPE   ( ." {{{{" )
@@ -167,12 +138,12 @@ CODE CMOVE>  ( c-addr1 c-addr2 u --   ; move from top 1->2 )
     NEXT,
 
 : CH.CH 
-   ( VEND .STACK)
+   ( VEND .STK)
     DUP ( C .. C C ) 
     #LAG DROP ( C C .. C C @ )
     INS ON? 
     IF                  
-       #LAG 1- OVER 1+ ROT SWAP ROT ( VEND .STACK) CMOVE> ( #LOCATE VXY)
+       #LAG 1- OVER 1+ ROT SWAP ROT ( VEND .STK) CMOVE> ( #LOCATE VXY)
     THEN
     C! ( C C @ .. C ) 
     #LOCATE VXY 
@@ -182,33 +153,35 @@ CODE CMOVE>  ( c-addr1 c-addr2 u --   ; move from top 1->2 )
     #LOCATE VXY 
   ;
 
-: RNG   ( N HI LO .. N F )
-  ROT   ( .. HI LO N ) DUP >R
-  SWAP  ( .. HI N LO )
-  -     ( .. HI N-LO )
-  U>    ( .. F )
-  R> SWAP ( .. N F )
-  ;
-
-: RNG.OF 4 ?PAIRS COMPILE RNG COMPILE 0BRANCH 
-    HERE 0 , COMPILE DROP 5 ; IMMEDIATE 
-
 : VEDIT VINIT EXIT.FLAG OFF ( SCR# -- )                
     BEGIN VT100
       6 0 XY INS ON? IF ." INS" ELSE 3 SPACES THEN
-      12 0 XY #LOCATE . . 
+      12 0 XY #LOCATE DECIMAL . . 
+      40 0 XY PAD COUNT TYPE
       #LOCATE VXY
       WKEY                  ( ADDR #CHAR )
       DUP
       CASE
         1 OF
             DROP C@ DUP                                                  
-              CASE CTRL L OF DROP SCR @ UPDATE.FULL ENDOF                          
-                  CTRL [  OF DROP EXIT.FLAG ON ENDOF                         
-                  <BS>    OF DROP BACKSPACE.CH ENDOF                         
-                  <DEL>   OF DROP DELETE.CH ENDOF                            
-                  <ESC>   OF DROP PROCESS.FORTH.COMMAND ENDOF      
-                  ASCII Z ASCII A RNG.OF CH.CH ENDOF          
+              CASE 
+                  CTRL L         OF DROP SCR @ UPDATE.FULL ENDOF                          
+                  CTRL [ ( ESC ) OF DROP EXIT.FLAG ON ENDOF                         
+                  <BS>           OF DROP BACKSPACE.CH UPDATE ENDOF                         
+                  <DEL>          OF DROP DELETE.CH UPDATE ENDOF                            
+                  <ESC>          OF DROP PROCESS.FORTH.COMMAND ENDOF  
+
+                  CTRL E         OF VEND ( right justify from cursor to end of line )
+                                    DROP #LAG               .STK CR ( .. CUR@ #RCUR )
+                                    -TRAILING DUP #LAG      .STK CR ( .. CUR@ #' #' CRU@ #RCUR )
+                                    ROT - SWAP DROP         .STK CR ( .. CUR2 #' #BLANKS-AT-END ) 
+                                    ROT DUP ROT + ROT ROT   .STK CR ( .. CUR@' CUR@ #BLANKS-AT-END )
+                                    DUP >R CMOVE> 
+                                    #LAG DROP R> BLANKS
+                                    UPDATE #LOCATE VXY ENDOF 
+
+                  ASCII ~ BL     RNG.OF CH.CH UPDATE ENDOF     
+
                   DROP 5 " WHAT?" .STATUS.LINE                               
               ENDCASE 
             ENDOF                                                  
@@ -221,6 +194,7 @@ CODE CMOVE>  ( c-addr1 c-addr2 u --   ; move from top 1->2 )
                 ASCII D OF ( LEFT ) #LEAD IF -1 R# +! VT100 LEFT  THEN DROP ENDOF
                 ASCII H OF ( HOME )       0 R# ! VTOP    ENDOF
                 ASCII F OF ( END ) C/L 15 * R# ! VBOTTOM ENDOF
+                ASCII E OF ( NUMPAD-5 ) PROCESS.FORTH.COMMAND  ENDOF
               ENDCASE
             THEN
         ENDOF                                                  
@@ -229,7 +203,7 @@ CODE CMOVE>  ( c-addr1 c-addr2 u --   ; move from top 1->2 )
               2 + C@  CASE
                   ASCII 5 OF ( PGUP )   SCR @ 1- VINIT  ENDOF
                   ASCII 6 OF ( PGDOWN ) SCR @ 1+ VINIT  ENDOF
-                  ASCII 2 OF ( INS )    INS TOGGLE      ENDOF
+                  ASCII 2 OF ( INS )    INS 1 TOGGLE    ENDOF
               ENDCASE
             THEN
         ENDOF                                                  
@@ -239,28 +213,15 @@ CODE CMOVE>  ( c-addr1 c-addr2 u --   ; move from top 1->2 )
                   ASCII H OF ( CTRL-HOME )
                                 R# @ C/L / C/L * R# !
                                 #LOCATE VXY ENDOF
-                  ASCII F OF ( CTRL-END )
-                                R# @ C/L / C/L * C/L 1- + R# !
-                                #LOCATE VXY  ENDOF
+                  ASCII F OF ( CTRL-END; MOVE TO END OF USED PART OF LINE )
+                                R# @ C/L / C/L * R# !
+                                #LAG  -TRAILING R# +! DROP
+                                #LOCATE VXY ENDOF 
               ENDCASE
             THEN
         ENDOF                                                  
-      ENDCASE                                                   
+      ENDCASE                                               
       EXIT.FLAG ON? UNTIL FLUSH VEND ;                                     
+;S
 
-
-( CTRL HOME)
-( WKEY .STACK CR DUMP 6 30CE) 
-( 30CE 1B 5B 31 3B 35 48   _[1;5H OK)
-
-( CTRL END)
-( WKEY .STACK CR DUMP 6 30CE) 
-( 30CE 1B 5B 31 3B 35 46   _[1;5F OK)
-
-( INS)
-( WKEY .STACK DUMP 4 30CE)
-( 30CE 1B 5B 32 7E         _[2~   OK)
-
-
-
-( GO FLOAD 2/VEDIT2.4T 7 VEDIT )
+( GO FLOAD 2/VEDIT.4T 7 VEDIT )
