@@ -68,10 +68,13 @@ CODE U>    ( UNSIGNED GREATER THAN )
     DEPTH 0 < IF ." Stack underflow" CR QUIT THEN
     DEPTH 0= IF ." Stack empty" ELSE 
         DEPTH 0 DO I 1+ 2 * SP@ + @ . LOOP THEN CR  ;
-: .P  .STK ;
-: RR CR .P ROT DUP ROT U> ROT ROT U> AND .P ;
-: TT CR
- S0 SP! ASCII z ASCII Z ASCII A .P RNG .P 
- S0 SP! ASCII D ASCII Z ASCII A .P RNG .P   
- S0 SP! ASCII 0 ASCII Z ASCII A .P RNG .P  ;
-;S   SUB LOWER BOUND FROM UPPER BOUND ALOS!!!!
+CODE U>    ( UNSIGNED GREATER THAN )
+    ,U++ LDD,  0,U CMPD,
+    .HI. IF,  0 ## LDD,  ELSE,  1 ## LDD,  THEN,
+    0,U STD,  NEXT,
+
+CODE /2 ( N .. N/2 )
+    0,U LDD, ASRA, RORB, 0,U STD, NEXT,
+CODE *2 ( N .. N/2 )
+    0,U LDD, ASLB, ROLA, 0,U STD, NEXT,
+;S

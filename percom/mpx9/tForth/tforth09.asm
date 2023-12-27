@@ -2366,7 +2366,7 @@ SYSBUFF FDB DODOES,DOBUFFER+2
 ; 13 : SETSCR         ( SETSCR <FILENAME> )                    
 ; 14     SYSFCB  INIT  RPTER  3  SYSBUFF  SYSFCB  OPEN  RPTER  ;            
 ; 12 : MNTSCR                                                         
-; 13     SYSFCB  " SCRNFILE.SC " (INIT) RPTER                          
+; 13     SYSFCB  " SCREENS1.SC " (INIT) RPTER                          
 ; 14     3  SYSBUFF  SYSFCB  OPEN  RPTER  ;         
 
 ; JNS add a buffer to store the screen file name in, commands to display it, and put it in the output of list.
@@ -2380,7 +2380,7 @@ SETSCR FDB DOCOL,SYSFCB,INIT,RPTER,OPENSCR,SEMIS
  WORDM 6,'MNTSCR'   ; ( MNTSCR; ... )
 MNTSCR FDB DOCOL,SYSFCB,PQUOTE
  FCB X-*
- FCC 'X/SCRNFILE.SC '
+ FCC 'X/SCREEN1.SC '
 X SET *-1
  FDB DUP,LIT,$F02A,CAT,LIT,$30,PLUS,SWAP,ONEP,CSTORE ; PATCH ABOVE FILENAME TO BE SAME DRIVE AS TFORTH09
  FDB DUP,COUNT,ONEP,SWAP,ONEM,SWAP,SYSSCR,SWAP,CMOVE ; SAVE THE FILENAME.

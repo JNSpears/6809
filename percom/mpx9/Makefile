@@ -6,8 +6,6 @@ BLKDSK=blank.dsk
 FTHDSK=forth.dsk
 BLKDSK2=blank2.dsk
 
-SCRNFILE=scrnfile.sc
-SCRNPADD=25
 
 UTILS=create DskEdt exec list memtst OutVectr copy hexload
 UTIL_SRCS=$(foreach file,$(UTILS),utils/$(file).asm)
@@ -83,14 +81,24 @@ tForth/tforth09.cm : tForth/memboot.tmp tForth/tforth09.asm
 tForth/memboot.tmp : /dev/null 
 	cat /dev/null | tr '\n' ' ' >tForth/memboot.tmp
 
+SCRNFILE1=SCREEN1.sc
+SCRNFILE2=SCREEN2.sc
+SCRNPAD=4
+# 25
+
 INIT_FILES=boot-sector/BootSector.bin os/mpx9.sy
-4TH_SRCS=Finish-tForth09 editor misctools vedit 
+4TH_SRCS=Finish-tForth09 misctools vedit 
 4TH_FILES=$(foreach file,$(4TH_SRCS),tForth/$(file).4th)
-4TH_SCREENS=tForth/Screens0-5.txt tForth/asm09.4th tForth/handy.4th tForth/VT100.4th
+4TH_SCREENS=tForth/Screens0-5.txt tForth/asm09.4th tForth/handy.4th tForth/VT100.4th tForth/editor.4th tForth/vedit.4th tForth/vccc2023.4th
+# 
+
 
 #.PHONY:
-$(SCRNFILE) : $(4TH_SCREENS) 
-	python2 tForth/File2Scrn.py $(4TH_SCREENS) -p $(SCRNPADD) -D >$(SCRNFILE)
+$(SCRNFILE1) : $(4TH_SCREENS) 
+	python2 tForth/File2Scrn.py $(4TH_SCREENS) -p $(SCRNPAD) -D >$(SCRNFILE1)
+
+$(SCRNFILE2) : $(4TH_SCREENS) 
+	python2 tForth/File2Scrn.py tForth/Screens0-5.txt -p 80 -D >$(SCRNFILE2)
 
 # tForth/Screen-blank.txt 
 $(TGTDSK): $(INIT_FILES)                                      $(UTIL_OBJS) $(XUTIL_FILES) $(MYUTIL_OBJS) $(XMYUTIL_FILES) mpx9+/mpx9+.cm1 $(MODULE_OBJS) # sub-makes
@@ -100,18 +108,21 @@ $(TGTDSK): $(INIT_FILES)                                      $(UTIL_OBJS) $(XUT
 $(BLKDSK): $(INIT_FILES)
 	$(MPX9DSK) $(BLKDSK) -n --init boot-sector/BootSector.bin os/mpx9.sy -f 
 
-$(FTHDSK): $(INIT_FILES) tForth/tforth09.cm $(4TH_FILES) $(SCRNFILE)
-	$(MPX9DSK) $(FTHDSK) -n --init boot-sector/BootSector.bin os/mpx9.sy 
-	$(MPX9DSK) $(FTHDSK) -n -w tForth/tforth09.cm --entry 0 --buffer 0
-	$(MPX9DSK) $(FTHDSK) -n -w $(4TH_FILES) 
-	$(MPX9DSK) $(FTHDSK) -n -w $(SCRNFILE) -f
-
-
 $(BLKDSK2): $(INIT_FILES)
 	$(MPX9DSK) $(BLKDSK2) -n --init boot-sector/BootSector.bin os/mpx9.sy -f 
 
-test: $(EPROMS) $(TGTDSK) $(FTHDSK) $(BLKDSK2)
-	../../tools/percom/percom -1 $(TGTDSK) -2 $(FTHDSK) -3 $(BLKDSK) -4 $(BLKDSK2) -- $(EPROMS)
+$(FTHDSK): $(INIT_FILES) tForth/tforth09.cm $(4TH_FILES) $(SCRNFILE1)
+	$(MPX9DSK) $(FTHDSK) -n --init boot-sector/BootSector.bin os/mpx9.sy 
+	$(MPX9DSK) $(FTHDSK) -n -w tForth/tforth09.cm --entry 0 --buffer 0
+	$(MPX9DSK) $(FTHDSK) -n -w $(4TH_FILES) 
+	$(MPX9DSK) $(FTHDSK) -n -w $(SCRNFILE1) -f
+
+$(FTHDSK2): $(INIT_FILES) tForth/tforth09.cm $(SCRNFILE2)
+	$(MPX9DSK) $(FTHDSK) -n --init boot-sector/BootSector.bin os/mpx9.sy 
+	$(MPX9DSK) $(FTHDSK) -n -w $(SCRNFILE2) -f
+
+test: $(EPROMS) $(TGTDSK) $(FTHDSK) $(FTHDSK2) $(BLKDSK2)
+	../../tools/percom/percom -1 $(TGTDSK) -2 $(FTHDSK) -3 $(FTHDSK2) -4 $(BLKDSK2) -- $(EPROMS)
 
 testd: $(EPROMS) $(TGTDSK) $(FTHDSK) $(BLKDSK2)
 	../../tools/percom/percomd -1 $(TGTDSK) -2 $(FTHDSK) -3 $(BLKDSK) -4 $(BLKDSK2) -- $(EPROMS)

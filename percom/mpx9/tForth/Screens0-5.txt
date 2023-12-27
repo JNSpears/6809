@@ -112,16 +112,12 @@ DECLARE VOCABULARY.
                                                                 
 ( Screen 7 )
 ." Screen #7" CR
+( : --> [COMPILE] --> BLK @ B/SCR / ." SCR:" . CR ; IMMEDIATE )
 
 DECIMAL 8  LOAD  ( 6809 ASSEMBLER )
 DECIMAL 17 LOAD  ( HANDY FORTH STUFF )
 DECIMAL 22 LOAD  ( VT100 )
+DECIMAL 25 LOAD  ( EDITOR )
+DECIMAL 39 LOAD  ( VEDIT )
 ."  -- done" CR ;S
-
-
-
-
-
-
-
 
